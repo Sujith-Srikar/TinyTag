@@ -7,7 +7,7 @@ const {
   handleGetAnalytics,
 } = require("../controllers/url");
 
-router.post("/", async (req, res) => {
+router.post("/generateurl", async (req, res) => {
   const orgurl = req.body;
   const shorturl = shortUrlGenerator(orgurl);
   res

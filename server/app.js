@@ -7,8 +7,6 @@ const urlroute = require("./routes/url")
 const PORT = process.env.PORT || 8000
 require("dotenv").config();
 
-
-
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -27,7 +25,7 @@ app.post("/generateqr",async (req, res) => {
   }
 })
 
-app.use("/generateurl", urlroute);
+app.use("/", urlroute);
 
 
 app.listen(PORT)
