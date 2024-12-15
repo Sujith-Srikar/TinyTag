@@ -8,8 +8,8 @@ const {
 } = require("../controllers/url");
 
 router.post("/generateurl", async (req, res) => {
-  const orgurl = req.body;
-  const shorturl = shortUrlGenerator(orgurl);
+  const orgurl = req.body.content;
+  const shorturl = await shortUrlGenerator(orgurl);
   res
     .status(200)
     .json({ message: "URL added successfully", shorturl: shorturl });

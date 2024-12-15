@@ -11,7 +11,9 @@ async function createShortMapping(longUrl, shortUrl) {
 }
 
 async function getLongUrl(shortUrl) {
+  console.log(shortUrl)
   const doc = await URL.doc(shortUrl).get();
+  console.log(doc)
   if (doc.exists) {
     await doc.ref.update({ clickcount: doc.data().clickcount + 1 });
     return doc.data().longUrl;
@@ -29,15 +31,15 @@ async function handleGetAnalytics(shorturl) {
   }
 }
 
-async function shortUrlGenerator({orgurl}) {
+async function shortUrlGenerator(orgurl) {
     const shortcode = encodeToBase62(c++);
     let finalurl;
     const success = await createShortMapping(orgurl, shortcode); 
     if (success) {
-        const baseurl = "https://tinytags.com/";
+        const baseurl = "https://tinytag.onrender.com/";
         finalurl = baseurl + shortcode;
     } else {
-        return shortUrlGenerator({orgurl}); 
+        return shortUrlGenerator(orgurl); 
     }
     return finalurl
 }
