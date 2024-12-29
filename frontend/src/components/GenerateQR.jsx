@@ -13,12 +13,11 @@ function GenerateQR() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/generateqr", {
+      const response = await fetch("https://tinytag.onrender.com/generateqr", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: input }),
       });
-      console.log(response)
       const blob = await response.blob();
       console.log(blob)
       setQrCode(URL.createObjectURL(blob));
