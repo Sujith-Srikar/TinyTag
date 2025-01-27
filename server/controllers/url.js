@@ -5,15 +5,13 @@ let c = 12345678;
 
 async function createShortMapping(longUrl, shortUrl) {
   const doc = URL.doc(shortUrl);
-  if ((await doc.get()).exists) return false;
+  if ((await doc.get()).exists) return false; //shorturl already exists
   await doc.set({ longUrl, shortUrl, createdAt: new Date(), clickcount: 0 });
   return true;
 }
 
 async function getLongUrl(shortUrl) {
-  console.log(shortUrl)
   const doc = await URL.doc(shortUrl).get();
-  console.log(doc)
   if (doc.exists) {
     await doc.ref.update({ clickcount: doc.data().clickcount + 1 });
     return doc.data().longUrl;
@@ -44,9 +42,49 @@ async function shortUrlGenerator(orgurl) {
     return finalurl
 }
 
+async function editLinkDestination(shorturl, longurl) {
+  const docRef = URL.doc(shorturl);
+  const doc = await docRef.get();
+  if(doc.exists){
+    if(doc.data().longUrl === longurl) 
+      throw new Error("LongURL already exists");
+    await docRef.update({ longUrl: longurl, clickcount: 0 });
+    return true;
+  }
+  else{
+    throw new Error("ShortURL not found");
+  }
+}
+
+async function createAlias(shortCode, longUrl) {
+  if (!shortCode || !longUrl) {
+    throw new Error("Both shortCode and longUrl are required");
+  }
+
+  const docRef = URL.doc(shortCode); // Get the DocumentReference
+  const doc = await docRef.get(); // Fetch the DocumentSnapshot
+
+  if (doc.exists) {
+    throw new Error("ShortURL already exists");
+  }
+
+  await docRef.set({
+    longUrl,
+    shortCode,
+    createdAt: new Date(),
+    clickCount: 0,
+  });
+
+  const baseUrl = "https://tinytag.onrender.com/";
+  return `${baseUrl}${shortCode}`;
+}
+
+
 module.exports = {
   shortUrlGenerator,
   createShortMapping,
   getLongUrl,
   handleGetAnalytics,
+  editLinkDestination,
+  createAlias
 };
