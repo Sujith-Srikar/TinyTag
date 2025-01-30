@@ -24,10 +24,11 @@ app.post("/generateqr",upload.single('logo'), async (req, res) => {
   }
   try{
     const qrcode = await generateQRCode(content, options, req.file)
-    res.set("Content-Type", "image/png");
+    res.set("Content-Type", "image/jpeg");
     res.status(200).send(qrcode);
   }
   catch(err){
+    console.log(err);
     res.status(500).send(`Failed to generate qrcode, ${err}`);
   }
 })

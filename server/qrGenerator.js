@@ -4,19 +4,19 @@ const axios = require("axios")
 
 async function generateQRCode(content, options, file){
   const defaultoptions = {
-    type: "image/svg",
+    type: "image/jpeg",
     width: 400,
     margin: 2,
     scale: 2,
     errorCorrectionLevel: "H",
     color: {
-      dark: "#000000", // Foreground color (QR code)
-      light: "#FFFFFF", // Background color
+      dark: "#4B164C", // Foreground color (QR code)
+      light: "#DE3163", // Background color
     },
   };
-
+  defaultoptions.color.dark = options.dark || "#000000";
+  defaultoptions.color.light = options.light || "#FFFFFF";
   const finaloptions = {...defaultoptions, ...options,file};
-  console.log(finaloptions)
   const qrCodeBuffer = await qrcode.toBuffer(content, finaloptions);
   if(finaloptions.logo || finaloptions.file){
     const qrimg = sharp(qrCodeBuffer); 
