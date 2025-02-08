@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import logo from "../../public/images/welcome.svg"
 
+const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
+
 function QRCode() {
 
   const [content, setContent] = useState("");
   const [qrCode, setQRCode] = useState(null);
-  const [logoURL, setLogoURL] = useState("");
   const [logoPath, setLogoPath] = useState("");
   const [foreColor, setForeColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
@@ -28,8 +29,7 @@ function QRCode() {
         formData.append("dark", foreColor);
         formData.append("light", bgColor);
 
-        const res = await axios.post(
-          "http://localhost:8000/generateqr",
+        const res = await axios.post(`${API_BASE_URL}/generateqr`,
           formData,
           {
             responseType: "arraybuffer",

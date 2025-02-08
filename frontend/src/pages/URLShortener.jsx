@@ -3,7 +3,7 @@ import axios from "axios";
 import { addUrlToDB, getUrlsFromDB, updateUrlInDB, deleteUrlFromDB } from "../components/idb";
 import { MoreHorizontal, BarChart3, Trash2, Save } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:8000"; // Backend URL
+const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
 
 function URLShortener() {
   const [urls, setUrls] = useState([]);
@@ -83,7 +83,7 @@ function MainSection({setUrls, urls}) {
         </div>
         <button
           onClick={handleShorten}
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg"
+          className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-800 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
         >
           Shorten Now!
         </button>
