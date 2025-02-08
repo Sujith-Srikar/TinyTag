@@ -23,7 +23,7 @@ async function getLongUrl(shortUrl) {
 async function handleGetAnalytics(shorturl) {
   const doc = await URL.doc(shorturl).get();
   if (doc.exists) {
-    return doc.data().clickcount;
+    return doc.data();
   } else {
     throw new Error("URL not found");
   }
@@ -56,8 +56,8 @@ async function editLinkDestination(shorturl, longurl) {
   }
 }
 
-async function createAlias(shortCode, longUrl) {
-  if (!shortCode || !longUrl) {
+async function createAlias(shortCode, longurl) {
+  if (!shortCode || !longurl) {
     throw new Error("Both shortCode and longUrl are required");
   }
 
@@ -69,7 +69,7 @@ async function createAlias(shortCode, longUrl) {
   }
 
   await docRef.set({
-    longUrl,
+    longurl,
     shortCode,
     createdAt: new Date(),
     clickCount: 0,
@@ -79,6 +79,22 @@ async function createAlias(shortCode, longUrl) {
   return `${baseUrl}${shortCode}`;
 }
 
+async function deleteShortUrl(shorturl) {
+  try {
+    const docRef = URL.doc(shorturl);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      throw new Error("Short URL not found");
+    }
+
+    await docRef.delete();
+    return { message: "Short URL deleted successfully" };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 
 module.exports = {
   shortUrlGenerator,
@@ -86,5 +102,6 @@ module.exports = {
   getLongUrl,
   handleGetAnalytics,
   editLinkDestination,
-  createAlias
+  createAlias,
+  deleteShortUrl
 };

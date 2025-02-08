@@ -6,15 +6,22 @@ const {
   getLongUrl,
   handleGetAnalytics,
   editLinkDestination,
-  createAlias
+  createAlias,
+  deleteShortUrl
 } = require("../controllers/url");
 
 router.post("/generateurl", async (req, res) => {
+  let shortCode;
+  if(req.body.shortCode)
+    shortCode = req.body.shortCode;
   const longurl = req.body.longUrl;
-  const shorturl = await shortUrlGenerator(longurl);
+  let result;
+  if(shortCode)
+    result = await createAlias(shortCode, longurl);
+  else result = await shortUrlGenerator(longurl);
   res
     .status(200)
-    .json({ message: "URL added successfully", shorturl: shorturl });
+    .json({ message: "URL added successfully", shorturl: result });
 });
 
 router.get("/:shorturl", async (req, res) => {
@@ -51,9 +58,17 @@ router.post("/createAlias",async (req, res)=>{
     const result = await createAlias(shortCode, longUrl);
     res.status(200).send(result);
   } catch (err) {
-    console.log(err)
     return res.status(404).send(err.message);
   }
 })
+
+router.delete("/delete/:shorturl", async (req, res) => {
+  try {
+    const result = await deleteShortUrl(req.params.shorturl);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
 
 module.exports = router

@@ -82,6 +82,7 @@ function HeroSection() {
   const [isflipped, setIsFlipped] = useState(false);
   const [ROWS, setROWS] = useState(6);
   const [COLS, setCOLS] = useState(6);
+  const lastScrollY = useRef(0)
 
   const updateGrid = () =>{
     if(window.innerWidth < 600){
@@ -94,11 +95,28 @@ function HeroSection() {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current) {
+        setIsFlipped(true); // Flip when scrolling down
+      } else {
+        setIsFlipped(false); // Flip back when scrolling up
+      }
+      lastScrollY.current = currentScrollY;
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      console.log("Unmounted")
+      window.removeEventListener("scroll", handleScroll);
+    }
+  }, []);
+
+  useEffect(() => {
     updateGrid();
     window.addEventListener("resize", updateGrid);
     return () => window.removeEventListener("resize", updateGrid);
-  })
+  },[]);
 
   useEffect(() => {
     const tiles = document.querySelectorAll(".tile");
@@ -118,7 +136,7 @@ function HeroSection() {
       <div>
         <nav>
           <Link to="/">Tiny Tag</Link>
-          <button onClick={() => setIsFlipped(!isflipped)}>Flip Tiles</button>
+          {/* <button onClick={() => setIsFlipped(!isflipped)}>Flip Tiles</button> */}
         </nav>
       </div>
       <Board isFlipped={isflipped} ROWS={ROWS} COLS={COLS} />
