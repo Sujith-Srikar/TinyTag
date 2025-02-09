@@ -102,6 +102,7 @@ function Features() {
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 items-center space-x-6">
               <a
                 href="https://github.com/Sujith-Srikar/TinyTag"
+                target="_blank"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Github className="w-5 h-5" />
