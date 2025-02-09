@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import gsap from "gsap";
 import "../App.css"
 
 const COOLDOWN = 1000;
 
-const Tile = ({ row, col, isFlipped }) => {
+const Tile = ({ row, col, isFlipped, ROWS, COLS }) => {
   const tileRef = useRef(null);
   let lastEnterTime = 0;
 
@@ -46,11 +45,19 @@ const Tile = ({ row, col, isFlipped }) => {
       <div ref={tileRef} className="tile" onMouseEnter={handleMouseEnter}>
         <div
           className="tile-face tile-front"
-          style={{ backgroundPosition: `${col *20}% ${row * 20}%` }}
+          style={{
+            backgroundPosition: `${(col / (COLS - 1)) * 100}% ${
+              (row / (ROWS - 1)) * 100
+            }%`,
+          }}
         ></div>
         <div
           className="tile-face tile-back"
-          style={{ backgroundPosition: `${col * 20}% ${row * 20}%` }}
+          style={{
+            backgroundPosition: `${(col / (COLS - 1)) * 100}% ${
+              (row / (ROWS - 1)) * 100
+            }%`,
+          }}
         ></div>
       </div>
     </>
@@ -69,6 +76,8 @@ const Board = ({ isFlipped, ROWS, COLS }) => {
                 row={rowIndex}
                 col={colIndex}
                 isFlipped={isFlipped}
+                ROWS={ROWS}
+                COLS={COLS}
               />
             ))}
           </div>
@@ -96,22 +105,6 @@ function HeroSection() {
   }
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current) {
-        setIsFlipped(true); // Flip when scrolling down
-      } else {
-        setIsFlipped(false); // Flip back when scrolling up
-      }
-      lastScrollY.current = currentScrollY;
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
-
-  useEffect(() => {
     updateGrid();
     window.addEventListener("resize", updateGrid);
     return () => window.removeEventListener("resize", updateGrid);
@@ -132,12 +125,6 @@ function HeroSection() {
 
   return (
     <>
-      <div>
-        <nav>
-          <Link to="/">Tiny Tag</Link>
-          {/* <button onClick={() => setIsFlipped(!isflipped)}>Flip Tiles</button> */}
-        </nav>
-      </div>
       <Board isFlipped={isflipped} ROWS={ROWS} COLS={COLS} />
     </>
   );

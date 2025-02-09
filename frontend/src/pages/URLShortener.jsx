@@ -3,6 +3,7 @@ import axios from "axios";
 import { addUrlToDB, getUrlsFromDB, updateUrlInDB, deleteUrlFromDB } from "../components/idb";
 import { MoreHorizontal, BarChart3, Trash2, Save, Copy, Check } from "lucide-react";
 import toast from "react-hot-toast";
+import Header from "../components/Header";
 
 const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
 
@@ -70,131 +71,140 @@ function MainSection({setUrls, urls}) {
   };
 
   return (
-    <main className="px-4 text-center py-16">
-      <h1 className="text-[10vw] md:text-[4vw] font-bold mb-6 ">
-        Shorten Your Loooong Links :)
-      </h1>
-      <div className="flex flex-col items-center justify-center gap-10 max-w-2xl mx-auto">
-        <div className="flex flex-col items-start gap-3 w-full">
-          <label htmlFor="longurl">Paste your link</label>
-          <div className="w-full glass-panel bg-gray-900 flex border border-white rounded-full items-center justify-center px-6">
-            <input
-              id="longurl"
-              type="text"
-              placeholder="https://example.com/very-looong-url"
-              value={longUrl}
-              onChange={(e) => setLongUrl(e.target.value)}
-              className="flex-grow w-full px-4 py-4 rounded-full bg-transparent text-white outline-none focus:outline-none focus:ring-0"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              onClick={() => setLongUrl("")}
-              className="lucide lucide-circle-x cursor-pointer"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="m15 9-6 6" />
-              <path d="m9 9 6 6" />
-            </svg>
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-3 w-full">
-          <label htmlFor="customalias">Create your custom alias</label>
-          <div className="flex flex-col md:flex-row items-center justify-around w-full">
-            <div className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
-              tinytag.onrender.com
+    <>
+      <Header />
+      <main className="px-4 text-center py-16">
+        <h1 className="text-[10vw] md:text-[4vw] font-bold mb-6 ">
+          Shorten Your Loooong Links :)
+        </h1>
+        <div className="flex flex-col items-center justify-center gap-10 max-w-2xl mx-auto">
+          <div className="flex flex-col items-start gap-3 w-full">
+            <label htmlFor="longurl">Paste your link</label>
+            <div className="w-full glass-panel bg-gray-900 flex border border-white rounded-full items-center justify-center px-6">
+              <input
+                id="longurl"
+                type="text"
+                placeholder="https://example.com/very-looong-url"
+                value={longUrl}
+                onChange={(e) => setLongUrl(e.target.value)}
+                className="flex-grow z-0 w-full px-4 py-4 rounded-full bg-transparent text-white outline-none focus:outline-none focus:ring-0"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => setLongUrl("")}
+                className="lucide lucide-circle-x cursor-pointer"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+              </svg>
             </div>
-            <span className="w-1/4 relative text-[10vw] md:text-[4vw]">/</span>
-            <input
-              id="customalias"
-              type="text"
-              placeholder="Enter your alias"
-              onChange={(e) => setCustomAlias(e.target.value)}
-              className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 outline-none"
-            />
           </div>
-        </div>
-        {loading ? (
-          <svg className="pl" width="240" height="240" viewBox="0 0 240 240">
-            <circle
-              className="pl__ring pl__ring--a"
-              cx="120"
-              cy="120"
-              r="105"
-              fill="none"
-              stroke="#000"
-              strokeWidth="20"
-              strokeDasharray="0 660"
-              strokeDashoffset="-330"
-              strokeLinecap="round"
-            ></circle>
-            <circle
-              className="pl__ring pl__ring--b"
-              cx="120"
-              cy="120"
-              r="35"
-              fill="none"
-              stroke="#000"
-              strokeWidth="20"
-              strokeDasharray="0 220"
-              strokeDashoffset="-110"
-              strokeLinecap="round"
-            ></circle>
-            <circle
-              className="pl__ring pl__ring--c"
-              cx="85"
-              cy="120"
-              r="70"
-              fill="none"
-              stroke="#000"
-              strokeWidth="20"
-              strokeDasharray="0 440"
-              strokeLinecap="round"
-            ></circle>
-            <circle
-              className="pl__ring pl__ring--d"
-              cx="155"
-              cy="120"
-              r="70"
-              fill="none"
-              stroke="#000"
-              strokeWidth="20"
-              strokeDasharray="0 440"
-              strokeLinecap="round"
-            ></circle>
-          </svg>
-        ) : (
-          <button
-            onClick={handleShorten}
-            className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-600 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
-          >
-            Shorten Now!
-          </button>
-        )}
-
-        {/* Short URL Result */}
-        {shortUrl && (
-          <div className="flex items-center justify-between gap-4 w-full px-6 py-4 rounded-lg bg-gray-800 text-white shadow-md">
-            <a className="truncate text-blue-400" href={shortUrl} target='_blank'>
-              {shortUrl}
-            </a>
+          <div className="flex flex-col items-start gap-3 w-full">
+            <label htmlFor="customalias">Create your custom alias</label>
+            <div className="flex flex-col md:flex-row items-center justify-around w-full">
+              <div className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
+                tinytag.onrender.com
+              </div>
+              <span className="w-1/4 relative text-[10vw] md:text-[4vw]">
+                /
+              </span>
+              <input
+                id="customalias"
+                type="text"
+                placeholder="Enter your alias"
+                onChange={(e) => setCustomAlias(e.target.value)}
+                className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 outline-none"
+              />
+            </div>
+          </div>
+          {loading ? (
+            <svg className="pl" width="240" height="240" viewBox="0 0 240 240">
+              <circle
+                className="pl__ring pl__ring--a"
+                cx="120"
+                cy="120"
+                r="105"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 660"
+                strokeDashoffset="-330"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--b"
+                cx="120"
+                cy="120"
+                r="35"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 220"
+                strokeDashoffset="-110"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--c"
+                cx="85"
+                cy="120"
+                r="70"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 440"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--d"
+                cx="155"
+                cy="120"
+                r="70"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 440"
+                strokeLinecap="round"
+              ></circle>
+            </svg>
+          ) : (
             <button
-              onClick={handleCopyToClipboard}
-              className="bg-purple-600 px-4 py-2 rounded-md shadow-md hover:bg-purple-500 transition-all"
+              onClick={handleShorten}
+              className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-600 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
             >
-              {copy ? <Check /> : <Copy />}
+              Shorten Now!
             </button>
-          </div>
-        )}
-      </div>
-    </main>
+          )}
+
+          {/* Short URL Result */}
+          {shortUrl && (
+            <div className="flex items-center justify-between gap-4 w-full px-6 py-4 rounded-lg bg-gray-800 text-white shadow-md">
+              <a
+                className="truncate text-blue-400"
+                href={shortUrl}
+                target="_blank"
+              >
+                {shortUrl}
+              </a>
+              <button
+                onClick={handleCopyToClipboard}
+                className="bg-purple-600 px-4 py-2 rounded-md shadow-md hover:bg-purple-500 transition-all"
+              >
+                {copy ? <Check /> : <Copy />}
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+    </>
   );
 }
 
@@ -279,7 +289,7 @@ function Table({ urls, setUrls }) {
 }
 
 function URLModal({ url, setUrls, onClose }) {
-  const [analytics, setAnalytics] = useState(null);
+  const [analytics, setAnalytics] = useState(0);
   const [longUrl, setLongUrl] = useState(url.longUrl);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -291,7 +301,7 @@ function URLModal({ url, setUrls, onClose }) {
         const { data } = await axios.get(
           `${API_BASE_URL}/analytics/${url.shortUrl.split("/").pop()}`
         );
-        setAnalytics(data.clickcount);
+        setAnalytics(data.clickCount);
       } catch (err) {
         console.error("Failed to load analytics");
       } finally {
@@ -348,7 +358,7 @@ function URLModal({ url, setUrls, onClose }) {
 
         {loading ? (
           <div className='flex justify-center'>
-            <svg class="pl" width="240" height="240" viewBox="0 0 240 240">
+            <svg className="pl" width="240" height="240" viewBox="0 0 240 240">
               <circle
                 className="pl__ring pl__ring--a"
                 cx="120"
@@ -358,7 +368,7 @@ function URLModal({ url, setUrls, onClose }) {
                 stroke="#000"
                 strokeWidth="20"
                 strokeDasharray="0 660"
-                stroke-dashoffset="-330"
+                strokeDashoffset="-330"
                 strokeLinecap="round"
               ></circle>
               <circle
@@ -370,7 +380,7 @@ function URLModal({ url, setUrls, onClose }) {
                 stroke="#000"
                 strokeWidth="20"
                 strokeDasharray="0 220"
-                stroke-dashoffset="-110"
+                strokeDashoffset="-110"
                 strokeLinecap="round"
               ></circle>
               <circle

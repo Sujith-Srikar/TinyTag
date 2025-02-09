@@ -11,19 +11,7 @@ body{
   overflow-x: hidden;
 }
 
-nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 2em;
-  z-index: 10;
-  pointer-events: none;
-}
-
-nav a{
+.logo{
   color: whitesmoke;
   text-decoration: none;
   pointer-events: all;
@@ -32,18 +20,39 @@ nav a{
   font-size: 28px;
 }
 
-nav button{
-  border: none;
-  outline: none;
-  color: whitesmoke;
-  background-color: black;
-  font-size: 24px;
-  font-family: "MOSKO MAPPA";
-  text-transform: uppercase;
+/* General Link Styles */
+.animated-link {
   pointer-events: all;
-  border-radius: 0.25em;
-  padding: 0.65em 1em 0.65em 1em;
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
+
+/* Hover Effect */
+.animated-link:hover {
+  color: #c084fc;
+  transform: scale(1.1);
+  text-shadow: 0 0 10px rgba(125, 85, 143, 0.358);
+}
+
+/* Underline Animation */
+.animated-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background: #c084fc;
+  transition: width 0.3s ease-in-out;
+}
+
+.animated-link:hover::after {
+  width: 100%;
+}
+
 
 .board{
     position: relative;
@@ -113,8 +122,8 @@ nav button{
 @media (max-width: 768px) {
     .tile-front::before {
         background-image: url('../images/TinyTag_fv_small.png');
+        background-size: 300% 300%;
     }
-
 }
 
 .blocks-container{

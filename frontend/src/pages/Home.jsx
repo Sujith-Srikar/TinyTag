@@ -1,11 +1,12 @@
 import React from 'react'
-import { HeroSection, ContentSection } from '../components/index'
+import { HeroSection, ContentSection, Features } from '../components/index'
 
 function Home() {
   return (
     <>
       <HeroSection />
       <ContentSection />
+      <Features />
     </>
   )
 }
