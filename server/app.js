@@ -8,7 +8,17 @@ const urlroute = require("./routes/url")
 const PORT = process.env.PORT || 8000
 require("dotenv").config();
 
-app.use(cors())
+const allowedOrigins = [
+  "http://localhost:3000", // React Dev Server
+  "http://localhost:5173", // Vite Dev Server
+  "https://tiny-tag.vercel.app", // Deployed Frontend
+];
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // If using cookies or authentication
+  })
+);
 app.use(bodyParser.json())
 
 app.use(express.json({ limit: "5mb" }));
