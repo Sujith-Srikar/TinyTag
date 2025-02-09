@@ -25,7 +25,7 @@ router.post("/generateurl", async (req, res) => {
 });
 
 router.get("/:shorturl", async (req, res) => {
-  getLongUrl(req.params.shorturl)
+  await getLongUrl(req.params.shorturl)
     .then((url) => res.redirect(url))
     .catch((err) => {
       res.status(404).send(`ShortURL not found: ${err.message}`);

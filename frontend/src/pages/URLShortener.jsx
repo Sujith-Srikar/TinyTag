@@ -45,7 +45,7 @@ function MainSection({setUrls, urls}) {
     } catch (error) {
       toast.error("Error copying to clipboard");
     }
-  }
+  } 
 
   // Shorten URL and update IndexedDB + UI
   const handleShorten = async () => {
@@ -301,7 +301,7 @@ function URLModal({ url, setUrls, onClose }) {
         const { data } = await axios.get(
           `${API_BASE_URL}/analytics/${url.shortUrl.split("/").pop()}`
         );
-        setAnalytics(data.clickCount);
+        setAnalytics(data.clickcount);
       } catch (err) {
         console.error("Failed to load analytics");
       } finally {

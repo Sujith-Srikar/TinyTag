@@ -6,7 +6,7 @@ function Header() {
 
   return (
     <>
-      <nav className="fixed z-20 top-0 left-0 w-full flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl">
+      <nav className="sticky z-20 top-0 left-0 w-full flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl">
         <Link to="/" className="logo">
           Tiny Tag
         </Link>

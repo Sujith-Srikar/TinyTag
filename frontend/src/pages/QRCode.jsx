@@ -59,7 +59,7 @@ function QRCode() {
   return (
     <>
       <Header />
-      <div className="w-full min-h-screen sm:max-h-screen font-sans">
+      <div className="w-full max-h-screen sm:max-h-screen font-sans">
         <div className="content-area w-full flex flex-col justify-evenly items-center py-10 h-1/4 gap-4">
           <div className="border border-white rounded-full flex items-center justify-center px-6">
             <input
@@ -172,7 +172,7 @@ function QRCode() {
           <div className="w-1/4 flex flex-col items-center md:items-end">
             <div className="w-[15rem] h-[15rem] sm:w-[20rem] sm:h-[20rem] bg-gray-800 rounded-lg flex justify-center items-center">
               {loading ? (
-                <div className="loader">
+                <div className="loader absolute  w-full h-full">
                   <div className="square" id="sq1"></div>
                   <div className="square" id="sq2"></div>
                   <div className="square" id="sq3"></div>
