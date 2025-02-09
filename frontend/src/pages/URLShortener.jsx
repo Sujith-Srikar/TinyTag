@@ -120,7 +120,7 @@ function MainSection({setUrls, urls}) {
               <input
                 id="customalias"
                 type="text"
-                placeholder="Enter your alias"
+                placeholder="Enter your alias(Optional)"
                 onChange={(e) => setCustomAlias(e.target.value)}
                 className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 outline-none"
               />
