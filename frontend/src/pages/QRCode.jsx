@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import logo from "../../public/images/welcome.svg"
+import toast from "react-hot-toast";
 
 const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
 
@@ -8,16 +9,19 @@ function QRCode() {
 
   const [content, setContent] = useState("");
   const [qrCode, setQRCode] = useState(null);
+  const [logoURL, setLogoURL] = useState("");
   const [logoPath, setLogoPath] = useState("");
   const [foreColor, setForeColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [loading, setLoading] = useState(false);
 
   async function handleGenerateQRCode(){
     const formData = new FormData();
     if(content.length==0){
-        alert("Content is required to generate a QR Code!");
+        toast.error("Content is required!");
         return;
     }
+    setLoading(true);
     try{
         formData.append("content", content);
         if(logoPath && logoURL)
@@ -40,6 +44,9 @@ function QRCode() {
     }
     catch(err){
         console.log(err);
+    }
+    finally{
+      setLoading(false);
     }
   }
 
@@ -78,7 +85,7 @@ function QRCode() {
           </svg>
         </div>
         <button
-          className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-800 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
+          className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-600 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
           onClick={handleGenerateQRCode}
         >
           Generate QR Code
@@ -113,7 +120,7 @@ function QRCode() {
             />
 
             {/* Tooltip */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-2 right-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Upload Logo
             </div>
           </div>
@@ -133,7 +140,7 @@ function QRCode() {
               className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
             />
             {/* Tooltip */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-2 right-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               QR Color
             </div>
           </div>
@@ -152,18 +159,35 @@ function QRCode() {
               className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
             />
             {/* Tooltip */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-2 right-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Bg Color
             </div>
           </div>
         </div>
+
         {/* QR Code Display */}
-        <div className="w-1/4 flex flex-col items-center">
-          <div className="w-[15rem] h-[15rem] sm:w-[20rem] sm:h-[20rem] flex items-center justify-center bg-gray-800 rounded-lg">
-            {qrCode ? (
-              <img src={qrCode} alt="QR Code" className="w-full h-full" />
+        <div className="w-1/4 flex flex-col items-center md:items-end">
+          <div className="w-[15rem] h-[15rem] sm:w-[20rem] sm:h-[20rem] bg-gray-800 rounded-lg flex justify-center items-center">
+            {loading ? (
+              <div className="loader">
+                <div className="square" id="sq1"></div>
+                <div className="square" id="sq2"></div>
+                <div className="square" id="sq3"></div>
+                <div className="square" id="sq4"></div>
+                <div className="square" id="sq5"></div>
+                <div className="square" id="sq6"></div>
+                <div className="square" id="sq7"></div>
+                <div className="square" id="sq8"></div>
+                <div className="square" id="sq9"></div>
+              </div>
             ) : (
-              <p className="text-gray-400">Your QR Code will appear here</p>
+              <div>
+                {qrCode ? (
+                  <img src={qrCode} alt="QR Code" className="w-full h-full" />
+                ) : (
+                  <p className=" text-gray-400 text-center">Your QR Code will appear here</p>
+                )}
+              </div>
             )}
           </div>
         </div>

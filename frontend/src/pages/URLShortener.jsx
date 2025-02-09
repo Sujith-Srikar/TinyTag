@@ -1,7 +1,8 @@
 import React, { useState, useEffect} from 'react'
 import axios from "axios";
 import { addUrlToDB, getUrlsFromDB, updateUrlInDB, deleteUrlFromDB } from "../components/idb";
-import { MoreHorizontal, BarChart3, Trash2, Save } from "lucide-react";
+import { MoreHorizontal, BarChart3, Trash2, Save, Copy, Check } from "lucide-react";
+import toast from "react-hot-toast";
 
 const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
 
@@ -28,17 +29,33 @@ function URLShortener() {
 function MainSection({setUrls, urls}) {
   const [longUrl, setLongUrl] = useState("");
   const [customAlias, setCustomAlias] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [shortUrl, setShortUrl] = useState("");
+  const [copy, setCopy] = useState(false);
+
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      setCopy(true);
+
+      setTimeout(() => {
+        setCopy(false);
+      }, 1500);
+    } catch (error) {
+      toast.error("Error copying to clipboard");
+    }
+  }
 
   // Shorten URL and update IndexedDB + UI
   const handleShorten = async () => {
-    if (!longUrl.trim()) return alert("Please enter a valid URL");
-
+    if (!longUrl.trim()) return toast.error("Please enter a URL");
+    setLoading(true);
     try {
       const payload = { longUrl };
       if (customAlias) payload.shortCode = customAlias;
       const { data } = await axios.post(`${API_BASE_URL}/generateurl`, payload);
       const newUrl = { shortUrl: data.shorturl, longUrl };
-
+      setShortUrl(data.shorturl);
       await addUrlToDB(newUrl);
       setUrls([...urls, newUrl]); 
 
@@ -47,46 +64,135 @@ function MainSection({setUrls, urls}) {
     } catch (error) {
       console.error("Error shortening URL:", error);
     }
+    finally{
+      setLoading(false);
+    }
   };
 
   return (
-    <main className="text-center py-16">
-      <h1 className="text-5xl font-bold mb-6 ">
+    <main className="px-4 text-center py-16">
+      <h1 className="text-[10vw] md:text-[4vw] font-bold mb-6 ">
         Shorten Your Loooong Links :)
       </h1>
       <div className="flex flex-col items-center justify-center gap-10 max-w-2xl mx-auto">
         <div className="flex flex-col items-start gap-3 w-full">
           <label htmlFor="longurl">Paste your link</label>
-          <input
-            id="longurl"
-            type="text"
-            placeholder="https://example.com/very-looong-url"
-            onChange={(e) => setLongUrl(e.target.value)}
-            className="flex-grow  glass-panel w-full px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500"
-          />
+          <div className="w-full glass-panel bg-gray-900 flex border border-white rounded-full items-center justify-center px-6">
+            <input
+              id="longurl"
+              type="text"
+              placeholder="https://example.com/very-looong-url"
+              value={longUrl}
+              onChange={(e) => setLongUrl(e.target.value)}
+              className="flex-grow w-full px-4 py-4 rounded-full bg-transparent text-white outline-none focus:outline-none focus:ring-0"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              onClick={() => setLongUrl("")}
+              className="lucide lucide-circle-x cursor-pointer"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15 9-6 6" />
+              <path d="m9 9 6 6" />
+            </svg>
+          </div>
         </div>
         <div className="flex flex-col items-start gap-3 w-full">
           <label htmlFor="customalias">Create your custom alias</label>
-          <div className="flex justify-around w-full">
-            <div className="flex-grow  glass-panel w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
+          <div className="flex flex-col md:flex-row items-center justify-around w-full">
+            <div className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
               tinytag.onrender.com
             </div>
-            <span className="w-1/4 relative top-2 text-4xl">/</span>
+            <span className="w-1/4 relative text-[10vw] md:text-[4vw]">/</span>
             <input
               id="customalias"
               type="text"
               placeholder="Enter your alias"
               onChange={(e) => setCustomAlias(e.target.value)}
-              className="flex-grow  glass-panel w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500"
+              className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 outline-none"
             />
           </div>
         </div>
-        <button
-          onClick={handleShorten}
-          className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-800 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
-        >
-          Shorten Now!
-        </button>
+        {loading ? (
+          <svg className="pl" width="240" height="240" viewBox="0 0 240 240">
+            <circle
+              className="pl__ring pl__ring--a"
+              cx="120"
+              cy="120"
+              r="105"
+              fill="none"
+              stroke="#000"
+              strokeWidth="20"
+              strokeDasharray="0 660"
+              strokeDashoffset="-330"
+              strokeLinecap="round"
+            ></circle>
+            <circle
+              className="pl__ring pl__ring--b"
+              cx="120"
+              cy="120"
+              r="35"
+              fill="none"
+              stroke="#000"
+              strokeWidth="20"
+              strokeDasharray="0 220"
+              strokeDashoffset="-110"
+              strokeLinecap="round"
+            ></circle>
+            <circle
+              className="pl__ring pl__ring--c"
+              cx="85"
+              cy="120"
+              r="70"
+              fill="none"
+              stroke="#000"
+              strokeWidth="20"
+              strokeDasharray="0 440"
+              strokeLinecap="round"
+            ></circle>
+            <circle
+              className="pl__ring pl__ring--d"
+              cx="155"
+              cy="120"
+              r="70"
+              fill="none"
+              stroke="#000"
+              strokeWidth="20"
+              strokeDasharray="0 440"
+              strokeLinecap="round"
+            ></circle>
+          </svg>
+        ) : (
+          <button
+            onClick={handleShorten}
+            className="px-10 py-4 rounded-full cursor-pointer border-0 bg-purple-600 shadow-md tracking-wider uppercase text-sm transition-all duration-500 ease-in-out hover:tracking-widest hover:bg-purple-600 hover:text-white hover:shadow-[0_7px_29px_0_rgba(93,24,220,1)] active:translate-y-2 active:transition-[100ms]"
+          >
+            Shorten Now!
+          </button>
+        )}
+
+        {/* Short URL Result */}
+        {shortUrl && (
+          <div className="flex items-center justify-between gap-4 w-full px-6 py-4 rounded-lg bg-gray-800 text-white shadow-md">
+            <a className="truncate text-blue-400" href={shortUrl} target='_blank'>
+              {shortUrl}
+            </a>
+            <button
+              onClick={handleCopyToClipboard}
+              className="bg-purple-600 px-4 py-2 rounded-md shadow-md hover:bg-purple-500 transition-all"
+            >
+              {copy ? <Check /> : <Copy />}
+            </button>
+          </div>
+        )}
       </div>
     </main>
   );
@@ -98,61 +204,66 @@ function Table({ urls, setUrls }) {
   const getShortCode = (shortUrl) => shortUrl.split("/").pop();
 
   return (
-    <section className="flex justify-center">
-      <div className="glass-panel p-8 bg-gray-900 min-w-[70vw] text-white rounded-xl shadow-lg mx-4">
-        <table className="table-auto w-full text-left">
-          <thead className="bg-gray-700">
-            <tr>
-              <th className="p-4">Short Link</th>
-              <th className="p-4">Original Link</th>
-              <th className="p-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {urls.length > 0 ? (
-              urls.map((url, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-gray-700 hover:bg-gray-800 transition"
-                >
-                  <td className="p-4">
-                    <a
-                      href={url.shortUrl}
-                      target="_blank"
-                      className="text-blue-400 hover:underline"
-                    >
-                      {url.shortUrl}
-                    </a>
-                  </td>
-                  <td className="p-4">
-                    <a
-                      href={url.longUrl}
-                      target="_blank"
-                      className="text-gray-400 hover:underline"
-                    >
-                      {url.longUrl}
-                    </a>
-                  </td>
-                  <td className="p-4">
-                    {/* More Options Icon */}
-                    <button
-                      onClick={() => setSelectedUrl(url)}
-                      className="p-2 rounded-full hover:bg-gray-700 transition"
-                    >
-                      <MoreHorizontal size={24} />
-                    </button>
+    <section className="w-full flex justify-center px-4">
+      <div className="glass-panel bg-gray-900 w-full md:max-w-5xl text-white rounded-xl shadow-lg md:mx-4 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table-auto min-w-full text-left">
+            <thead className="bg-gray-700">
+              <tr>
+                <th className="p-4 border-r border-gray-400 ">
+                  Short Link
+                </th>
+                <th className="p-4 border-r border-gray-400 whitespace-nowrap hidden sm:table-cell">
+                  Original Link
+                </th>
+                <th className="p-4 ">View More</th>
+              </tr>
+            </thead>
+            <tbody>
+              {urls.length > 0 ? (
+                urls.map((url, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-700 hover:bg-gray-800 transition"
+                  >
+                    <td className="p-4 truncate max-w-[200px]">
+                      <a
+                        href={url.shortUrl}
+                        target="_blank"
+                        className="text-blue-400 hover:underline break-all"
+                      >
+                        {url.shortUrl}
+                      </a>
+                    </td>
+                    <td className="p-4 truncate max-w-[300px] hidden sm:table-cell">
+                      <a
+                        href={url.longUrl}
+                        target="_blank"
+                        className="text-gray-400 hover:underline break-all"
+                      >
+                        {url.longUrl}
+                      </a>
+                    </td>
+                    <td className="p-4 text-center">
+                      <button
+                        onClick={() => setSelectedUrl(url)}
+                        className="p-2 rounded-full hover:bg-gray-700 transition"
+                      >
+                        <MoreHorizontal size={24} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="p-4 text-center text-gray-400">
+                    No URLs yet
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="p-4 text-center text-gray-400">
-                  No URLs yet
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* URL Modal */}
@@ -203,10 +314,10 @@ function URLModal({ url, setUrls, onClose }) {
         prev.map((u) => (u.shortUrl === url.shortUrl ? { ...u, longUrl } : u))
       );
       await updateUrlInDB(url.shortUrl, longUrl);
-      alert("Long URL updated!");
+      toast.success("Long URL updated!");
       onClose();
     } catch (err) {
-      alert("Error updating URL");
+      toast.error("Error updating URL");
     } finally {
       setSaving(false);
     }
@@ -221,11 +332,11 @@ function URLModal({ url, setUrls, onClose }) {
         );
         setUrls((prev) => prev.filter((u) => u.shortUrl !== url.shortUrl));
         await deleteUrlFromDB(url.shortUrl);
-        alert("Short URL deleted!");
+        toast.success("Short URL deleted!");
         onClose();
       } catch (err) {
         console.log(err)
-        alert("Error deleting short URL.");
+        toast.error("Error deleting short URL.");
       }
     }
   };
@@ -236,7 +347,56 @@ function URLModal({ url, setUrls, onClose }) {
         <h2 className="text-2xl font-bold text-blue-400">URL Details</h2>
 
         {loading ? (
-          <p className="text-gray-400">Loading analytics...</p>
+          <div className='flex justify-center'>
+            <svg class="pl" width="240" height="240" viewBox="0 0 240 240">
+              <circle
+                className="pl__ring pl__ring--a"
+                cx="120"
+                cy="120"
+                r="105"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 660"
+                stroke-dashoffset="-330"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--b"
+                cx="120"
+                cy="120"
+                r="35"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 220"
+                stroke-dashoffset="-110"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--c"
+                cx="85"
+                cy="120"
+                r="70"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 440"
+                strokeLinecap="round"
+              ></circle>
+              <circle
+                className="pl__ring pl__ring--d"
+                cx="155"
+                cy="120"
+                r="70"
+                fill="none"
+                stroke="#000"
+                strokeWidth="20"
+                strokeDasharray="0 440"
+                strokeLinecap="round"
+              ></circle>
+            </svg>
+          </div>
         ) : (
           <div className="bg-gray-800 p-4 rounded-lg flex justify-between">
             <div className="flex items-center gap-4">
@@ -249,7 +409,9 @@ function URLModal({ url, setUrls, onClose }) {
 
         {/* Editable Long URL */}
         <div>
-          <label className="text-md font-bold text-gray-300">Edit Long URL</label>
+          <label className="text-md font-bold text-gray-300">
+            Edit Long URL
+          </label>
           <input
             type="text"
             value={longUrl}

@@ -46,7 +46,7 @@ const Tile = ({ row, col, isFlipped }) => {
       <div ref={tileRef} className="tile" onMouseEnter={handleMouseEnter}>
         <div
           className="tile-face tile-front"
-          style={{ backgroundPosition: `${col * 20}% ${row * 20}%` }}
+          style={{ backgroundPosition: `${col *20}% ${row * 20}%` }}
         ></div>
         <div
           className="tile-face tile-back"
@@ -107,7 +107,6 @@ function HeroSection() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
-      console.log("Unmounted")
       window.removeEventListener("scroll", handleScroll);
     }
   }, []);
