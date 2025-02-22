@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import "../App.css"
+import Cursor from "./Cursor";
 
 const COOLDOWN = 1000;
 
@@ -92,6 +93,7 @@ function HeroSection() {
   const [ROWS, setROWS] = useState(6);
   const [COLS, setCOLS] = useState(6);
   const lastScrollY = useRef(0)
+  const [isCursorActive, setIsCursorActive] = useState(false);
 
   const updateGrid = () =>{
     if(window.innerWidth < 600){
@@ -124,9 +126,14 @@ function HeroSection() {
   }, [isflipped]);
 
   return (
-    <>
+    <div
+      className="hero-section-container"
+      onMouseEnter={() => setIsCursorActive(true)}
+      onMouseLeave={() => setIsCursorActive(false)}
+    >
       <Board isFlipped={isflipped} ROWS={ROWS} COLS={COLS} />
-    </>
+      {isCursorActive && <Cursor />}
+    </div>
   );
 }
 
