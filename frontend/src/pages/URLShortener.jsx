@@ -5,7 +5,7 @@ import { MoreHorizontal, BarChart3, Trash2, Save, Copy, Check } from "lucide-rea
 import toast from "react-hot-toast";
 import Header from "../components/Header";
 
-const API_BASE_URL = "https://tinytag.onrender.com"; // Backend URL
+const API_BASE_URL = "http://ec2-52-66-9-103.ap-south-1.compute.amazonaws.com:8000"; // Backend URL
 
 function URLShortener() {
   const [urls, setUrls] = useState([]);
