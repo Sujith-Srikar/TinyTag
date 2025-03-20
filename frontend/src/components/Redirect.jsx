@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 
 function Redirect(){
 
-    const API_BASE_URL = "https://tinytag.onrender.com";
+    const API_BASE_URL =
+      "https://ec2-52-66-9-103.ap-south-1.compute.amazonaws.com";
     const {shorturl} = useParams();
     const [validUrl, setValidUrl] = useState(true);
 
