@@ -12,7 +12,6 @@ async function createShortMapping(longUrl, shortUrl) {
 
 async function getLongUrl(shortUrl) {
   const doc = await URL.doc(shortUrl).get();
-  console.log(doc.data())
   if (doc.exists) {
     await doc.ref.update({ clickcount: doc.data().clickcount + 1 });
     return doc.data().longUrl;
@@ -76,7 +75,7 @@ async function createAlias(shortCode, longurl) {
     clickcount: 0,
   });
 
-  const baseUrl = "https://tinytag.onrender.com/";
+  const baseUrl = "https://tiny-tag.vercel.app/";
   return `${baseUrl}${shortCode}`;
 }
 

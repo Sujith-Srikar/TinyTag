@@ -9,14 +9,14 @@ const PORT = process.env.PORT || 8000
 require("dotenv").config();
 
 const allowedOrigins = [
-  "http://localhost:3000", // React Dev Server
-  "http://localhost:5173", // Vite Dev Server
-  "https://tiny-tag.vercel.app", // Deployed Frontend
+  "http://localhost:3000", 
+  "http://localhost:5173", 
+  "https://tiny-tag.vercel.app", 
 ];
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true, // If using cookies or authentication
+    credentials: true, 
   })
 );
 app.use(bodyParser.json())
