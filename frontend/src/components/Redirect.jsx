@@ -1,43 +1,50 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { db, doc, getDoc, updateDoc } from "../firebase";
 
-function Redirect(){
+async function getLongUrl(shortUrl) {
+  const docRef = doc(db, "url", shortUrl); // <--- get doc ref from collection "url"
+  const docSnap = await getDoc(docRef);
 
-    const API_BASE_URL =
-      "https://ec2-52-66-9-103.ap-south-1.compute.amazonaws.com";
-    const {shorturl} = useParams();
-    const [validUrl, setValidUrl] = useState(true);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    await updateDoc(docRef, { clickcount: data.clickcount + 1 });
+    return data.longUrl;
+  } else {
+    throw new Error("URL not found");
+  }
+}
 
-    useEffect(()=>{
-        async function init(){
-            try{
-            const res = await axios.get(`${API_BASE_URL}/${shorturl}`);
-            if(res.status === 200){
-                setValidUrl(true);
-                window.location.href = res.data;
-            }
-        }
-        catch(err){
-            setValidUrl(false);
-            toast.error("Invalid Short URL");
-        }
-        }
-        init();
-    })
+function Redirect() {
+  const { shorturl } = useParams();
+  const [validUrl, setValidUrl] = useState(true);
 
-    return (
-      <>
-        <div className="text-white flex justify-center items-center mt-5 h-screen">
-          {validUrl ? (
-            <h2 className="text-2xl">Redirecting...</h2>
-          ) : (
-            <h2 className="text-2xl">Invalid Short URL</h2>
-          )}
-        </div>
-      </>
-    );
+  useEffect(() => {
+    async function fetchUrl() {
+      try {
+        const longUrl = await getLongUrl(shorturl);
+        setValidUrl(true);
+        window.location.href = longUrl;
+      } catch (error) {
+        console.error("Error fetching URL:", error);
+        setValidUrl(false);
+        toast.error(error.message || "Something went wrong");
+      }
+    }
+
+    fetchUrl();
+  }, [shorturl]);
+
+  return (
+    <div className="text-white flex justify-center items-center mt-5 h-screen">
+      {validUrl ? (
+        <h2 className="text-2xl">Redirecting...</h2>
+      ) : (
+        <h2 className="text-2xl">Invalid Short URL</h2>
+      )}
+    </div>
+  );
 }
 
 export default Redirect;

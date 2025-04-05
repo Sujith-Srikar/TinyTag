@@ -112,7 +112,7 @@ function MainSection({setUrls, urls}) {
             <label htmlFor="customalias">Create your custom alias</label>
             <div className="flex flex-col md:flex-row items-center justify-around w-full">
               <div className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
-                tinytag.onrender.com
+                tiny-tag.vercel.app
               </div>
               <span className="w-1/4 relative text-[10vw] md:text-[4vw]">
                 /
