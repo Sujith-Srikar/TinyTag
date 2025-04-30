@@ -5,7 +5,8 @@ import { MoreHorizontal, BarChart3, Trash2, Save, Copy, Check } from "lucide-rea
 import toast from "react-hot-toast";
 import Header from "../components/Header";
 
-const API_BASE_URL = "https://www.api.tinytag.xyz"; // Backend URL
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
+
 
 function URLShortener() {
   const [urls, setUrls] = useState([]);
@@ -112,7 +113,7 @@ function MainSection({setUrls, urls}) {
             <label htmlFor="customalias">Create your custom alias</label>
             <div className="flex flex-col md:flex-row items-center justify-around w-full">
               <div className="flex-grow  glass-panel w-full md:w-1/3 px-4 py-4 rounded-full bg-gray-900 text-white border border-gray-300 focus:outline-none focus:ring focus:ring-purple-500">
-                tiny-tag.vercel.app
+                tinytag.xyz
               </div>
               <span className="w-1/4 relative text-[10vw] md:text-[4vw]">
                 /

@@ -1,29 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { db, doc, getDoc, updateDoc } from "../firebase";
-
-async function getLongUrl(shortUrl) {
-  const docRef = doc(db, "url", shortUrl); // <--- get doc ref from collection "url"
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    await updateDoc(docRef, { clickcount: data.clickcount + 1 });
-    return data.longUrl;
-  } else {
-    throw new Error("URL not found");
-  }
-}
+import axios from "axios";
 
 function Redirect() {
   const { shorturl } = useParams();
   const [validUrl, setValidUrl] = useState(true);
 
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
+
   useEffect(() => {
     async function fetchUrl() {
       try {
-        const longUrl = await getLongUrl(shorturl);
+        const longUrl = await axios.get(`${API_BASE_URL}/url/${shorturl}`);
         setValidUrl(true);
         window.location.href = longUrl;
       } catch (error) {

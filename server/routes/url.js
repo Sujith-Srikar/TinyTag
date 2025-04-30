@@ -24,7 +24,7 @@ router.post("/generateurl", async (req, res) => {
     .json({ message: "URL added successfully", shorturl: result });
 });
 
-router.get("/:shorturl", async (req, res) => {
+router.get("/url/:shorturl", async (req, res) => {
   try {
     const longUrl = await getLongUrl(req.params.shorturl);
     res.status(200).send(longUrl); 

@@ -75,7 +75,7 @@ async function createAlias(shortCode, longurl) {
     clickcount: 0,
   });
 
-  const baseUrl = "https://tiny-tag.vercel.app/";
+  const baseUrl = "https://tinytag.xyz/";
   return `${baseUrl}${shortCode}`;
 }
 
