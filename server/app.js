@@ -9,9 +9,11 @@ const PORT = process.env.PORT || 8000
 require("dotenv").config();
 
 const allowedOrigins = [
-  "http://localhost:3000", 
-  "http://localhost:5173", 
-  "https://tiny-tag.vercel.app", 
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://tiny-tag.vercel.app",
+  "https://www.tinytag.xyz",
+  "https://tinytag.xyz",
 ];
 app.use(
   cors({

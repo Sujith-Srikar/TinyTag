@@ -4,7 +4,7 @@ import logo from "../../public/images/welcome.svg"
 import toast from "react-hot-toast";
 import { Header } from '../components';
 
-const API_BASE_URL = "https://ec2-52-66-9-103.ap-south-1.compute.amazonaws.com"; // Backend URL
+const API_BASE_URL = "https://www.api.tinytag.xyz"; // Backend URL
 
 function QRCode() {
 
