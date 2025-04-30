@@ -3,18 +3,18 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-function Redirect() {
+export function Redirect() {
   const { shorturl } = useParams();
   const [validUrl, setValidUrl] = useState(true);
 
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
 
   useEffect(() => {
-    async function fetchUrl() {
+    const fetchUrl = async () => {
       try {
-        const longUrl = await axios.get(`${API_BASE_URL}/url/${shorturl}`);
+        const res = await axios.get(`${API_BASE_URL}/url/${shorturl}`);
         setValidUrl(true);
-        window.location.href = longUrl;
+        window.location.href = res.data;
       } catch (error) {
         console.error("Error fetching URL:", error);
         setValidUrl(false);
@@ -35,5 +35,3 @@ function Redirect() {
     </div>
   );
 }
-
-export default Redirect;
