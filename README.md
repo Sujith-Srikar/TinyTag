@@ -61,7 +61,7 @@ Code messy? We’ll act like it never happened.
 
 ## License
 
-MIT License. Tweak it, share it, just give TinyTag a little nod. [Details here](https://opensource.org/licenses/MIT).
+MIT License. Share it, tweak it, just don’t forget to say “thanks, TinyTag.”
 
 ---
 
