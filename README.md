@@ -1,3 +1,5 @@
+# Live Demo - [TinyTag](https://www.tinytag.xyz/)
+
 # TinyTag: The URL Shortener and QR Code Generator You’ve Been Waiting For
 
 ![TinyTag Logo](https://www.tinytag.xyz/logo.png)  
