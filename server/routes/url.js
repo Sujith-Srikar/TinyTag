@@ -11,17 +11,19 @@ const {
 } = require("../controllers/url");
 
 router.post("/generateurl", async (req, res) => {
-  let shortCode;
-  if(req.body.shortCode)
-    shortCode = req.body.shortCode;
-  const longurl = req.body.longUrl;
-  let result;
-  if(shortCode)
-    result = await createAlias(shortCode, longurl);
-  else result = await shortUrlGenerator(longurl);
-  res
-    .status(200)
-    .json({ message: "URL added successfully", shorturl: result });
+  try {
+    let shortCode;
+    if (req.body.shortCode) shortCode = req.body.shortCode;
+    const longurl = req.body.longUrl;
+    let result;
+    if (shortCode) result = await createAlias(shortCode, longurl);
+    else result = await shortUrlGenerator(longurl);
+    res
+      .status(200)
+      .json({ message: "URL added successfully", shorturl: result });
+  } catch (err) {
+    res.status(404).send(`${err.message}`);
+  }
 });
 
 router.get("/url/:shorturl", async (req, res) => {

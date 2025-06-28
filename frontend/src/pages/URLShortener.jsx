@@ -64,7 +64,7 @@ function MainSection({setUrls, urls}) {
       setLongUrl("");
       setCustomAlias("");
     } catch (error) {
-      console.error("Error shortening URL:", error);
+      toast.error(error.response.data);
     }
     finally{
       setLoading(false);

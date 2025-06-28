@@ -34,7 +34,7 @@ async function shortUrlGenerator(orgurl) {
     let finalurl;
     const success = await createShortMapping(orgurl, shortcode); 
     if (success) {
-        const baseurl = "https://tinytag.onrender.com/";
+        const baseurl = "https://tinytag.xyz/";
         finalurl = baseurl + shortcode;
     } else {
         return shortUrlGenerator(orgurl); 

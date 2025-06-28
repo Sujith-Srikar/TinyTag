@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import {Home, QRCode, URLShortener} from "./pages/index";
 import {Redirect} from "./components/index";
