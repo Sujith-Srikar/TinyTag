@@ -48,7 +48,7 @@ async function editLinkDestination(shorturl, longurl) {
   if(doc.exists){
     if(doc.data().longUrl === longurl) 
       throw new Error("LongURL already exists");
-    await docRef.update({ longUrl: longurl, clickcount: doc.data().clickcount });
+    await docRef.update({ longUrl: longurl });
     return true;
   }
   else{
