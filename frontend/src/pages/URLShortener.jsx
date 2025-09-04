@@ -1,17 +1,27 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { addUrlToDB, getUrlsFromDB, updateUrlInDB, deleteUrlFromDB } from "../components/idb";
-import { MoreHorizontal, BarChart3, Trash2, Save, Copy, Check } from "lucide-react";
+import {
+  addUrlToDB,
+  getUrlsFromDB,
+  updateUrlInDB,
+  deleteUrlFromDB,
+} from "../components/idb";
+import {
+  MoreHorizontal,
+  BarChart3,
+  Trash2,
+  Save,
+  Copy,
+  Check,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import Header from "../components/Header";
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
 
-
 function URLShortener() {
   const [urls, setUrls] = useState([]);
 
-  // Fetch URLs from IndexedDB on load
   useEffect(() => {
     async function fetchStoredUrls() {
       const storedUrls = await getUrlsFromDB();
@@ -28,7 +38,7 @@ function URLShortener() {
   );
 }
 
-function MainSection({setUrls, urls}) {
+function MainSection({ setUrls, urls }) {
   const [longUrl, setLongUrl] = useState("");
   const [customAlias, setCustomAlias] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,27 +56,54 @@ function MainSection({setUrls, urls}) {
     } catch (error) {
       toast.error("Error copying to clipboard");
     }
-  } 
+  };
 
-  // Shorten URL and update IndexedDB + UI
   const handleShorten = async () => {
     if (!longUrl.trim()) return toast.error("Please enter a URL");
+
+    // Validate custom alias if provided
+    if (customAlias) {
+      if (!/^[a-zA-Z0-9_-]+$/.test(customAlias)) {
+        return toast.error(
+          "Custom alias can only contain letters, numbers, hyphens, and underscores"
+        );
+      }
+      if (customAlias.length < 3 || customAlias.length > 20) {
+        return toast.error("Custom alias must be between 3 and 20 characters");
+      }
+    }
+
     setLoading(true);
     try {
       const payload = { longUrl };
-      if (customAlias) payload.shortCode = customAlias;
-      const { data } = await axios.post(`${API_BASE_URL}/generateurl`, payload);
-      const newUrl = { shortUrl: data.shorturl, longUrl };
-      setShortUrl(data.shorturl);
+      if (customAlias) payload.alias = customAlias;
+      const { data } = await axios.post(
+        `${API_BASE_URL}/url/shorten`,
+        payload
+      );
+      const newUrl = {
+        id: data.shortUrl,
+        shortUrl: data.shortUrl,
+        longUrl: data.longUrl,
+      };
+
+      setShortUrl(data.shortUrl);
       await addUrlToDB(newUrl);
-      setUrls([...urls, newUrl]); 
+      setUrls([...urls, newUrl]);
 
       setLongUrl("");
       setCustomAlias("");
+      toast.success("URL shortened successfully!");
     } catch (error) {
-      toast.error(error.response.data);
-    }
-    finally{
+      console.log("Error", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        "An error occurred while shortening the URL";
+      toast.error(errorMessage);
+    } finally {
       setLoading(false);
     }
   };
@@ -221,9 +258,7 @@ function Table({ urls, setUrls }) {
           <table className="table-auto min-w-full text-left">
             <thead className="bg-gray-700">
               <tr>
-                <th className="p-4 border-r border-gray-400 ">
-                  Short Link
-                </th>
+                <th className="p-4 border-r border-gray-400 ">Short Link</th>
                 <th className="p-4 border-r border-gray-400 whitespace-nowrap hidden sm:table-cell">
                   Original Link
                 </th>
@@ -300,11 +335,12 @@ function URLModal({ url, setUrls, onClose }) {
     async function fetchAnalytics() {
       try {
         const { data } = await axios.get(
-          `${API_BASE_URL}/analytics/${url.shortUrl.split("/").pop()}`
+          `${API_BASE_URL}/url/analytics/${url.shortUrl.split("/").pop()}`
         );
-        setAnalytics(data.clickcount);
+        setAnalytics(data.data.clickcount);
       } catch (err) {
-        console.error("Failed to load analytics");
+        console.error("Failed to load analytics:", err);
+        toast.error("Failed to load analytics data");
       } finally {
         setLoading(false);
       }
@@ -316,11 +352,13 @@ function URLModal({ url, setUrls, onClose }) {
   const handleSaveLongUrl = async () => {
     setSaving(true);
     try {
-      await axios.post(`${API_BASE_URL}/editlinkdestination`, {
-        shorturl: url.shortUrl.split("/").pop(),
-        newLongUrl: longUrl,
-      });
-      
+      await axios.put(
+        `${API_BASE_URL}/url/edit/${url.shortUrl.split("/").pop()}`,
+        {
+          newLongUrl: longUrl,
+        }
+      );
+
       setUrls((prev) =>
         prev.map((u) => (u.shortUrl === url.shortUrl ? { ...u, longUrl } : u))
       );
@@ -328,7 +366,14 @@ function URLModal({ url, setUrls, onClose }) {
       toast.success("Long URL updated!");
       onClose();
     } catch (err) {
-      toast.error("Error updating URL");
+      console.error("Error updating URL:", err);
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.response?.data ||
+        err.message ||
+        "Error updating URL";
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -339,15 +384,21 @@ function URLModal({ url, setUrls, onClose }) {
     if (window.confirm("Are you sure you want to delete this short URL?")) {
       try {
         await axios.delete(
-          `${API_BASE_URL}/delete/${url.shortUrl.split("/").pop()}`
+          `${API_BASE_URL}/url/${url.shortUrl.split("/").pop()}`
         );
         setUrls((prev) => prev.filter((u) => u.shortUrl !== url.shortUrl));
         await deleteUrlFromDB(url.shortUrl);
         toast.success("Short URL deleted!");
         onClose();
       } catch (err) {
-        console.log(err)
-        toast.error("Error deleting short URL.");
+        console.error("Error deleting URL:", err);
+        const errorMessage =
+          err.response?.data?.error ||
+          err.response?.data?.message ||
+          err.response?.data ||
+          err.message ||
+          "Error deleting short URL";
+        toast.error(errorMessage);
       }
     }
   };
@@ -358,7 +409,7 @@ function URLModal({ url, setUrls, onClose }) {
         <h2 className="text-2xl font-bold text-blue-400">URL Details</h2>
 
         {loading ? (
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <svg className="pl" width="240" height="240" viewBox="0 0 240 240">
               <circle
                 className="pl__ring pl__ring--a"
@@ -459,6 +510,4 @@ function URLModal({ url, setUrls, onClose }) {
   );
 }
 
-
-
-export default URLShortener
+export default URLShortener;

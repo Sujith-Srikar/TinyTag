@@ -34,7 +34,7 @@ function QRCode() {
         formData.append("dark", foreColor);
         formData.append("light", bgColor);
 
-        const res = await axios.post(`${API_BASE_URL}/generateqr`,
+        const res = await axios.post(`${API_BASE_URL}/qr/generate`,
           formData,
           {
             responseType: "arraybuffer",

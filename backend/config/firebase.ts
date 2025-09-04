@@ -1,10 +1,10 @@
-const admin = require("firebase-admin");
-require("dotenv").config();
+import admin from "firebase-admin"
 
-// Parse the Firebase service account JSON from environment variable
+if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+  throw new Error("FIREBASE_SERVICE_ACCOUNT environment variable is not set");
+}
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-// Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -15,4 +15,4 @@ const db = admin.firestore();
 // Reference to the "url" collection
 const URL = db.collection("url");
 
-module.exports = URL;
+export default URL;
