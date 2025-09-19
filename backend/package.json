@@ -1,7 +1,12 @@
 {
-  "name": ".",
+  "name": "tinytag-backend",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "bun run index.ts",
+    "start": "bun run dist/index.js"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/cors": "^2.8.19",
