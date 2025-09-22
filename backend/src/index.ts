@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import "dotenv/config";
 
 import qrRoute from "./routes/qrRoutes";
 import urlRoute from "./routes/urlRoutes";
