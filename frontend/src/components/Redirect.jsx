@@ -14,7 +14,7 @@ export function Redirect() {
       try {
         const res = await axios.get(`${API_BASE_URL}/url/${shorturl}`);
         setValidUrl(true);
-        window.location.href = res.data;
+        window.location.href = res.data.longUrl;
       } catch (error) {
         console.error("Error fetching URL:", error);
         setValidUrl(false);
