@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "bun run src/index.ts",
-    "start": "node -r dotenv/config dist/index.js",
-    "start:bun": "bun run --env-file=.env dist/index.js"
+    "start": "bun run dist/index.js",
+    "start:prod": "cross-env NODE_ENV=production bun --env-file=.env ./dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest",
