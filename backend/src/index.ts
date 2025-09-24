@@ -4,6 +4,7 @@ import "dotenv/config";
 
 import qrRoute from "./routes/qrRoutes";
 import urlRoute from "./routes/urlRoutes";
+import healthRoute from "./routes/healthRoutes";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -25,5 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/qr", qrRoute);
 app.use("/api/url", urlRoute);
+app.use("/api/health", healthRoute);
 
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
