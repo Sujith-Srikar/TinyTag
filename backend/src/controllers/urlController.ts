@@ -56,7 +56,7 @@ async function urlRedirection(req: Request, res: Response) {
     }
 
     const longUrl = await urlRedirectionService(shortCode);
-    res.redirect(301, longUrl);
+    res.status(200).json({data: longUrl});
   } catch (error: any) {
     console.error("URL redirection error:", error);
 
