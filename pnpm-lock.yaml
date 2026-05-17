@@ -89,6 +89,9 @@ importers:
         specifier: ^2.105.4
         version: 2.105.4
     devDependencies:
+      '@repo/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
