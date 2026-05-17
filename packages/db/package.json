@@ -1,15 +1,22 @@
 {
   "name": "@repo/db",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "db:init": "pnpm dlx supabase init",
+    "db:login": "pnpm dlx supabase login",
+    "db:link": "pnpm dlx supabase link",
+    "db:new": "pnpm dlx supabase migration new",
+    "db:push": "pnpm dlx supabase db push",
+    "db:types": "pnpm dlx supabase gen types typescript --linked > ./src/types.ts"
   },
   "devDependencies": {
-    "@repo/typescript-config": "*"
+    "@repo/typescript-config": "workspace:*",
+    "supabase": "^2.98.2"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4"
