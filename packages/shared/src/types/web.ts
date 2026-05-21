@@ -38,3 +38,12 @@ export const createErrorResponse = (error: string): ErrorResponse => ({
   data: null,
   error,
 });
+
+export type LogLevel = "info" | "warn" | "error" | "debug";
+
+export interface LogMessage {
+  level: LogLevel;
+  message: string;
+  timestamp: string;
+  data?: unknown;
+}
