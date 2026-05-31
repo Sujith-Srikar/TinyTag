@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { publicProcedure, createTRPCRouter } from "../init";
 import { logger } from "@repo/shared";
 import { z } from "zod";
-import { create_short_url, edit_long_url } from "@repo/db";
-import { generateSlug } from "../../utils/generate-slug";
+import { create_short_url, delete_url, edit_long_url } from "@repo/db";
+import { LinkBuilderFormSchema } from "@repo/shared";
 
 export const postRouter = createTRPCRouter({
   shortenUrl: publicProcedure
@@ -12,49 +12,29 @@ export const postRouter = createTRPCRouter({
       docs: {
         description:
           "Creates and stores a shortened URL with collision-safe slug generation.",
-        tags: ["urls", "shortener", "links"],
+        tags: ["urls", "shortener", "links", "create"],
       },
     })
-    .input(
-      z.object({
-        customAlias: z.string().optional(),
-        longUrl: z.url(),
-      }),
-    )
+    .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        for (let i = 0; i < 2; i++) {
-          const slug: string = opts.input.customAlias ?? generateSlug();
+        const input = opts.input;
+        const error = await create_short_url(input);
 
-          const error = await create_short_url(slug, opts.input.longUrl);
-
-          if (!error) {
-            return {
-              success: true,
-              message: "ShortUrl Created Successfully",
-              slug,
-            };
-          }
-
-          if (error.code === "23505") {
-            continue;
-          }
-
+        if (error) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to create short url",
           });
         }
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Slug collision occurred",
-        });
+
+        return {
+          success: true,
+          message: "ShortUrl Created Successfully",
+          slug: input.slug,
+        };
       } catch (error) {
         logger.error("Error while creating a shortUrl", error);
-
-        if (error instanceof TRPCError) {
-          throw error;
-        }
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -69,7 +49,7 @@ export const postRouter = createTRPCRouter({
       docs: {
         description:
           "Updates the destination URL associated with an existing short URL slug.",
-        tags: ["urls", "shortener", "links"],
+        tags: ["urls", "shortener", "links", "edit"],
       },
     })
     .input(
@@ -103,6 +83,49 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update long url",
+        });
+      }
+    }),
+
+  deleteUrl: publicProcedure
+    .meta({
+      name: "Delete URL",
+      docs: {
+        description:
+          "Deletes an already existing short URL slug and its associated data.",
+        tags: ["urls", "shortener", "links", "delete"],
+      },
+    })
+    .input(
+      z.object({
+        slug: z.string().min(4).max(10),
+      }),
+    )
+    .mutation(async (opts) => {
+      try {
+        const { data } = await delete_url(opts.input.slug);
+
+        if (data && data.length != 0) {
+          return {
+            success: true,
+            message: "Deleted URL Successfully",
+          };
+        }
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Slug Not Found to Delete",
+        });
+      } catch (error) {
+        logger.error("Error while deleting url", error);
+
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erroe while Deleting URL",
         });
       }
     }),

@@ -23,7 +23,7 @@ export async function GET(_: Request, context: { params: Promise<{ slug: string;
     if (!linksData) {
       return NextResponse.json(createErrorResponse("Slug not found"), { status: StatusCode.NOT_FOUND, });
     }
-    const result = await setRedirectData(slug, linksData.longurl);
+    const result = await setRedirectData(slug, linksData.destination_url);
 
     if (!result) {
       return NextResponse.json(createErrorResponse("Unable to cache redirect data"), { status: StatusCode.INTERNAL_SERVER_ERROR, });
@@ -31,7 +31,7 @@ export async function GET(_: Request, context: { params: Promise<{ slug: string;
 
     await setAnalyticsData(slug);
 
-    return NextResponse.redirect(linksData.longurl, 302);
+    return NextResponse.redirect(linksData.destination_url, 302);
   } catch (error) {
     console.log("Error while redirecting:", error);
 

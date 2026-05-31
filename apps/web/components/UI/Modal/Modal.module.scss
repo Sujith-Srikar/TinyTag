@@ -1,0 +1,226 @@
+/* ──────────────────────────────────────────────────────────
+   Modal Overlay
+────────────────────────────────────────────────────────── */
+
+.dialogOverlay,
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+
+  background: rgba(10, 10, 14, 0.34);
+
+  backdrop-filter: blur(18px);
+
+  will-change: opacity, backdrop-filter;
+
+  &[data-state="open"] {
+    animation: overlayShow 220ms ease forwards;
+  }
+
+  &[data-state="closed"] {
+    animation: overlayHide 180ms ease forwards;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Desktop Dialog
+────────────────────────────────────────────────────────── */
+
+.dialogContent {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+
+  margin: auto;
+
+  width: calc(100vw - 32px);
+  max-width: 448px;
+
+  height: fit-content;
+  max-height: min(90vh, 720px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: var(--bg-surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-xl);
+
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.28),
+    0 8px 24px rgba(0, 0, 0, 0.18);
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+
+  will-change: transform, opacity;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 9999px;
+  }
+
+  &[data-state="open"] {
+    animation: dialogShow 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  &[data-state="closed"] {
+    animation: dialogHide 180ms ease forwards;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Mobile Drawer
+────────────────────────────────────────────────────────── */
+
+.drawerContent {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  max-height: 92dvh;
+
+  overflow: hidden;
+
+  background: var(--bg-surface);
+
+  border-top: 1px solid var(--border);
+
+  border-radius: 24px 24px 0 0;
+
+  box-shadow:
+    0 -8px 32px rgba(0, 0, 0, 0.12),
+    0 -24px 64px rgba(0, 0, 0, 0.18);
+
+  will-change: transform;
+}
+
+.drawerBody {
+  flex: 1;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 9999px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Drawer Handle
+────────────────────────────────────────────────────────── */
+
+.drawerHandleWrap {
+  position: sticky;
+  top: 0;
+
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 14px 0 8px;
+
+  background: var(--bg-surface);
+
+  border-radius: inherit;
+}
+
+.drawerHandle {
+  width: 42px;
+  height: 5px;
+
+  border-radius: 9999px;
+
+  background: var(--border-strong);
+
+  opacity: 0.9;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Animations
+────────────────────────────────────────────────────────── */
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialogShow {
+  from {
+    opacity: 0;
+    transform:
+      translateY(12px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+@keyframes dialogHide {
+  from {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform:
+      translateY(6px)
+      scale(0.98);
+  }
+}

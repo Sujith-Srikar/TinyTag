@@ -1,0 +1,34 @@
+// File: apps/web/components/ui/Logo.module.scss
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+
+  &[data-collapsed='true'] {
+    justify-content: center;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  transition: transform var(--transition-spring);
+
+  .logo:hover & {
+    transform: rotate(-8deg) scale(1.05);
+  }
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.accent {
+  color: var(--accent);
+}

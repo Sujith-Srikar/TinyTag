@@ -1,0 +1,59 @@
+// File: apps/web/components/ui/ThemeToggle.module.scss
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+
+  &:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+  }
+
+  &.collapsed {
+    justify-content: center;
+    padding: 8px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.iconWrap {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.icon {
+  position: absolute;
+  inset: 0;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transform: rotate(-30deg) scale(0.7);
+  transition:
+    opacity var(--transition-slow),
+    transform var(--transition-spring);
+
+  &.active {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
