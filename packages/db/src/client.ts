@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import {Database} from './types.js';
-import {env} from '@repo/shared';
+import {env} from '@repo/shared/env';
 
 export const db = createClient<Database>(
   env.NEXT_PUBLIC_SUPABASE_URL,

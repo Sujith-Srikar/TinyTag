@@ -42,24 +42,39 @@ export type Database = {
       links: {
         Row: {
           clicks_count: number
+          comments: string | null
           created_at: string
+          destination_url: string
+          expires_at: string | null
           id: string
-          longurl: string
+          is_active: boolean
+          password_hash: string | null
           slug: string
+          tags: string[] | null
         }
         Insert: {
           clicks_count?: number
+          comments?: string | null
           created_at?: string
+          destination_url: string
+          expires_at?: string | null
           id?: string
-          longurl: string
+          is_active?: boolean
+          password_hash?: string | null
           slug: string
+          tags?: string[] | null
         }
         Update: {
           clicks_count?: number
+          comments?: string | null
           created_at?: string
+          destination_url?: string
+          expires_at?: string | null
           id?: string
-          longurl?: string
+          is_active?: boolean
+          password_hash?: string | null
           slug?: string
+          tags?: string[] | null
         }
         Relationships: []
       }

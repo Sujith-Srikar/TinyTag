@@ -15,9 +15,9 @@
     "db:types": "pnpm dlx supabase gen types typescript --linked > ./src/types.ts"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/shared": "workspace:*",
-    "supabase": "^2.98.2"
+    "@repo/typescript-config": "workspace:*",
+    "supabase": "^2.101.0"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4"
