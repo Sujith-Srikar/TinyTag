@@ -21,7 +21,7 @@ interface LinkCardProps {
   onDelete?: (link: LinkRecord) => void;
 }
 
-const BASE_URL = "tt.vercel.app";
+const BASE_URL = "ttags.vercel.app";
 
 export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
