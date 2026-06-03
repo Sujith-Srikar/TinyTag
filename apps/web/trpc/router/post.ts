@@ -4,6 +4,7 @@ import { logger } from "@repo/shared";
 import { z } from "zod";
 import { create_short_url, delete_url, edit_long_url } from "@repo/db";
 import { LinkBuilderFormSchema } from "@repo/shared";
+import { deleteData } from "@repo/cache";
 
 export const postRouter = createTRPCRouter({
   shortenUrl: publicProcedure
@@ -52,20 +53,13 @@ export const postRouter = createTRPCRouter({
         tags: ["urls", "shortener", "links", "edit"],
       },
     })
-    .input(
-      z.object({
-        slug: z.string(),
-        newLongUrl: z.url(),
-      }),
-    )
+    .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const error = await edit_long_url(
-          opts.input.slug,
-          opts.input.newLongUrl,
-        );
+        const error = await edit_long_url(opts.input);
 
         if (!error) {
+          deleteData(opts.input.slug);
           return {
             success: true,
             message: "Updated Long Url Successfully",

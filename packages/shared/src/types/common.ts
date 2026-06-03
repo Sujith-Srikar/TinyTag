@@ -23,13 +23,13 @@ export type LinkBuilderValues = z.infer<typeof LinkBuilderFormSchema>;
 
 export type LinkRecord = {
   clicksCount: number;
-  comments: string | null;
+  comments?: string;
   destinationUrl: string;
-  expiresAt: string | null;
+  expiresAt?: string;
   id: string;
-  password: string | null;
+  password?: string;
   slug: string;
-  tags: string[] | null;
+  tags?: string[];
   isActive: boolean,
   createdAt: string
 }
