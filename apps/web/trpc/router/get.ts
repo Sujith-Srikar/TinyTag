@@ -45,12 +45,12 @@ export const getRouter = createTRPCRouter({
         const mappedResponse: LinkRecord[] = res.map((link) => ({
           destinationUrl: link.destination_url,
           slug: link.slug,
-          comments: link.comments,
-          tags: link.tags,
+          comments: link.comments ?? undefined,
+          tags: link.tags ?? undefined,
           clicksCount: link.clicks_count,
-          expiresAt: link.expires_at,
+          expiresAt: link.expires_at ?? undefined,
           id: link.id,
-          password: link.password_hash,
+          password: link.password_hash ?? undefined,
           isActive: link.is_active,
           createdAt: link.created_at
         }))
