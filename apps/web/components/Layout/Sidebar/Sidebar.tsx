@@ -9,7 +9,7 @@ import { LayoutDashboard, ChartNoAxesCombined, Wrench } from "lucide-react";
 
 const NAV_ITEMS = [
   {
-    href: "/",
+    href: "/dashboard",
     label: "Dashboard",
     icon: <LayoutDashboard />,
   },

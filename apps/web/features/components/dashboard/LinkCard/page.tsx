@@ -13,11 +13,12 @@ import {
 } from "@/utils/mock-data";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
+import { LinkBuilderFields } from "@/types/linkBuilder";
 
 interface LinkCardProps {
   link: LinkRecord;
   index?: number;
-  onEdit?: (link: LinkRecord) => void;
+  onEdit?: (link: LinkBuilderFields) => void;
   onDelete?: (link: LinkRecord) => void;
 }
 
@@ -28,7 +29,15 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const shortUrl = `${BASE_URL}/${link.slug}`;
 
-  // Close menu on outside click
+  const editLink: LinkBuilderFields = {
+    destinationUrl: link.destinationUrl,
+    slug: link.slug,
+    expiresAt: link.expiresAt,
+    comments: link.comments,
+    tags: link.tags,
+    password: link.password
+  }
+
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
@@ -41,7 +50,6 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   }, [menuOpen]);
 
   const handleCopy = async () => {
-    
     if (navigator?.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(`https://${shortUrl}`);
@@ -50,7 +58,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
         console.error("Modern Clipboard API failed, trying fallback:", error);
       }
     }
-  }
+  };
 
   return (
     <div
@@ -82,7 +90,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
           <div className={styles.titleRow}>
             <span className={styles.title}>{link.destinationUrl}</span>
             {!link.isActive && <Badge variant="destructive">Inactive</Badge>}
-              {link.expiresAt && link.isActive && (
+            {link.expiresAt && link.isActive && (
               <Badge variant="outline">
                 Expires {formatDate(link.expiresAt)}
               </Badge>
@@ -119,7 +127,12 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
           <span className={styles.slugBase}>{BASE_URL}/</span>
           <span className={styles.slugPart}>{link.slug}</span>
         </Link>
-        <Button value={`https://${shortUrl}`} size="icon-sm" onClick={handleCopy}>
+        <Button
+          variant="outline"
+          value={`https://${shortUrl}`}
+          size="icon-sm"
+          onClick={handleCopy}
+        >
           <Copy size={14} />
         </Button>
       </div>
@@ -172,11 +185,11 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
               </svg>
               Analytics
             </Link>
-            <button
-              className={styles.menuItem}
+            <Button
+              variant="secondary"
               onClick={() => {
                 setMenuOpen(false);
-                onEdit?.(link);
+                onEdit?.(editLink);
               }}
             >
               <svg viewBox="0 0 14 14" fill="none">
@@ -188,13 +201,13 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
                 />
               </svg>
               Edit
-            </button>
-            <button
-              className={[styles.menuItem, styles.menuItemDanger].join(" ")}
+            </Button>
+            <Button
               onClick={() => {
                 setMenuOpen(false);
                 onDelete?.(link);
               }}
+              variant="destructive"
             >
               <svg viewBox="0 0 14 14" fill="none">
                 <path
@@ -206,7 +219,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
                 />
               </svg>
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>

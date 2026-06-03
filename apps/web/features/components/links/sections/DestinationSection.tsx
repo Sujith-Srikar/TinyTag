@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, FieldDescription, FieldLabel, FieldError } from "@repo/ui";
+import { Field, FieldLabel, FieldError } from "@repo/ui";
 import { Input } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";

@@ -31,7 +31,7 @@ export default function DashboardPage() {
       <LinkList
         links={links}
         onCreateNew={() => linkBuilder.openBuilder()}
-        onEdit={() => linkBuilder.openBuilder()}
+        onEdit={(link) => linkBuilder.openBuilder(link)}
         onDelete={() => linkBuilder.openBuilder()}
       />
 

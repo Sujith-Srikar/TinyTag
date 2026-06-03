@@ -5,6 +5,7 @@ import { Button, Input } from "@repo/ui";
 import { LinkCard } from "../LinkCard/page";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
+import { LinkBuilderFields } from "@/types/linkBuilder";
 
 type SortKey = "clicks" | "createdAt" | "title";
 type FilterStatus = "all" | "active" | "inactive";
@@ -12,7 +13,7 @@ type FilterStatus = "all" | "active" | "inactive";
 interface LinkListProps {
   links: LinkRecord[];
   onCreateNew: () => void;
-  onEdit: (link: LinkRecord) => void;
+  onEdit: (link: LinkBuilderFields) => void;
   onDelete: (link: LinkRecord) => void;
 }
 

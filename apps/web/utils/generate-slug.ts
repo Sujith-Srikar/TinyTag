@@ -15,7 +15,7 @@ export const generateSlugFromUrl  = (url: string): string => {
         .replace(/[^a-z0-9-]/g, "-")
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "")
-        .slice(0, 14);
+        .slice(0, 10);
     } catch {
       return generateRandomSlug();
     }

@@ -25,6 +25,8 @@ import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
+import { Link } from "lucide-react";
+import { useEffect } from "react";
 
 export const LinkBuilder = () => {
   const methods = useForm<LinkBuilderFields>({
@@ -35,16 +37,21 @@ export const LinkBuilder = () => {
 
   const queryClient = useQueryClient();
 
-  const { handleSubmit } = methods;
-  const { isOpen, closeBuilder } = useLinkBuilderStore();
-  const linkBuilderStore = useLinkBuilderStore();
+  const {
+    handleSubmit,
+    formState: { dirtyFields },
+    reset
+  } = methods;
+  const { isOpen, closeBuilder, selectedLink } = useLinkBuilderStore();
   const trpc = useTRPC();
   const createSlug = useMutation(
     trpc.post.shortenUrl.mutationOptions({
       onSuccess: (data) => {
-        console.log("Data Sucess Creatte Slug:", data);
+        console.log("Slug Created Successfully:", data);
         toast.success("Slug Created Successfully");
-        queryClient.invalidateQueries({queryKey: trpc.get.getAllUrls.queryKey()})
+        queryClient.invalidateQueries({
+          queryKey: trpc.get.getAllUrls.queryKey(),
+        });
       },
       onError: (err) => {
         console.log("SLug creation error:", err);
@@ -53,15 +60,60 @@ export const LinkBuilder = () => {
     }),
   );
 
+  const editSlug = useMutation(
+    trpc.post.editLongUrl.mutationOptions({
+      onSuccess: (data) => {
+        console.log("Slug Ediited Successfully:", data);
+        toast.success("Slug Ediited Successfully");
+        queryClient.invalidateQueries({
+          queryKey: trpc.get.getAllUrls.queryKey(),
+        });
+      },
+      onError: (err) => {
+        console.log("Slug not Edited error:", err);
+        toast.error("Slug not Edited");
+      },
+    }),
+  );
+
+  useEffect(() => {
+    if (!selectedLink) {
+      reset({
+        destinationUrl: "",
+        slug: "",
+        comments: "",
+      });
+      return;
+    }
+
+    reset({
+      destinationUrl: selectedLink.destinationUrl ?? "",
+      slug: selectedLink.slug ?? "",
+      comments: selectedLink.comments ?? "",
+    });
+  }, [selectedLink, reset]);
+
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
     try {
-      createSlug.mutate({
-        destinationUrl: data.destinationUrl,
-        slug: data.slug,
-        comments: data.comments,
-        expiresAt: data.expiresAt
-      });
-      linkBuilderStore.closeBuilder();
+      if (selectedLink) {
+        let editObj: LinkBuilderFields = {
+          slug: data.slug,
+          destinationUrl: data.destinationUrl,
+          ...(dirtyFields.comments && { comments: data.comments }),
+          ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt }),
+          ...(dirtyFields.password && { password: data.password }),
+          ...(dirtyFields.tags && { tags: data.tags }),
+        };
+        editSlug.mutate(editObj);
+      } else {
+        createSlug.mutate({
+          destinationUrl: data.destinationUrl,
+          slug: data.slug,
+          comments: data.comments,
+          expiresAt: data.expiresAt,
+        });
+      }
+      closeBuilder();
     } catch (error) {
       logger.error("Error while creating Slug:", error);
     }
@@ -79,7 +131,7 @@ export const LinkBuilder = () => {
             title="New link"
             description="Create a polished short link with a Dub-style workflow."
             onClose={closeBuilder}
-            icon={<HeaderIcon />}
+            icon={<Link />}
           />
 
           <ModalBody className={styles.body}>
@@ -146,7 +198,7 @@ export const LinkBuilder = () => {
               Cancel
             </Button>
             <Button type="submit">
-              Create link
+              {selectedLink ? "Edit Link" : "Create link"}
             </Button>
           </ModalFooter>
         </form>
@@ -154,28 +206,3 @@ export const LinkBuilder = () => {
     </Modal>
   );
 };
-
-function HeaderIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M8.5 10.5a4 4 0 0 0 5.657 0l1.414-1.414a4 4 0 0 0-5.657-5.657l-.707.707"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.5 7.5a4 4 0 0 0-5.657 0L2.43 8.914a4 4 0 0 0 5.657 5.657l.707-.707"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}

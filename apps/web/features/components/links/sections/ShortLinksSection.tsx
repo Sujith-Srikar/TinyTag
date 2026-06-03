@@ -50,6 +50,7 @@ export const ShortLinkSection = () => {
               onClick={handleShuffle}
               aria-label="Generate random slug"
               title="Generate random slug"
+              type="button"
             >
               <Shuffle size={12} />
             </Button>
@@ -59,6 +60,7 @@ export const ShortLinkSection = () => {
               onClick={handleSmartShuffle}
               aria-label="Generate slug from destination"
               title="Generate slug from destination"
+              type="button"
             >
               <Sparkles size={12} />
             </Button>
