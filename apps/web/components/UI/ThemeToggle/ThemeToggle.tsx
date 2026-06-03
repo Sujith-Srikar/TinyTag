@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import styles from "./ThemeToggle.module.scss";
 import { Button } from "@repo/ui";
+import { useEffect, useState } from "react";
 
 interface ThemeToggleProps {
   showLabel?: boolean;
@@ -13,8 +14,18 @@ export function ThemeToggle({
   showLabel = false,
   collapsed = false,
 }: ThemeToggleProps) {
-  const { themes, resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <Button

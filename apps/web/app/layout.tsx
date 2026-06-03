@@ -27,33 +27,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <Toaster />
+          <Toaster position="top-center" />
           <div className="app-shell">
             <Sidebar />
             <main className="app-main">{children}</main>
           </div>
         </Providers>
-
-        <style>{`
-          .app-shell {
-            display: flex;
-            min-height: 100vh;
-          }
-
-          .app-main {
-            flex: 1;
-            min-width: 0;
-            margin-left: var(--sidebar-width);
-            background-color: var(--bg-base);
-            transition: margin-left 160ms ease;
-          }
-
-          @media (max-width: 768px) {
-            .app-main {
-              margin-left: 0;
-            }
-          }
-        `}</style>
       </body>
     </html>
   );
