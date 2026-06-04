@@ -6,6 +6,7 @@ import { LinkCard } from "../LinkCard/page";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
 import { LinkBuilderFields } from "@/types/linkBuilder";
+import { Frown } from "lucide-react";
 
 type SortKey = "clicks" | "createdAt" | "title";
 type FilterStatus = "all" | "active" | "inactive";
@@ -113,21 +114,7 @@ export function LinkList({
       {/* List */}
       {filtered.length === 0 ? (
         <div className={styles.empty}>
-          <svg viewBox="0 0 48 48" fill="none" width={48} height={48}>
-            <circle
-              cx="24"
-              cy="24"
-              r="20"
-              stroke="var(--border)"
-              strokeWidth="2"
-            />
-            <path
-              d="M16 22a6 6 0 0 1 12 0M20 26h.01M28 26h.01"
-              stroke="var(--text-muted)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Frown />
           <p className={styles.emptyTitle}>No links found</p>
           <p className={styles.emptyText}>
             {search

@@ -296,3 +296,28 @@
     margin-left: 0;
   }
 }
+
+[data-slot="tooltip-content"] {
+  opacity: 0;
+  transform: scale(0.98);
+
+  transition:
+    opacity 50ms ease-out,
+    transform 50ms ease-out;
+}
+
+[data-slot="tooltip-content"][data-state="instant-open"],
+[data-slot="tooltip-content"][data-state="delayed-open"] {
+  opacity: 1;
+  transform: scale(1);
+
+  transition:
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="tooltip-content"] {
+    transition: none !important;
+  }
+}

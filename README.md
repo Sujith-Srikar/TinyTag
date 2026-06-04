@@ -157,3 +157,169 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.dev/docs/reference/configuration)
 - [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+
+```
+├── apps/
+│   └── web/
+│       ├── app/
+│       │   ├── [slug]/
+│       │   │   └── route.ts
+│       │   ├── api/
+│       │   │   └── trpc/
+│       │   │       └── [trpc]/
+│       │   │           └── route.ts
+│       │   ├── dashboard/
+│       │   │   └── page.tsx
+│       │   ├── docs/
+│       │   │   └── route.ts
+│       │   ├── links/
+│       │   │   └── [id]/
+│       │   │       ├── page.module.scss
+│       │   │       └── page.tsx
+│       │   ├── globals.scss
+│       │   ├── layout.tsx
+│       │   ├── page.module.css
+│       │   └── page.tsx
+│       ├── components/
+│       │   ├── Layout/
+│       │   │   ├── Sidebar/
+│       │   │   │   ├── Sidebar.module.scss
+│       │   │   │   └── Sidebar.tsx
+│       │   │   ├── TopBar/
+│       │   │   │   ├── TopBar.module.scss
+│       │   │   │   └── TopBar.tsx
+│       │   │   └── index.ts
+│       │   └── UI/
+│       │       ├── Logo/
+│       │       │   ├── Logo.module.scss
+│       │       │   └── Logo.tsx
+│       │       ├── Modal/
+│       │       │   ├── DeleteConfirmModal.module.scss
+│       │       │   ├── DeleteConfirmModal.tsx
+│       │       │   ├── Modal.module.scss
+│       │       │   ├── Modal.tsx
+│       │       │   ├── ModalParts.module.scss
+│       │       │   └── ModalParts.tsx
+│       │       ├── ThemeToggle/
+│       │       │   ├── ThemeToggle.module.scss
+│       │       │   └── ThemeToggle.tsx
+│       │       └── index.ts
+│       ├── features/
+│       │   └── components/
+│       │       ├── dashboard/
+│       │       │   ├── LinkCard/
+│       │       │   │   ├── page.module.scss
+│       │       │   │   └── page.tsx
+│       │       │   ├── LinkList/
+│       │       │   │   ├── page.module.scss
+│       │       │   │   └── page.tsx
+│       │       │   ├── StatsBar/
+│       │       │   │   ├── page.module.scss
+│       │       │   │   └── page.tsx
+│       │       │   └── index.ts
+│       │       └── links/
+│       │           ├── sections/
+│       │           │   ├── CommentSection.tsx
+│       │           │   ├── DestinationSection.tsx
+│       │           │   ├── index.ts
+│       │           │   └── ShortLinksSection.tsx
+│       │           ├── LinkBuilder.module.scss
+│       │           └── LinkBuilder.tsx
+│       ├── hooks/
+│       │   └── useLinkBuilder.ts
+│       ├── providers/
+│       │   ├── Providers.tsx
+│       │   ├── ThemeProvider.tsx
+│       │   └── TRPCProvider.tsx
+│       ├── trpc/
+│       │   ├── router/
+│       │   │   ├── app.ts
+│       │   │   ├── get.ts
+│       │   │   └── post.ts
+│       │   ├── client.ts
+│       │   └── init.ts
+│       ├── types/
+│       │   └── linkBuilder.ts
+│       ├── utils/
+│       │   ├── generate-slug.ts
+│       │   └── mock-data.ts
+│       ├── .gitignore
+│       ├── components.json
+│       ├── eslint.config.js
+│       ├── next.config.js
+│       ├── package.json
+│       ├── postcss.config.mjs
+│       ├── README.md
+│       └── tsconfig.json
+├── packages/
+│   ├── cache/
+│   │   ├── src/
+│   │   │   ├── client.ts
+│   │   │   ├── index.ts
+│   │   │   ├── schema.ts
+│   │   │   └── service.ts
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   ├── db/
+│   │   ├── src/
+│   │   │   ├── queries/
+│   │   │   │   └── index.ts
+│   │   │   ├── client.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   ├── supabase/
+│   │   │   ├── migrations/
+│   │   │   │   ├── 20260516170122_create_links_table.sql
+│   │   │   │   ├── 20260531034846_rename-link-columns.sql
+│   │   │   │   ├── 20260531042533_rename-description-to-comments.sql
+│   │   │   │   └── 20260531052151_add-isActive-column.sql
+│   │   │   └── config.toml
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   ├── eslint-config/
+│   │   ├── base.js
+│   │   ├── next.js
+│   │   ├── package.json
+│   │   ├── react-internal.js
+│   │   └── README.md
+│   ├── shared/
+│   │   ├── src/
+│   │   │   ├── types/
+│   │   │   │   ├── common.ts
+│   │   │   │   └── web.ts
+│   │   │   ├── env.ts
+│   │   │   ├── index.ts
+│   │   │   └── logger.ts
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   ├── typescript-config/
+│   │   ├── base.json
+│   │   ├── nextjs.json
+│   │   ├── package.json
+│   │   └── react-library.json
+│   └── ui/
+│       ├── src/
+│       │   ├── components/
+│       │   │   ├── badge.tsx
+│       │   │   ├── button.tsx
+│       │   │   ├── field.tsx
+│       │   │   ├── input.tsx
+│       │   │   ├── label.tsx
+│       │   │   ├── separator.tsx
+│       │   │   ├── textarea.tsx
+│       │   │   └── tooltip.tsx
+│       │   ├── lib/
+│       │   │   └── utils.ts
+│       │   └── index.ts
+│       ├── eslint.config.mjs
+│       ├── package.json
+│       └── tsconfig.json
+├── .gitignore
+├── .npmrc
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── README.md
+├── turbo.json
+└── vercel.json
+```

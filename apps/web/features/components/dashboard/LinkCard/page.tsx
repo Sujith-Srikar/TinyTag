@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Copy } from "lucide-react";
+import { Copy, Pencil, Trash } from "lucide-react";
 import { Badge, Button } from "@repo/ui";
 import {
   getDomain,
@@ -187,19 +187,14 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
             </Link>
             <Button
               variant="secondary"
+              size="sm"
               onClick={() => {
                 setMenuOpen(false);
                 onEdit?.(editLink);
               }}
+              className="bg-transparent"
             >
-              <svg viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M2 9L9.5 1.5L12.5 4.5L5 12H2V9Z"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Pencil />
               Edit
             </Button>
             <Button
@@ -208,16 +203,10 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
                 onDelete?.(link);
               }}
               variant="destructive"
+              size="sm"
+              className="bg-transparent"
             >
-              <svg viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M2 3.5h10M5 3.5V2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v1M6 6.5v4M8 6.5v4M3 3.5l.75 8a.5.5 0 0 0 .5.5h5.5a.5.5 0 0 0 .5-.5l.75-8"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Trash />
               Delete
             </Button>
           </div>
