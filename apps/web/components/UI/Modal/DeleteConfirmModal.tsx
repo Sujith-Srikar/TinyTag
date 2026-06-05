@@ -1,90 +1,83 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@repo/ui";
-import { type LinkRecord } from "@/utils/mock-data";
+import { AlertTriangle } from "lucide-react";
+
+import { Modal } from "@/components/UI";
+import {
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/UI/Modal/ModalParts";
+
+import { useLinkBuilderStore } from "@/hooks/useLinkBuilder";
+
 import styles from "./DeleteConfirmModal.module.scss";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
+import { toast } from "sonner";
+import { logger } from "@repo/shared";
+import { useEffect } from "react";
 
-interface DeleteConfirmModalProps {
-  open: boolean;
-  link?: LinkRecord | null;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+export function DeleteConfirmModal() {
+  const { modal, selectedLink, closeModal } = useLinkBuilderStore();
 
-export function DeleteConfirmModal({
-  open,
-  link,
-  onConfirm,
-  onCancel,
-}: DeleteConfirmModalProps) {
-  const [deleting, setDeleting] = useState(false);
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const deleteLink = useMutation(trpc.post.deleteUrl.mutationOptions({
 
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, onCancel]);
+    onSuccess: () => {
+      toast.success('Slug Deleted Successfully');
+      queryClient.invalidateQueries({queryKey: trpc.get.getAllUrls.queryKey()});
+    },
 
-  if (!open || !link) return null;
+    onError: () => {
+      toast.error('Slug Deletion Unsuccessful')
+    }
+  }))
 
-  const handleConfirm = async () => {
-    setDeleting(true);
-    await new Promise((r) => setTimeout(r, 500));
-    setDeleting(false);
-    onConfirm();
-  };
+  const handleDelete = () => {
+    try {
+      if(!selectedLink) return;
+      deleteLink.mutate({slug: selectedLink.slug});
+      closeModal();
+    } catch (error) {
+      logger.error('Error while Deleting Slug:', error)
+    }
+  }
 
   return (
-    <div
-      className={styles.root}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="delete-title"
+    <Modal
+      showModal={modal === "delete"}
+      setShowModal={closeModal}
+      className={styles.modal}
     >
-      <div className={styles.backdrop} onClick={onCancel} aria-hidden="true" />
+      <ModalHeader
+        title="Delete link?"
+        description="This action cannot be undone."
+        onClose={closeModal}
+        icon={<AlertTriangle />}
+        iconVariant="danger"
+      />
 
-      <div className={styles.dialog}>
-        <div className={styles.iconWrap}>
-          <svg viewBox="0 0 24 24" fill="none" width={24} height={24}>
-            <path
-              d="M12 9v4M12 17h.01"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-          </svg>
+      <ModalBody>
+        <div className={styles.content}>
+          <p className={styles.body}>
+            <span className={styles.slug}>/{selectedLink?.slug}</span> will be
+            permanently deleted.
+          </p>
         </div>
+      </ModalBody>
 
-        <h2 className={styles.title} id="delete-title">
-          Delete link?
-        </h2>
-        <p className={styles.body}>
-          <span className={styles.slug}>/{link.slug}</span> will be permanently
-          deleted. This action cannot be undone.
-        </p>
+      <ModalFooter>
+        <Button variant="ghost" type="button" onClick={closeModal}>
+          Cancel
+        </Button>
 
-        <div className={styles.actions}>
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant='destructive'
-            onClick={handleConfirm}
-          >
-            Delete
-          </Button>
-        </div>
-      </div>
-    </div>
+        <Button variant="destructive" type="button" onClick={handleDelete}>
+          Delete
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
 }

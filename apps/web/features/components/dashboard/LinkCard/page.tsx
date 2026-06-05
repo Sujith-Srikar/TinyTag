@@ -19,7 +19,7 @@ interface LinkCardProps {
   link: LinkRecord;
   index?: number;
   onEdit?: (link: LinkBuilderFields) => void;
-  onDelete?: (link: LinkRecord) => void;
+  onDelete?: (link: LinkBuilderFields) => void;
 }
 
 const BASE_URL = "ttags.vercel.app";

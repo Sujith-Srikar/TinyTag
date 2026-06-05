@@ -15,7 +15,7 @@ interface LinkListProps {
   links: LinkRecord[];
   onCreateNew: () => void;
   onEdit: (link: LinkBuilderFields) => void;
-  onDelete: (link: LinkRecord) => void;
+  onDelete: (link: LinkBuilderFields) => void;
 }
 
 export function LinkList({

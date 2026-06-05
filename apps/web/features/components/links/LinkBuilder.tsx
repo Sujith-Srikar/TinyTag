@@ -42,7 +42,7 @@ export const LinkBuilder = () => {
     formState: { dirtyFields },
     reset
   } = methods;
-  const { isOpen, closeBuilder, selectedLink } = useLinkBuilderStore();
+  const { modal, closeModal, selectedLink } = useLinkBuilderStore();
   const trpc = useTRPC();
   const createSlug = useMutation(
     trpc.post.shortenUrl.mutationOptions({
@@ -113,7 +113,7 @@ export const LinkBuilder = () => {
           expiresAt: data.expiresAt,
         });
       }
-      closeBuilder();
+      closeModal();
     } catch (error) {
       logger.error("Error while creating Slug:", error);
     }
@@ -121,8 +121,8 @@ export const LinkBuilder = () => {
 
   return (
     <Modal
-      showModal={isOpen}
-      setShowModal={closeBuilder}
+      showModal={modal === 'create' || modal === 'edit'}
+      setShowModal={closeModal}
       className={styles.modal}
     >
       <FormProvider {...methods}>
@@ -130,7 +130,7 @@ export const LinkBuilder = () => {
           <ModalHeader
             title="New link"
             description="Create a polished short link with a Dub-style workflow."
-            onClose={closeBuilder}
+            onClose={closeModal}
             icon={<Link />}
           />
 
@@ -194,7 +194,7 @@ export const LinkBuilder = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" type="button" onClick={closeBuilder}>
+            <Button variant="ghost" type="button" onClick={closeModal}>
               Cancel
             </Button>
             <Button type="submit">

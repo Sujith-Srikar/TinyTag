@@ -1,18 +1,22 @@
-import {create} from 'zustand';
-import { LinkBuilderFields } from '@/types/linkBuilder';
+import { create } from "zustand";
+import { LinkBuilderFields } from "@/types/linkBuilder";
 
 type LinkBuilderStore = {
-    isOpen: boolean;
-    selectedLink: LinkBuilderFields | null;
+  modal: "create" | "edit" | "delete" | null;
+  selectedLink: LinkBuilderFields | null;
 
-    openBuilder: (link?: LinkBuilderFields) => void;
-    closeBuilder: () => void;
-}
+  openCreate: () => void;
+  openEdit: (link: LinkBuilderFields) => void;
+  openDelete: (link: LinkBuilderFields) => void;
+  closeModal: () => void;
+};
 
 export const useLinkBuilderStore = create<LinkBuilderStore>((set) => ({
-    isOpen: false,
-    selectedLink: null,
+  modal: null,
+  selectedLink: null,
 
-    openBuilder: (link) => set({isOpen: true, selectedLink: link ?? null}),
-    closeBuilder: () => set({isOpen: false, selectedLink: null})
-}))
+  openCreate: () => {set({ modal: "create", selectedLink: null })},
+  openEdit: (link) => set({ modal: "edit", selectedLink: link }),
+  openDelete: (link) => set({ modal: "delete", selectedLink: link }),
+  closeModal: () => set({ modal: null, selectedLink: null }),
+}));
