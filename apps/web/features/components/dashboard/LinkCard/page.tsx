@@ -10,7 +10,7 @@ import {
   formatNumber,
   formatDate,
   getFaviconUrl,
-} from "@/utils/mock-data";
+} from "@/utils/formatters";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
 import { LinkBuilderFields } from "@/types/linkBuilder";
@@ -35,8 +35,8 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
     expiresAt: link.expiresAt,
     comments: link.comments,
     tags: link.tags,
-    password: link.password
-  }
+    password: link.password,
+  };
 
   useEffect(() => {
     if (!menuOpen) return;

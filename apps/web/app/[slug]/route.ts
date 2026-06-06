@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRedirectData, setAnalyticsData, setRedirectData } from "@repo/cache";
 import { StatusCode, createErrorResponse } from "@repo/shared";
-import { getLinkBySlug } from '@repo/db'
+import { getLinkBySlug, updateClicksCount } from '@repo/db'
 
 export async function GET(_: Request, context: { params: Promise<{ slug: string; }> }) {
   try {
@@ -14,7 +14,7 @@ export async function GET(_: Request, context: { params: Promise<{ slug: string;
     const cached = await getRedirectData(slug);
 
     if (cached) {
-      await setAnalyticsData(slug);
+      void updateClicksCount(slug).catch((err) => console.log(err))
       return NextResponse.redirect(cached.longUrl, 302);
     }
 

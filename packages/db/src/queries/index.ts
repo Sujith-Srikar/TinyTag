@@ -60,10 +60,25 @@ const delete_url = async (slug: string) => {
   return res;
 };
 
+const updateClicksCount = async ( slug: string ) => {
+  const { data, error } = await db.rpc("increment_click_count", {
+    target_slug: slug
+  });
+
+  if (error) {
+    throw new Error(
+      `Failed to increment click count for slug "${slug}": ${error.message}`,
+    );
+  }
+
+  return data ?? false;
+}
+
 export {
   getAllLinks,
   getLinkBySlug,
   create_short_url,
   edit_long_url,
   delete_url,
+  updateClicksCount
 };

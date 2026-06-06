@@ -83,7 +83,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_click_count: { Args: { target_slug: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
