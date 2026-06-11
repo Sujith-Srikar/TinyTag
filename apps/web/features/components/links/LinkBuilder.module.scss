@@ -1,9 +1,9 @@
 .modal {
-  width: min(1100px, calc(100vw - 24px)) !important;
-  max-width: none !important;
-  max-height: min(92vh, 860px) !important;
-  padding: 0 !important;
-  overflow: hidden !important;
+  width: min(1100px, calc(100vw - 24px));
+  max-width: none;
+  max-height: min(92vh, 860px);
+  padding: 0;
+  overflow: hidden;
 }
 
 .builder {
@@ -28,15 +28,15 @@
   padding-top: 16px;
 }
 
-.mainColumn,
-.sideRail {
+.leftColumn,
+.rigthColumn {
   min-width: 0;
 }
 
-.mainColumn {
+.leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 36px;
 }
 
 .sectionCard,
@@ -51,7 +51,7 @@
   padding: 18px;
 }
 
-.sideRail {
+.rigthColumn {
   position: relative;
 }
 
@@ -142,14 +142,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
 }
 
 .shortLinkActions {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
 @media (max-width: 960px) {

@@ -128,28 +128,22 @@ export const LinkBuilder = () => {
       <FormProvider {...methods}>
         <form className={styles.builder} onSubmit={handleSubmit(onSubmit)}>
           <ModalHeader
-            title="New link"
-            description="Create a polished short link with a Dub-style workflow."
+            title={selectedLink? "Edit Link" : "New link"}
+            description={`${selectedLink ? "Edit" : "Create"} a polished short link`}
             onClose={closeModal}
             icon={<Link />}
           />
 
           <ModalBody className={styles.body}>
-            <div className={styles.mainColumn}>
-              <section className={styles.sectionCard}>
+            <div className={styles.leftColumn}>
                 <DestinationSection />
-              </section>
 
-              <section className={styles.sectionCard}>
                 <ShortLinkSection />
-              </section>
 
-              <section className={styles.sectionCard}>
                 <CommentSection />
-              </section>
             </div>
 
-            <aside className={styles.sideRail}>
+            <aside className={styles.rightColumn}>
               <div className={styles.previewCard}>
                 <div className={styles.previewTopRow}>
                   <Badge variant="default">Draft saved</Badge>

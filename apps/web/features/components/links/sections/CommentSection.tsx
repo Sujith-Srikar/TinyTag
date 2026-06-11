@@ -6,6 +6,7 @@ import {
   FieldLabel,
   FieldError,
   Textarea,
+  InfoTooltip,
 } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";
@@ -19,10 +20,13 @@ export const CommentSection = () => {
   return (
     <>
       <Field>
-        <FieldLabel htmlFor="comment">Comments</FieldLabel>
+        <div className="labelWithTooltip">
+          <FieldLabel htmlFor="comment">Comments</FieldLabel>
+          <InfoTooltip content="Use comments to add context to your short links – for you and your team" />
+        </div>
         <Textarea
           id="comment"
-          placeholder="Add internal notes or campaign context"
+          placeholder="Add comments"
           rows={4}
           {...register("comments")}
         />

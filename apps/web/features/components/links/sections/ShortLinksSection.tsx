@@ -69,7 +69,7 @@ export const ShortLinkSection = () => {
         <Input
           id="slug"
           type="text"
-          placeholder="optional custom slug"
+          placeholder="Your Slug"
           {...register("slug")}
         />
         <FieldError errors={[errors.slug]} />
