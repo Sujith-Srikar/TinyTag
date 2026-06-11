@@ -297,6 +297,12 @@
   }
 }
 
+.labelWithTooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 [data-slot="tooltip-content"] {
   opacity: 0;
   transform: scale(0.98);
