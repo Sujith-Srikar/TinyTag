@@ -26,6 +26,8 @@ const BASE_URL = "ttags.vercel.app";
 
 export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [faviconLoaded, setFaviconLoaded] = useState<boolean>(false);
+  const [faviconFailed, setFaviconFailed] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const shortUrl = `${BASE_URL}/${link.slug}`;
 
@@ -70,20 +72,27 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
       {/* Favicon + destination */}
       <div className={styles.main}>
         <div className={styles.favicon}>
-          <Image
+          {!faviconLoaded && (
+            <span className={styles.faviconFallback}>
+              {getDomain(link.destinationUrl).charAt(0).toUpperCase()}
+            </span>
+          )}
+
+          {/* Favicons are loaded from arbitrary user URLs, so native avoids Next.js
+          remote hostname restrictions. */}
+          {!faviconFailed && <img
             src={getFaviconUrl(link.destinationUrl)}
             alt=""
             width={20}
             height={20}
-            unoptimized
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
+            onLoad={() => setFaviconLoaded(true)}
+            onError={() => {
+              setFaviconFailed(true);
+              setFaviconLoaded(false);
             }}
-          />
-          {/* Fallback initial */}
-          <span className={styles.faviconFallback}>
-            {getDomain(link.destinationUrl).charAt(0).toUpperCase()}
-          </span>
+            loading="lazy"
+            className={styles.faviconImage}
+          />}
         </div>
 
         <div className={styles.info}>

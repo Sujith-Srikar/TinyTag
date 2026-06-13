@@ -39,6 +39,7 @@
 }
 
 .favicon {
+  position: relative;
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
@@ -48,12 +49,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  position: relative;
   overflow: hidden;
-
-  img {
-    position: relative;
-  }
 }
 
 .faviconFallback {
@@ -66,7 +62,10 @@
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-muted);
-  z-index: 0;
+}
+
+.faviconImage {
+  display: block;
 }
 
 .info {

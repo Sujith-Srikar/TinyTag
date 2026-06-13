@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRedirectData, setAnalyticsData, setRedirectData } from "@repo/cache";
+import { getRedirectData, setRedirectData } from "@repo/cache";
 import { StatusCode, createErrorResponse } from "@repo/shared";
 import { getLinkBySlug, updateClicksCount } from '@repo/db'
 
@@ -28,8 +28,6 @@ export async function GET(_: Request, context: { params: Promise<{ slug: string;
     if (!result) {
       return NextResponse.json(createErrorResponse("Unable to cache redirect data"), { status: StatusCode.INTERNAL_SERVER_ERROR, });
     }
-
-    await setAnalyticsData(slug);
 
     return NextResponse.redirect(linksData.destination_url, 302);
   } catch (error) {
