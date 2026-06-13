@@ -1,8 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, createTRPCRouter } from "../init";
 import { logger } from "@repo/shared";
-import { getAllLinks } from "@repo/db";
+import { slugExists, getAllLinks } from "@repo/db";
 import { type LinkRecord } from "@repo/shared";
+import z from "zod";
+import { generateRandomSlug, generateSlugFromUrl } from "@/utils/generate-slug";
 
 export const getRouter = createTRPCRouter({
   health: publicProcedure
@@ -33,14 +35,14 @@ export const getRouter = createTRPCRouter({
       name: "Get All Urls",
       docs: {
         description: "Fetch All Urls for a particular User",
-        tags: ["urls", 'get', 'all'],
+        tags: ["urls", "get", "all"],
       },
     })
     .query(async () => {
       try {
         const res = await getAllLinks();
 
-        if(!res) return null;
+        if (!res) return null;
 
         const mappedResponse: LinkRecord[] = res.map((link) => ({
           destinationUrl: link.destination_url,
@@ -52,8 +54,8 @@ export const getRouter = createTRPCRouter({
           id: link.id,
           password: link.password_hash ?? undefined,
           isActive: link.is_active,
-          createdAt: link.created_at
-        }))
+          createdAt: link.created_at,
+        }));
 
         return mappedResponse;
       } catch (error) {
@@ -64,5 +66,42 @@ export const getRouter = createTRPCRouter({
           message: "Failed to Get All Urls",
         });
       }
+    }),
+
+  generateAvailableSlug: publicProcedure
+    .input(z.object({ destinationUrl: z.string().optional() }))
+    .query(async (opts) => {
+      let prevSlugs: string[] = ['dashboard'];
+      while (true) {
+        const slug = opts.input.destinationUrl
+          ? generateSlugFromUrl(opts.input.destinationUrl)
+          : generateRandomSlug();
+
+        if(prevSlugs.includes(slug)){
+          continue;
+        }
+
+        const res = await slugExists(slug);
+        if (!res) {
+          return { data: slug };
+        }
+        prevSlugs.push(slug);
+      }
+    }),
+
+  validateSlugAvailability: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async (opts) => {
+      console.log('Vaidate slug availability:', opts.input.slug);
+      const res = await slugExists(opts.input.slug);
+
+      if (res) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Slug already exists",
+        });
+      }
+
+      return { error: null };
     }),
 });

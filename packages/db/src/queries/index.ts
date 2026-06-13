@@ -74,11 +74,20 @@ const updateClicksCount = async ( slug: string ) => {
   return data ?? false;
 }
 
+const slugExists = async (slug: string): Promise<boolean> => {
+  const { data } = await db.from("links").select("*").eq("slug", slug).single();
+
+  if (data) return true;
+
+  return false;
+};
+
 export {
   getAllLinks,
   getLinkBySlug,
   create_short_url,
   edit_long_url,
   delete_url,
-  updateClicksCount
+  updateClicksCount,
+  slugExists,
 };
