@@ -20,6 +20,7 @@ import {
   DestinationSection,
   ShortLinkSection,
   CommentSection,
+  QrCodeSection
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
@@ -44,7 +45,7 @@ export const LinkBuilder = () => {
   } = methods;
   const { modal, closeModal, selectedLink } = useLinkBuilderStore();
   const trpc = useTRPC();
-  const createSlug = useMutation(
+  const createLink = useMutation(
     trpc.post.shortenUrl.mutationOptions({
       onSuccess: (data) => {
         console.log("Slug Created Successfully:", data);
@@ -106,7 +107,7 @@ export const LinkBuilder = () => {
         };
         editSlug.mutate(editObj);
       } else {
-        createSlug.mutate({
+        createLink.mutate({
           destinationUrl: data.destinationUrl,
           slug: data.slug,
           comments: data.comments,
@@ -144,46 +145,7 @@ export const LinkBuilder = () => {
             </div>
 
             <aside className={styles.rightColumn}>
-              <div className={styles.previewCard}>
-                <div className={styles.previewTopRow}>
-                  <Badge variant="default">Draft saved</Badge>
-                  <Badge variant="outline">Links</Badge>
-                </div>
-
-                <div className={styles.previewStack}>
-                  <div>
-                    <p className={styles.previewLabel}>Destination</p>
-                    <p className={styles.previewValue}>
-                      {"https://example.com/your/destination"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className={styles.previewLabel}>Short link</p>
-                    <div className={styles.previewLinkRow}>
-                      <p className={styles.previewLink}>
-                        tt.vercel.app/
-                        <strong>{"auto-generated"}</strong>
-                      </p>
-                      {true && (
-                        <Button
-                          value={`tt.vercel.app/`}
-                          variant='link'
-                          size="sm"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={styles.previewHintBox}>
-                    <p className={styles.previewHintTitle}>What happens next</p>
-                    <p className={styles.previewHintText}>
-                      Keep the destination focused, generate a short slug when
-                      needed, and add internal comments for later reference.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <QrCodeSection />
             </aside>
           </ModalBody>
 

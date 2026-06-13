@@ -1,0 +1,44 @@
+"use client";
+
+import { LinkBuilderFields } from "@/types/linkBuilder";
+import QrCode from "qrcode";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { APP_URL } from "@repo/shared";
+import styles from '../LinkBuilder.module.scss'
+
+export const QrCodeSection = () => {
+
+  const [svg, setSvg] = useState<string>("");
+  const {watch} = useFormContext<LinkBuilderFields>();
+  const slug = watch('slug');
+
+  const generateQR = async () => {
+    const url = await QrCode.toString(`${APP_URL}/${slug}`, {
+      errorCorrectionLevel: "H",
+      width: 156,
+      margin: 2,
+    });
+
+    setSvg(url);
+  };
+  useEffect(() => {
+    if(!slug) return;
+    generateQR();
+  }, [slug]);
+
+  return (
+    <div className={styles.qrCard}>
+      <div className={styles.qrHeader}>
+        <span>QR Code</span>
+      </div>
+
+      <div className={styles.qrPreview}>
+        <div
+          className={styles.qrSvg}
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
+      </div>
+    </div>
+  );
+};

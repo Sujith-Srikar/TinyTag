@@ -22,8 +22,7 @@ export function getDomain(url: string): string {
 
 export function getFaviconUrl(url: string): string {
   try {
-    const { protocol, hostname } = new URL(url);
-    return `https://www.google.com/s2/favicons?domain=${protocol}//${hostname}&sz=32`;
+    return `${new URL(url).origin}/favicon.ico`;
   } catch {
     return "";
   }
