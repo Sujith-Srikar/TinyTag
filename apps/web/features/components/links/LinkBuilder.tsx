@@ -1,10 +1,10 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Modal } from "@/components/UI";
-import { Badge, Button } from "@repo/ui";
+import { Button } from "@repo/ui";
 import {
   ModalBody,
   ModalFooter,
@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { logger } from "@repo/shared";
 import { Link } from "lucide-react";
 import { useEffect } from "react";
+import { useSlugGenerator } from "@/hooks/useSlugGenerator";
 
 export const LinkBuilder = () => {
   const methods = useForm<LinkBuilderFields>({
@@ -44,7 +45,9 @@ export const LinkBuilder = () => {
     reset
   } = methods;
   const { modal, closeModal, selectedLink } = useLinkBuilderStore();
+  const { generateRandomSlug } = useSlugGenerator();
   const trpc = useTRPC();
+
   const createLink = useMutation(
     trpc.post.shortenUrl.mutationOptions({
       onSuccess: (data) => {
@@ -78,21 +81,30 @@ export const LinkBuilder = () => {
   );
 
   useEffect(() => {
-    if (!selectedLink) {
-      reset({
-        destinationUrl: "",
-        slug: "",
-        comments: "",
-      });
-      return;
-    }
+    if (!selectedLink) return;
 
     reset({
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
       comments: selectedLink.comments ?? "",
     });
-  }, [selectedLink, reset]);
+  }, [selectedLink]);
+
+  useEffect(() => {
+    if (modal !== "create") return;
+
+    const initialize = async () => {
+      const slug = await generateRandomSlug();
+
+      reset({
+        destinationUrl: "",
+        slug,
+        comments: "",
+      });
+    };
+
+    initialize();
+  }, [modal]);
 
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
     try {

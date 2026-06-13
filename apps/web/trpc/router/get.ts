@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, createTRPCRouter } from "../init";
-import { logger } from "@repo/shared";
+import { logger, RESERVED_SLUGS } from "@repo/shared";
 import { slugExists, getAllLinks } from "@repo/db";
 import { type LinkRecord } from "@repo/shared";
 import z from "zod";
@@ -71,7 +71,7 @@ export const getRouter = createTRPCRouter({
   generateAvailableSlug: publicProcedure
     .input(z.object({ destinationUrl: z.string().optional() }))
     .query(async (opts) => {
-      let prevSlugs: string[] = ['dashboard'];
+      const prevSlugs: string[] = [...RESERVED_SLUGS];
       while (true) {
         const slug = opts.input.destinationUrl
           ? generateSlugFromUrl(opts.input.destinationUrl)
