@@ -1,25 +1,21 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import {
-  getLinkById,
-  getMockClickSeries,
-} from "@/utils/mock-data";
 
 const BASE_URL = "tt.vercel.app";
 
 export default function AnalyticsPage({ params }: { params: { id: string } }) {
-  const link = getLinkById(params.id);
+  // const link = getLinkById(params.id);
 
-  if (!link) {
-    notFound();
-  }
+  // if (!link) {
+  //   notFound();
+  // }
 
-  const data7d = getMockClickSeries(link.id, "7d");
-  const data30d = getMockClickSeries(link.id, "30d");
-  const data90d = getMockClickSeries(link.id, "90d");
+  // const data7d = getMockClickSeries(link.id, "7d");
+  // const data30d = getMockClickSeries(link.id, "30d");
+  // const data90d = getMockClickSeries(link.id, "90d");
 
-  const shortUrl = `https://${BASE_URL}/${link.slug}`;
+  // const shortUrl = `https://${BASE_URL}/${link.slug}`;
 
   return (
     <>Comming Soon</>

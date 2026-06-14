@@ -178,10 +178,15 @@ Learn more about the power of Turborepo:
 │       │   │       └── page.tsx
 │       │   ├── globals.scss
 │       │   ├── layout.tsx
+│       │   ├── not-found.tsx
 │       │   ├── page.module.css
 │       │   └── page.tsx
 │       ├── components/
 │       │   ├── Layout/
+│       │   │   ├── NotFound/
+│       │   │   │   ├── Model.tsx
+│       │   │   │   ├── NotFoundPage.tsx
+│       │   │   │   └── Scene.tsx
 │       │   │   ├── Sidebar/
 │       │   │   │   ├── Sidebar.module.scss
 │       │   │   │   └── Sidebar.tsx
@@ -222,15 +227,22 @@ Learn more about the power of Turborepo:
 │       │           │   ├── CommentSection.tsx
 │       │           │   ├── DestinationSection.tsx
 │       │           │   ├── index.ts
+│       │           │   ├── QrCodeSection.tsx
 │       │           │   └── ShortLinksSection.tsx
 │       │           ├── LinkBuilder.module.scss
 │       │           └── LinkBuilder.tsx
 │       ├── hooks/
-│       │   └── useLinkBuilder.ts
+│       │   ├── useLinkBuilder.ts
+│       │   └── useSlugGenerator.ts
 │       ├── providers/
 │       │   ├── Providers.tsx
 │       │   ├── ThemeProvider.tsx
 │       │   └── TRPCProvider.tsx
+│       ├── public/
+│       │   ├── fonts/
+│       │   │   └── PPNeueMontreal-Regular.ttf
+│       │   └── media/
+│       │       └── shards.glb
 │       ├── trpc/
 │       │   ├── router/
 │       │   │   ├── app.ts
@@ -241,8 +253,8 @@ Learn more about the power of Turborepo:
 │       ├── types/
 │       │   └── linkBuilder.ts
 │       ├── utils/
-│       │   ├── generate-slug.ts
-│       │   └── mock-data.ts
+│       │   ├── formatters.ts
+│       │   └── generate-slug.ts
 │       ├── .gitignore
 │       ├── components.json
 │       ├── eslint.config.js
@@ -287,6 +299,7 @@ Learn more about the power of Turborepo:
 │   │   │   ├── types/
 │   │   │   │   ├── common.ts
 │   │   │   │   └── web.ts
+│   │   │   ├── constant.ts
 │   │   │   ├── env.ts
 │   │   │   ├── index.ts
 │   │   │   └── logger.ts
@@ -303,6 +316,7 @@ Learn more about the power of Turborepo:
 │       │   │   ├── badge.tsx
 │       │   │   ├── button.tsx
 │       │   │   ├── field.tsx
+│       │   │   ├── infotooltip.tsx
 │       │   │   ├── input.tsx
 │       │   │   ├── label.tsx
 │       │   │   ├── separator.tsx
@@ -322,4 +336,5 @@ Learn more about the power of Turborepo:
 ├── README.md
 ├── turbo.json
 └── vercel.json
+
 ```
