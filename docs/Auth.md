@@ -1,742 +1,176 @@
-# TinyTags v2 — Authentication & Authorization Architecture
+# TinyTags v2 — Auth & Authorization Notes
 
-## Goal
-
-Build a production-grade authentication and authorization system using:
-
-* Next.js App Router
-* Supabase Auth
-* Supabase SSR
-* tRPC
-* Middleware (Proxy)
-* Row Level Security (RLS)
-
-Supporting:
-
-* Google OAuth
-* Anonymous Authentication
-* Account Upgrade (Anonymous → Google)
-* Protected Routes
-* Protected APIs
-* Ownership-Based Access Control
+**Stack:** Next.js App Router · Supabase Auth · Supabase SSR · tRPC · Middleware · RLS
+**Supports:** Google OAuth · Anonymous Auth · Anonymous→Google Upgrade · Protected Routes/APIs · Ownership-Based Access Control
 
 ---
 
-# Core Principle
+## 1. Core Principle
 
-Authentication proves identity.
-Authorization protects resources.
-Every resource must belong to a user.
-The authenticated user must always come from a validated session, never from client-provided data.
+Authentication proves **identity**. Authorization protects **resources**. Every resource belongs to a user. The authenticated user always comes from a **validated session** — never from client-provided data.
+
+**End-to-end flow:**
+`Browser → Supabase Auth → Cookies → Middleware → Server Components → tRPC Context → Protected Procedures → RLS → Database`
+
+Auth and data are separate concerns: **Supabase Auth = Identity**, **Supabase Database = Application Data**.
 
 ---
 
-# Authentication Architecture
+## 2. Authentication Methods
 
-```text
-Browser
-   ↓
-Supabase Auth
-   ↓
-Cookies
-   ↓
-Middleware
-   ↓
-Server Components
-   ↓
-tRPC Context
-   ↓
-Protected Procedures
-   ↓
-RLS Policies
-   ↓
-Database
+| Method | Use case | Pros | Cons |
+|---|---|---|---|
+| Google OAuth | Permanent account | Recoverable, multi-device, persistent identity, future premium support | Requires signup step |
+| Anonymous | Frictionless onboarding | No signup, instant access | Browser-dependent, hard to recover, not portable |
+
+Anonymous users are still **real** authenticated users — `auth.users`, `is_anonymous = true`, created via `supabase.auth.signInAnonymously()`.
+
+| | User | Session |
+|---|---|---|
+| Stored in | `auth.users` | Access + refresh tokens |
+| Represents | Identity | Logged-in state |
+| Lifetime | Persists until deleted | Expires |
+
+---
+
+## 3. Why Supabase SSR (Cookies, not localStorage)
+
+| Client | Storage | Browser sees | Server sees |
+|---|---|---|---|
+| `createClient()` (plain) | localStorage | Authenticated | Anonymous (can't read localStorage) |
+| `@supabase/ssr` | Cookies | Authenticated | Authenticated |
+
+Cookies are readable by browser, middleware, route handlers, and server components — that's the whole reason SSR helpers exist.
+
+---
+
+## 4. OAuth (PKCE) — Full Request Chain
+
+```
+App → supabase.co/auth/v1/authorize → accounts.google.com (login) → supabase.co/auth/v1/callback (validates code) → my-app.com/auth/callback?code=... → exchangeCodeForSession() → cookies set → redirect /dashboard
 ```
 
-Authentication and application data are separate concerns.
+**Key insight:** Supabase is the OAuth client — not your app. Google only trusts registered OAuth clients; Supabase holds the client secret and does PKCE verification + token exchange before handing control to your app.
 
-```text
-Supabase Auth
-    ↓
-Identity
+**Why `exchangeCodeForSession()` exists:** Google returns an *authorization code*, not a session. `code → exchangeCodeForSession() → access+refresh tokens → cookies → session`. Skip this and the user is "authenticated by Google" but not logged into your app.
 
-Supabase Database
-    ↓
-Application Data
-```
+### Redirect URI config — two different places (common gotcha)
 
----
+| Where | What goes there | Why |
+|---|---|---|
+| Google Cloud Console → Authorized Redirect URI | **Only** `https://PROJECT.supabase.co/auth/v1/callback` | Google redirects to Supabase, never directly to your app's `/auth/callback` |
+| Supabase → Auth → URL Configuration → Redirect URLs | Your app's callback URLs (`localhost:3000/auth/callback`, prod domains) | Destinations Supabase is *allowed* to send the user to after OAuth succeeds |
 
-# Supported Authentication Methods
-
-## Google OAuth
-
-Permanent account.
-
-Benefits:
-
-* Recoverable
-* Multi-device access
-* Persistent identity
-* Future premium support
+**Bug hit:** prod login redirected to `localhost:3000/?code=...`. Cause: Supabase's **Site URL** (the fallback when no redirect resolves) was still `localhost:3000`. Fix: update Site URL + Redirect URLs in Supabase after every deploy.
 
 ---
 
-## Anonymous Authentication
+## 5. Anonymous Login — No Callback Needed
 
-Frictionless onboarding.
+Entirely inside Supabase: `Browser → Supabase → anonymous user created → session returned`. No Google, no redirect, no OAuth callback.
 
-Benefits:
+**Why `router.refresh()` was needed:** server components render *before* the anonymous session exists, so they still think `user = null`. `router.refresh()` forces a new request that includes the fresh cookies, so the server finally sees the user. Without it: session exists, but UI stays stale.
 
-* No signup
-* Instant access
+---
 
-Limitations:
-
-* Browser dependent
-* Difficult recovery
-* Not portable
-
-Anonymous users are still real authenticated users.
+## 6. Anonymous → Google Upgrade
 
 ```ts
-supabase.auth.signInAnonymously()
+supabase.auth.linkIdentity({ provider: "google" })
 ```
+Same user ID throughout — no ownership migration, no data transfer, no broken references.
 
-Creates:
-
-```text
-auth.users
-is_anonymous = true
-```
+**Edge cases hit:**
+- **Auto-picks a Google account** due to an existing Google SSO session → force the picker with `queryParams: { prompt: "select_account" }`.
+- **`identity_already_exists`** — the Google account is already linked to a *different* Supabase user. Handled centrally via `useAuthErrors()`: reads the URL hash, shows a toast, strips the hash from the URL.
 
 ---
 
-# User vs Session
+## 7. Why Middleware, Not Client-Side Protection
 
-## User
+| Client-side (`auth.getUser()` + `router.replace()`) | Middleware |
+|---|---|
+| UI flicker | No page flash |
+| Component mounts before redirect | Session checked before request reaches the page |
+| Queries fire before redirect | No wasted requests |
+| Logic duplicated per page | Centralized, scales better |
 
-Stored in:
+Always configure a **matcher** — without one, middleware also runs on every HTML/JS/CSS/image/font request.
 
-```text
-auth.users
-```
-Represents identity.
-
-Examples:
-
-* Google User
-* Anonymous User
-
-Users persist until deleted.
+**Route groups:** `(public)` landing → `(auth)` login/callback → `(app)` dashboard/analytics/settings/links. Separate layouts, cleaner architecture, URLs unchanged.
 
 ---
 
-## Session
+## 8. tRPC Auth Layer
 
-Contains:
+Context flow: `Cookie → Supabase → User → Context`, exposing `ctx.user` and `ctx.supabase` to every procedure. Use `protectedProcedure` instead of repeating `if (!user)` everywhere — centralized, reusable, consistent.
 
-```text
-Access Token
-Refresh Token
-```
-Represents logged-in state. Sessions expire; Users do not.
+### Two layers of protection (both required)
 
----
+| Layer | Protects | Examples |
+|---|---|---|
+| Middleware | Pages | `/dashboard`, `/analytics`, `/settings` |
+| tRPC protected procedures | APIs | `createLink`, `deleteLink`, `updateLink`, `getMyLinks` |
 
-# Why Supabase SSR
-
-Using:
-
-```ts
-createClient()
-```
-stores auth in localStorage.
-
-Result:
-
-```text
-Browser = Authenticated
-Server = Anonymous
-```
-Middleware cannot read localStorage.
+Page protection alone doesn't protect the API — and vice versa.
 
 ---
 
-Solution:
-
-```ts
-@supabase/ssr
-```
-Stores auth in cookies.
-
-Cookies are readable by:
-
-* Browser
-* Middleware
-* Route Handlers
-* Server Components
-
-Result:
-
-```text
-Browser = Authenticated
-Server = Authenticated
-```
-
----
-
-# PKCE Authentication Flow
-
-Using:
-
-```text
-Google
- ↓
-Authorization Code
- ↓
-/auth/callback
- ↓
-exchangeCodeForSession()
- ↓
-Cookies
- ↓
-Session
-```
-
-Benefits:
-
-* Recommended by Supabase
-* More secure
-* Works with SSR
-* No token leakage
-
----
-
-# OAuth Callback
-
-Route:
-
-```text
-/auth/callback
-```
-
-Purpose:
-
-```ts
-supabase.auth.exchangeCodeForSession(code)
-```
-
-Creates the authenticated session cookie and redirects into the application.
-
----
-
-# Anonymous → Google Upgrade
-
-Goal:
-
-```text
-Guest User
- ↓
-Creates Links
- ↓
-Upgrade
- ↓
-Google Account
- ↓
-Same User ID
-```
-
-No ownership migration.
-No data transfer.
-No broken references.
-Implemented using:
-
-```ts
-supabase.auth.linkIdentity({
-  provider: "google"
-});
-```
-
----
-
-# Google Account Selection
-
-Observed:
-
-```text
-Upgrade
- ↓
-Automatically chooses Google account
-```
-
-Reason:
-
-Existing Google SSO session.
-
-Force chooser:
-
-```ts
-queryParams: {
-  prompt: "select_account"
-}
-```
-
----
-
-# Identity Already Exists
-
-Possible error:
-
-```text
-identity_already_exists
-```
-
-Meaning:
-
-```text
-Google Account
-already linked
-to another Supabase user
-```
-
-Handled using:
-
-```ts
-useAuthErrors()
-```
-
-Responsibilities:
-
-* Read URL hash
-* Show toast
-* Remove hash from URL
-
-Centralized auth error handling.
-
----
-
-# Why Middleware Instead of Client Protection
-
-Client-side:
-
-```ts
-auth.getUser()
-router.replace(...)
-```
-
-Problems:
-
-* UI flicker
-* Component mounts first
-* Queries execute first
-* Logic duplicated everywhere
-
----
-
-Middleware:
-
-```text
-Request
- ↓
-Middleware
- ↓
-Session Check
- ↓
-Allow / Redirect
-```
-
-Benefits:
-
-* No page flash
-* No wasted requests
-* Centralized protection
-* Better scalability
-
----
-
-# Middleware Matcher
-
-Always configure matcher.
-
-Without matcher:
-
-```text
-HTML
-JS
-CSS
-Images
-Fonts
-```
-
-all execute middleware.
-
-Matcher ensures only meaningful routes are checked.
-
----
-
-# Route Groups
-
-Structure:
-
-```text
-app/
-
-(public)
- └── Landing Pages
-
-(auth)
- ├── Login
- └── Callback
-
-(app)
- ├── Dashboard
- ├── Analytics
- ├── Settings
- └── Links
-```
-
-Benefits:
-
-* Separate layouts
-* Cleaner architecture
-* URLs unchanged
-
----
-
-# tRPC Authentication
-
-Create context:
-
-```ts
-createTRPCContext()
-```
-
-Flow:
-
-```text
-Cookie
- ↓
-Supabase
- ↓
-User
- ↓
-Context
-```
-
-Provides:
-
-```ts
-ctx.user
-ctx.supabase
-```
-
-to every procedure.
-
----
-
-# Protected Procedures
-
-Instead of:
-
-```ts
-if (!user)
-```
-
-Use:
-
-```ts
-protectedProcedure
-```
-
-Benefits:
-
-* Centralized
-* Reusable
-* Consistent
-
----
-
-# Route Protection vs API Protection
-
-## Route Protection
-
-Handled by:
-
-```text
-Middleware
-```
-
-Examples:
-
-```text
-/dashboard
-/analytics
-/settings
-```
-
----
-
-## API Protection
-
-Handled by:
-
-```text
-tRPC
-```
-
-Examples:
-
-```text
-Create Link
-Delete Link
-Update Link
-Get My Links
-```
-
-Both are required.
-
----
-
-# Ownership Model
-
-Every link belongs to a user.
+## 9. Ownership Model & RLS
 
 ```sql
-links (
-  id,
-  user_id,
-  slug,
-  destination_url
-)
+links (id, user_id, slug, destination_url)
 ```
+Ownership = `user_id`.
 
-Ownership determined by:
+| Operation | Policy |
+|---|---|
+| Select | `auth.uid() = user_id` — read only your own rows |
+| Insert | `with check (auth.uid() = user_id)` — can only create rows for yourself |
+| Update | `using (auth.uid() = user_id) with check (auth.uid() = user_id)` — edit your own rows, can't transfer ownership |
+| Delete | `using (auth.uid() = user_id)` — delete only your own rows |
 
-```text
-user_id
-```
+**Why RLS "broke everything":** a plain `createClient()` doesn't carry the session, so `auth.uid()` evaluates to `null` → `null = user_id` is always `false` → zero rows returned even though data exists. Debug with `select auth.uid();` — if it returns `null`, no authenticated session reached the database. (Root cause of `getMyLinks()` returning `[]`.)
 
 ---
 
-# Row Level Security (RLS)
+## 10. Public vs Protected Queries
 
-Policies:
+| Type | Examples | Client | Why |
+|---|---|---|---|
+| Public | `slugExists`, `getRedirectUrl`, `incrementClickCount` | Shared/public client | No ownership check needed |
+| Protected | `getMyLinks`, `createShortUrl`, `editLongUrl`, `deleteUrl` | `ctx.supabase` (cookie-bound) | RLS needs `auth.uid()`, which only resolves with an authenticated cookie session |
 
-## Select
-
-```sql
-auth.uid() = user_id
-```
-
-User reads only their rows.
+**Public redirects for anonymous visitors:** RLS blocks anonymous `select * from links` for `/some-slug`. Fix: a `security definer` function `get_redirect_url(slug)` that bypasses RLS but returns **only** `destination_url`, nothing else.
 
 ---
 
-## Insert
+## 11. Three Supabase Clients
 
-```sql
-with check (
-  auth.uid() = user_id
-)
-```
+| Client | Created with | Used for | Storage |
+|---|---|---|---|
+| Browser | `createClient()` | Login, logout, linkIdentity, anonymous auth | Browser (localStorage) |
+| Server | `createServerClient()` in `utils/auth/server.ts` | Route handlers, server components, tRPC context | Cookies via `cookies()` |
+| Middleware | `createServerClient()` in `proxy.ts` | Route protection, session refresh, JWT validation | `request.cookies` / `response.cookies` |
 
-User can only create rows for themselves.
-
----
-
-## Update
-
-```sql
-using (
-  auth.uid() = user_id
-)
-
-with check (
-  auth.uid() = user_id
-)
-```
-
-User can update only their own rows and cannot transfer ownership.
+Three clients exist because each runtime has a different cookie API — `cookies()` isn't available inside middleware, which instead reads/writes `request.cookies` and `response.cookies` directly.
 
 ---
 
-## Delete
+## 12. Multi-Layer Security Summary
 
-```sql
-using (
-  auth.uid() = user_id
-)
-```
+| Layer | Boundary |
+|---|---|
+| 1. Middleware | Protects pages |
+| 2. tRPC protected procedures | Protects APIs |
+| 3. RLS | Protects the database — **final boundary**, holds even if 1 & 2 are bypassed |
 
-User can delete only their own rows.
-
----
-
-# Public Redirect Function
-
-Problem:
-
-RLS blocks anonymous access.
-
-Need:
-
-```text
-/some-slug
-```
-
-to work publicly.
-
-Solution:
-
-```sql
-security definer
-```
-
-function.
-
-```sql
-get_redirect_url(slug)
-```
-
-Returns destination URL while bypassing RLS safely.
-
-Only exposes redirect target.
-
-Nothing else.
+**Debug order when auth breaks:** `Session → Cookie → Context → auth.uid() → RLS`.
 
 ---
 
-# Security Layers
+## 13. Key Decisions
 
-## Layer 1
+✅ Supabase SSR · ✅ PKCE OAuth Flow · ✅ Google Login · ✅ Anonymous Login · ✅ Anonymous → Google Upgrade · ✅ Middleware Route Protection · ✅ tRPC Protected Procedures · ✅ User-Owned Resources · ✅ RLS Authorization · ✅ Route Groups · ✅ Centralized Auth Error Handling · ✅ Public Redirect Function · ✅ Cookie-Based Sessions · ✅ Multi-Layer Security
 
-Middleware
-
-```text
-Protect Pages
-```
-
----
-
-## Layer 2
-
-tRPC Protected Procedures
-
-```text
-Protect APIs
-```
-
----
-
-## Layer 3
-
-RLS
-
-```text
-Protect Database
-```
-
-Final security boundary.
-
----
-
-# Database Access Pattern
-
-Public Queries:
-
-```text
-getLinkBySlug
-slugExists
-updateClicksCount
-```
-
-Can use shared/public client.
-
----
-
-Protected Queries:
-
-```text
-getMyLinks
-createShortUrl
-editLongUrl
-deleteUrl
-```
-
-Must use:
-
-```ts
-ctx.supabase
-```
-
-Server client with authenticated cookies.
-
-Reason:
-
-RLS requires:
-
-```sql
-auth.uid()
-```
-
-Anonymous DB client returns:
-
-```sql
-auth.uid() = null
-```
-
-and RLS denies access.
-
----
-
-# Key Decisions
-
-✅ Supabase SSR
-
-✅ PKCE OAuth Flow
-
-✅ Google Login
-
-✅ Anonymous Login
-
-✅ Anonymous → Google Upgrade
-
-✅ Middleware Route Protection
-
-✅ tRPC Protected Procedures
-
-✅ User-Owned Resources
-
-✅ RLS Authorization
-
-✅ Route Groups
-
-✅ Centralized Auth Error Handling
-
-✅ Public Redirect Function
-
-✅ Cookie-Based Sessions
-
-✅ Multi-Layer Security
-
----
-
-# Search Keywords
-
-* Why Supabase SSR
-* PKCE Flow
-* OAuth Callback
-* Anonymous Authentication
-* Account Linking
-* Identity Already Exists
-* Middleware vs Client Auth
-* Protected Procedures
-* tRPC Context
-* Row Level Security
-* auth.uid()
-* Security Definer Function
-* Public Redirect Architecture
-* Ownership Model
-* Route Groups
-* Multi Layer Security
+**Keywords:** Supabase SSR, PKCE Flow, OAuth Callback, Anonymous Auth, Account Linking, Identity Already Exists, Middleware vs Client Auth, Protected Procedures, tRPC Context, Row Level Security, auth.uid(), Security Definer Function, Public Redirect Architecture, Ownership Model, Route Groups, Multi-Layer Security
