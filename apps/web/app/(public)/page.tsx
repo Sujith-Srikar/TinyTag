@@ -4,7 +4,7 @@ import {useRouter} from 'next/navigation';
 import {useEffect} from 'react'
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui";
-import styles from "./page.module.css";
+import styles from './page.module.css';
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;

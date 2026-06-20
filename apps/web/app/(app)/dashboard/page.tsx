@@ -16,11 +16,10 @@ export default function DashboardPage() {
 
   const linkBuilder = useLinkBuilderStore();
   const trpc = useTRPC();
-  const {data} = useQuery(trpc.get.getAllUrls.queryOptions());
-
+  const { data } = useQuery(trpc.get.getMyUrls.queryOptions());
 
   useEffect(() => {
-    if(!data) return;
+    if (!data) return;
 
     setLinks(data);
   }, [data]);
