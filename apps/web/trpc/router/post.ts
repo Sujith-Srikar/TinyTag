@@ -21,7 +21,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async (opts) => {
       try {
         const input = opts.input;
-        const error = await create_short_url(input, opts.ctx.user.id);
+        const error = await create_short_url( input, opts.ctx.user.id, opts.ctx.supabase );
 
         if (error) {
           throw new TRPCError({
@@ -58,7 +58,7 @@ export const postRouter = createTRPCRouter({
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const error = await edit_long_url(opts.input, opts.ctx.user.id);
+        const error = await edit_long_url(opts.input, opts.ctx.supabase);
 
         if (!error) {
           deleteData(opts.input.slug);
@@ -100,7 +100,7 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async (opts) => {
       try {
-        const { data } = await delete_url(opts.input.slug, opts.ctx.user.id);
+        const { data } = await delete_url(opts.input.slug, opts.ctx.supabase);
 
         if (data && data.length != 0) {
           return {

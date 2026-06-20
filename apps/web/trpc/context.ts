@@ -1,7 +1,8 @@
 import { createSupabaseServerClient } from "@/utils/auth/server";
 import { User } from "@repo/shared";
+import {type DBClient} from "@repo/db";
 
-export type ContextType = {user: User | null};
+export type ContextType = {user: User | null; supabase: DBClient};
 
 export async function createTRPCContext(): Promise<ContextType> {
   const supabase = await createSupabaseServerClient();
@@ -18,5 +19,6 @@ export async function createTRPCContext(): Promise<ContextType> {
           email: user.email ?? null,
         }
       : null,
+    supabase
   };
 }

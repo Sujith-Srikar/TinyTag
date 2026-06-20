@@ -41,8 +41,7 @@ export const getRouter = createTRPCRouter({
     })
     .query(async ({ ctx }) => {
       try {
-        const res = await getMyLinks(ctx.user.id);
-        console.log('Res get my urls:', res, "Userid:", ctx.user.id);
+        const res = await getMyLinks(ctx.supabase);
 
         if (!res) return null;
 
@@ -125,7 +124,6 @@ export const getRouter = createTRPCRouter({
     })
     .input(z.object({ slug: z.string() }))
     .query(async (opts) => {
-      console.log("Vaidate slug availability:", opts.input.slug);
       const res = await slugExists(opts.input.slug);
 
       if (res) {

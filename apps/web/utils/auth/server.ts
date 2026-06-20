@@ -1,8 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { clientEnv } from "@repo/shared/env/client";
+import { type DBClient } from "@repo/db";
 
-export async function createSupabaseServerClient() {
+export async function createSupabaseServerClient(): Promise<DBClient> {
   const cookieStore = await cookies();
 
   return createServerClient(
