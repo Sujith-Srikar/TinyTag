@@ -54,7 +54,7 @@ export const LinkBuilder = () => {
         console.log("Slug Created Successfully:", data);
         toast.success("Slug Created Successfully");
         queryClient.invalidateQueries({
-          queryKey: trpc.get.getAllUrls.queryKey(),
+          queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {
@@ -70,7 +70,7 @@ export const LinkBuilder = () => {
         console.log("Slug Ediited Successfully:", data);
         toast.success("Slug Ediited Successfully");
         queryClient.invalidateQueries({
-          queryKey: trpc.get.getAllUrls.queryKey(),
+          queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {

@@ -28,7 +28,7 @@ export function DeleteConfirmModal() {
 
     onSuccess: () => {
       toast.success('Slug Deleted Successfully');
-      queryClient.invalidateQueries({queryKey: trpc.get.getAllUrls.queryKey()});
+      queryClient.invalidateQueries({queryKey: trpc.get.getMyUrls.queryKey()});
     },
 
     onError: () => {

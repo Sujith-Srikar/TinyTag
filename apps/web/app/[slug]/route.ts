@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRedirectData, setRedirectData } from "@repo/cache";
 import { StatusCode, createErrorResponse } from "@repo/shared";
-import { getLinkBySlug, updateClicksCount } from '@repo/db'
+import { getLinkBySlug, updateClicksCount } from "@repo/db";
 
 export async function GET(_: Request, context: { params: Promise<{ slug: string; }> }) {
   try {
@@ -18,18 +18,18 @@ export async function GET(_: Request, context: { params: Promise<{ slug: string;
       return NextResponse.redirect(cached.longUrl, 302);
     }
 
-    const linksData = await getLinkBySlug(slug);
+    const destination_url = await getLinkBySlug(slug);
 
-    if (!linksData) {
-      return NextResponse.json(createErrorResponse("Slug not found"), { status: StatusCode.NOT_FOUND, });
+    if (!destination_url) {
+      return NextResponse.json(createErrorResponse("Slug not found"), {status: StatusCode.NOT_FOUND});
     }
-    const result = await setRedirectData(slug, linksData.destination_url);
+    const result = await setRedirectData(slug, destination_url);
 
     if (!result) {
-      return NextResponse.json(createErrorResponse("Unable to cache redirect data"), { status: StatusCode.INTERNAL_SERVER_ERROR, });
+      return NextResponse.json(createErrorResponse("Unable to cache redirect data"),{ status: StatusCode.INTERNAL_SERVER_ERROR });
     }
 
-    return NextResponse.redirect(linksData.destination_url, 302);
+    return NextResponse.redirect(destination_url, 302);
   } catch (error) {
     console.log("Error while redirecting:", error);
 
