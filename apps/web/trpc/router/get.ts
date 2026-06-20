@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure, createTRPCRouter } from "../init";
+import { publicProcedure, createTRPCRouter, protectedProcedure } from "../init";
 import { logger, RESERVED_SLUGS } from "@repo/shared";
-import { slugExists, getAllLinks } from "@repo/db";
+import { slugExists, getMyLinks } from "@repo/db";
 import { type LinkRecord } from "@repo/shared";
 import z from "zod";
 import { generateRandomSlug, generateSlugFromUrl } from "@/utils/generate-slug";
@@ -30,17 +30,19 @@ export const getRouter = createTRPCRouter({
       }
     }),
 
-  getAllUrls: publicProcedure
+  getMyUrls: protectedProcedure
     .meta({
-      name: "Get All Urls",
+      name: "Get User Specific Urls",
       docs: {
         description: "Fetch All Urls for a particular User",
         tags: ["urls", "get", "all"],
+        auth: true
       },
     })
-    .query(async () => {
+    .query(async ({ ctx }) => {
       try {
-        const res = await getAllLinks();
+        const res = await getMyLinks(ctx.user.id);
+        console.log('Res get my urls:', res, "Userid:", ctx.user.id);
 
         if (!res) return null;
 
@@ -68,7 +70,30 @@ export const getRouter = createTRPCRouter({
       }
     }),
 
+  getMe: protectedProcedure
+    .meta({
+      name: "Get Current User",
+      docs: {
+        description:
+          "Returns information about the currently authenticated user.h",
+        tags: ["Authentication", "User"],
+        auth: true
+      },
+    })
+    .query((opts) => {
+      const user = opts.ctx.user;
+      return user;
+    }),
+
   generateAvailableSlug: publicProcedure
+    .meta({
+      name: "Generate Available Slug",
+      docs: {
+        description:
+          "Generates a unique slug that is not currently in use. If a destination URL is provided, the slug is derived from the URL and adjusted until an available value is found.",
+        tags: ["urls", "generation", "slug", "get"],
+      },
+    })
     .input(z.object({ destinationUrl: z.string().optional() }))
     .query(async (opts) => {
       const prevSlugs: string[] = [...RESERVED_SLUGS];
@@ -77,7 +102,7 @@ export const getRouter = createTRPCRouter({
           ? generateSlugFromUrl(opts.input.destinationUrl)
           : generateRandomSlug();
 
-        if(prevSlugs.includes(slug)){
+        if (prevSlugs.includes(slug)) {
           continue;
         }
 
@@ -90,9 +115,17 @@ export const getRouter = createTRPCRouter({
     }),
 
   validateSlugAvailability: publicProcedure
+    .meta({
+      name: "Validate Slug Availability",
+      docs: {
+        description:
+          "Checks whether a slug is available for use. Returns success if the slug is unused, otherwise throws a CONFLICT error.",
+        tags: ["urls", "get", "slug", "validation"],
+      },
+    })
     .input(z.object({ slug: z.string() }))
     .query(async (opts) => {
-      console.log('Vaidate slug availability:', opts.input.slug);
+      console.log("Vaidate slug availability:", opts.input.slug);
       const res = await slugExists(opts.input.slug);
 
       if (res) {

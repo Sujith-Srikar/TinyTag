@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure, createTRPCRouter } from "../init";
+import { createTRPCRouter, protectedProcedure } from "../init";
 import { logger } from "@repo/shared";
 import { z } from "zod";
 import { create_short_url, delete_url, edit_long_url } from "@repo/db";
@@ -7,20 +7,21 @@ import { LinkBuilderFormSchema } from "@repo/shared";
 import { deleteData } from "@repo/cache";
 
 export const postRouter = createTRPCRouter({
-  shortenUrl: publicProcedure
+  shortenUrl: protectedProcedure
     .meta({
       name: "Create Short URL",
       docs: {
         description:
           "Creates and stores a shortened URL with collision-safe slug generation.",
         tags: ["urls", "shortener", "links", "create"],
+        auth: true
       },
     })
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
         const input = opts.input;
-        const error = await create_short_url(input);
+        const error = await create_short_url(input, opts.ctx.user.id);
 
         if (error) {
           throw new TRPCError({
@@ -44,19 +45,20 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
-  editLongUrl: publicProcedure
+  editLongUrl: protectedProcedure
     .meta({
       name: "Edit Long URL",
       docs: {
         description:
           "Updates the destination URL associated with an existing short URL slug.",
         tags: ["urls", "shortener", "links", "edit"],
+        auth: true
       },
     })
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const error = await edit_long_url(opts.input);
+        const error = await edit_long_url(opts.input, opts.ctx.user.id);
 
         if (!error) {
           deleteData(opts.input.slug);
@@ -81,13 +83,14 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
-  deleteUrl: publicProcedure
+  deleteUrl: protectedProcedure
     .meta({
       name: "Delete URL",
       docs: {
         description:
           "Deletes an already existing short URL slug and its associated data.",
         tags: ["urls", "shortener", "links", "delete"],
+        auth: true
       },
     })
     .input(
@@ -97,7 +100,7 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async (opts) => {
       try {
-        const { data } = await delete_url(opts.input.slug);
+        const { data } = await delete_url(opts.input.slug, opts.ctx.user.id);
 
         if (data && data.length != 0) {
           return {

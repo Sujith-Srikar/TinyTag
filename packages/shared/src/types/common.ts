@@ -33,3 +33,9 @@ export type LinkRecord = {
   isActive: boolean,
   createdAt: string
 }
+
+export interface User {
+  id: string;
+  isAnonymous: boolean;
+  email: string | null;
+}
