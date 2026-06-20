@@ -1,9 +1,9 @@
 import { Redis } from "@upstash/redis";
-import {env} from '@repo/shared/env'
+import {serverEnv} from '@repo/shared/env/server'
 
 const redis = new Redis({
-  url: env.UPSTASH_REDIS_REST_URL,
-  token: env.UPSTASH_REDIS_REST_TOKEN,
+  url: serverEnv.UPSTASH_REDIS_REST_URL,
+  token: serverEnv.UPSTASH_REDIS_REST_TOKEN,
 });
 
 export default redis;

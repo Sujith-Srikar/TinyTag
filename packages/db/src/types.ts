@@ -51,6 +51,7 @@ export type Database = {
           password_hash: string | null
           slug: string
           tags: string[] | null
+          user_id: string | null
         }
         Insert: {
           clicks_count?: number
@@ -63,6 +64,7 @@ export type Database = {
           password_hash?: string | null
           slug: string
           tags?: string[] | null
+          user_id?: string | null
         }
         Update: {
           clicks_count?: number
@@ -75,6 +77,7 @@ export type Database = {
           password_hash?: string | null
           slug?: string
           tags?: string[] | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -83,6 +86,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_redirect_url: { Args: { target_slug: string }; Returns: string }
       increment_click_count: { Args: { target_slug: string }; Returns: boolean }
     }
     Enums: {

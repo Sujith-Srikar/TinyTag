@@ -1,0 +1,1 @@
+create index idx_links_user_id  on public.links(user_id);
