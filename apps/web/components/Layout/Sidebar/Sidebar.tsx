@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo, ThemeToggle } from "@/components/UI";
 import styles from "./Sidebar.module.scss";
 import { LayoutDashboard, ChartNoAxesCombined, Wrench } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "@repo/shared";
+import { createClient } from "@/utils/auth/client";
+import { Button } from "@repo/ui";
+import { useAuthErrors } from "@/hooks/useAuthErrors";
+const supabase = createClient();
 
 const NAV_ITEMS = [
   {
@@ -29,6 +36,41 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  const trpc = useTRPC();
+  const { data, error } = useQuery(trpc.get.getMe.queryOptions());
+
+  useAuthErrors();
+
+  const handleLogOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if(error) return;
+    router.refresh();
+  };
+
+  const handleUpgradeAcc = async () => {
+    const { data, error } = await supabase.auth.linkIdentity({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          prompt: "select_account",
+        },
+      },
+    });
+
+    if(error || !data.url) return;
+
+    window.location.assign(data.url);
+  }
+
+  useEffect(() => {
+    if (error || !data) return;
+
+    setUser(data);
+  }, [data]);
 
   return (
     <>
@@ -162,23 +204,36 @@ export function Sidebar() {
         {/* Footer */}
         <div className={styles.footer}>
           <ThemeToggle showLabel={!collapsed} collapsed={collapsed} />
+          <Button onClick={handleLogOut}>Logout</Button>
 
-          {/* User avatar placeholder */}
+          {!collapsed && user?.isAnonymous && (
+            <Button className={styles.upgradeButton} onClick={handleUpgradeAcc}>
+              Upgrade with Google
+            </Button>
+          )}
+
           <div
-            className={[
-              styles.userRow,
-              collapsed ? styles.userRowCollapsed : "",
-            ]
+            className={[styles.userRow, collapsed ? styles.userRowCollapsed : "",]
               .filter(Boolean)
               .join(" ")}
           >
             <div className={styles.avatar} title="User account">
-              <span>U</span>
+              <span>
+                {user?.isAnonymous
+                  ? "G"
+                  : (user?.email?.charAt(0).toUpperCase() ?? "U")}
+              </span>
             </div>
+
             {!collapsed && (
               <div className={styles.userInfo}>
-                <span className={styles.userName}>user@example.com</span>
-                <span className={styles.userPlan}>Free Plan</span>
+                <span className={styles.userName}>
+                  {user?.isAnonymous ? "Guest User" : user?.email}
+                </span>
+
+                <span className={styles.userPlan}>
+                  {user?.isAnonymous ? "Anonymous Session" : "Free Plan"}
+                </span>
               </div>
             )}
           </div>
