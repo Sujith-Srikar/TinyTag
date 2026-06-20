@@ -162,25 +162,35 @@ Learn more about the power of Turborepo:
 ├── apps/
 │   └── web/
 │       ├── app/
+│       │   ├── (app)/
+│       │   │   ├── dashboard/
+│       │   │   │   └── page.tsx
+│       │   │   ├── links/
+│       │   │   │   └── [id]/
+│       │   │   │       ├── page.module.scss
+│       │   │   │       └── page.tsx
+│       │   │   └── layout.tsx
+│       │   ├── (auth)/
+│       │   │   └── auth/
+│       │   │       ├── callback/
+│       │   │       │   └── route.ts
+│       │   │       └── login/
+│       │   │           ├── page.module.scss
+│       │   │           └── page.tsx
+│       │   ├── (public)/
+│       │   │   ├── page.module.css
+│       │   │   └── page.tsx
 │       │   ├── [slug]/
 │       │   │   └── route.ts
 │       │   ├── api/
 │       │   │   └── trpc/
 │       │   │       └── [trpc]/
 │       │   │           └── route.ts
-│       │   ├── dashboard/
-│       │   │   └── page.tsx
 │       │   ├── docs/
 │       │   │   └── route.ts
-│       │   ├── links/
-│       │   │   └── [id]/
-│       │   │       ├── page.module.scss
-│       │   │       └── page.tsx
 │       │   ├── globals.scss
 │       │   ├── layout.tsx
-│       │   ├── not-found.tsx
-│       │   ├── page.module.css
-│       │   └── page.tsx
+│       │   └── not-found.tsx
 │       ├── components/
 │       │   ├── Layout/
 │       │   │   ├── NotFound/
@@ -232,6 +242,7 @@ Learn more about the power of Turborepo:
 │       │           ├── LinkBuilder.module.scss
 │       │           └── LinkBuilder.tsx
 │       ├── hooks/
+│       │   ├── useAuthErrors.ts
 │       │   ├── useLinkBuilder.ts
 │       │   └── useSlugGenerator.ts
 │       ├── providers/
@@ -249,10 +260,14 @@ Learn more about the power of Turborepo:
 │       │   │   ├── get.ts
 │       │   │   └── post.ts
 │       │   ├── client.ts
+│       │   ├── context.ts
 │       │   └── init.ts
 │       ├── types/
 │       │   └── linkBuilder.ts
 │       ├── utils/
+│       │   ├── auth/
+│       │   │   ├── client.ts
+│       │   │   └── server.ts
 │       │   ├── formatters.ts
 │       │   └── generate-slug.ts
 │       ├── .gitignore
@@ -261,8 +276,11 @@ Learn more about the power of Turborepo:
 │       ├── next.config.js
 │       ├── package.json
 │       ├── postcss.config.mjs
+│       ├── proxy.ts
 │       ├── README.md
 │       └── tsconfig.json
+├── docs/
+│   └── Auth.md
 ├── packages/
 │   ├── cache/
 │   │   ├── src/
@@ -284,7 +302,10 @@ Learn more about the power of Turborepo:
 │   │   │   │   ├── 20260516170122_create_links_table.sql
 │   │   │   │   ├── 20260531034846_rename-link-columns.sql
 │   │   │   │   ├── 20260531042533_rename-description-to-comments.sql
-│   │   │   │   └── 20260531052151_add-isActive-column.sql
+│   │   │   │   ├── 20260531052151_add-isActive-column.sql
+│   │   │   │   ├── 20260618012541_add user_id.sql
+│   │   │   │   ├── 20260618014633_add index for user_id.sql
+│   │   │   │   └── 20260619015256_add-rls-policies.sql
 │   │   │   └── config.toml
 │   │   ├── package.json
 │   │   └── tsconfig.json
@@ -296,11 +317,13 @@ Learn more about the power of Turborepo:
 │   │   └── README.md
 │   ├── shared/
 │   │   ├── src/
+│   │   │   ├── env/
+│   │   │   │   ├── client.ts
+│   │   │   │   └── server.ts
 │   │   │   ├── types/
 │   │   │   │   ├── common.ts
 │   │   │   │   └── web.ts
 │   │   │   ├── constant.ts
-│   │   │   ├── env.ts
 │   │   │   ├── index.ts
 │   │   │   └── logger.ts
 │   │   ├── package.json
