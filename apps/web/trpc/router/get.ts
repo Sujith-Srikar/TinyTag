@@ -6,6 +6,10 @@ import { type LinkRecord } from "@repo/shared";
 import z from "zod";
 import { generateRandomSlug, generateSlugFromUrl } from "@/utils/generate-slug";
 
+const isReserved = (slug: string) => {
+  return RESERVED_SLUGS.has(slug.trim().toLowerCase());
+};
+
 export const getRouter = createTRPCRouter({
   health: publicProcedure
     .meta({
@@ -36,7 +40,7 @@ export const getRouter = createTRPCRouter({
       docs: {
         description: "Fetch All Urls for a particular User",
         tags: ["urls", "get", "all"],
-        auth: true
+        auth: true,
       },
     })
     .query(async ({ ctx }) => {
@@ -76,7 +80,7 @@ export const getRouter = createTRPCRouter({
         description:
           "Returns information about the currently authenticated user.h",
         tags: ["Authentication", "User"],
-        auth: true
+        auth: true,
       },
     })
     .query((opts) => {
@@ -95,13 +99,13 @@ export const getRouter = createTRPCRouter({
     })
     .input(z.object({ destinationUrl: z.string().optional() }))
     .query(async (opts) => {
-      const prevSlugs: string[] = [...RESERVED_SLUGS];
+      const prevSlugs: string[] = [];
       while (true) {
         const slug = opts.input.destinationUrl
           ? generateSlugFromUrl(opts.input.destinationUrl)
           : generateRandomSlug();
 
-        if (prevSlugs.includes(slug)) {
+        if (prevSlugs.includes(slug) || isReserved(slug)) {
           continue;
         }
 
@@ -124,6 +128,14 @@ export const getRouter = createTRPCRouter({
     })
     .input(z.object({ slug: z.string() }))
     .query(async (opts) => {
+      
+      if (isReserved(opts.input.slug)) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Slug already exists",
+        });
+      }
+
       const res = await slugExists(opts.input.slug);
 
       if (res) {

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Logo } from "@/components/UI";
 import styles from "./page.module.scss";
 import { ArrowRight, Globe, User } from "lucide-react";
+import { toast } from "sonner";
 const supabase = createClient();
 
 function Login() {
@@ -16,13 +17,19 @@ function Login() {
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-    if (error) return;
+    if (error) {
+      toast.error("Unable to Sigin");
+      return;
+    }
     router.refresh();
   };
 
   const handleSigninAnonymous = async () => {
     const { error } = await supabase.auth.signInAnonymously();
-    if (error) return;
+    if (error) {
+      toast.error("Unable to Sigin");
+      return;
+    }
     router.refresh();
   };
 

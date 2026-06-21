@@ -1,38 +1,41 @@
 import { NextResponse } from "next/server";
 import { getRedirectData, setRedirectData } from "@repo/cache";
-import { StatusCode, createErrorResponse } from "@repo/shared";
+import { StatusCode, createErrorResponse, logger } from "@repo/shared";
 import { getLinkBySlug, updateClicksCount } from "@repo/db";
 
-export async function GET(_: Request, context: { params: Promise<{ slug: string; }> }) {
+export async function GET(req: Request, context: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await context.params;
 
     if (!slug) {
-      return NextResponse.json(createErrorResponse("Slug is not given"), { status: StatusCode.BAD_REQUEST, });
+      logger.warn("Redirect attempted without slug", slug);
+      return NextResponse.json(createErrorResponse("Slug is not given"), {status: StatusCode.BAD_REQUEST,});
     }
 
     const cached = await getRedirectData(slug);
 
     if (cached) {
-      void updateClicksCount(slug).catch((err) => console.log(err))
+      logger.info("Redirect cache hit", {slug, destinationUrl: cached.longUrl});
+      void updateClicksCount(slug).catch((err) => logger.error("Failed to increment click count", { slug, err }),);
       return NextResponse.redirect(cached.longUrl, 302);
     }
 
     const destination_url = await getLinkBySlug(slug);
 
     if (!destination_url) {
-      return NextResponse.json(createErrorResponse("Slug not found"), {status: StatusCode.NOT_FOUND});
+      logger.warn("Slug not found", { slug });
+      return NextResponse.redirect(new URL("/link-not-found", req.url));
     }
-    const result = await setRedirectData(slug, destination_url);
 
-    if (!result) {
-      return NextResponse.json(createErrorResponse("Unable to cache redirect data"),{ status: StatusCode.INTERNAL_SERVER_ERROR });
-    }
+    void setRedirectData(slug, destination_url).catch((err) => logger.error("Failed to cache redirect", {slug, err}));
+    void updateClicksCount(slug).catch((err) => logger.error("Failed to increment click count", { slug, err }));
 
     return NextResponse.redirect(destination_url, 302);
   } catch (error) {
-    console.log("Error while redirecting:", error);
 
-    return NextResponse.json(createErrorResponse("Error while redirecting"), { status: StatusCode.INTERNAL_SERVER_ERROR, });
+    const { slug } = await context.params;
+    logger.error("Redirect route failed", {slug, error,});
+
+    return NextResponse.redirect(new URL("/link-not-found", req.url));
   }
 }

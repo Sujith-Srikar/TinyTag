@@ -12,6 +12,7 @@ import { User } from "@repo/shared";
 import { createClient } from "@/utils/auth/client";
 import { Button } from "@repo/ui";
 import { useAuthErrors } from "@/hooks/useAuthErrors";
+import { toast } from "sonner";
 const supabase = createClient();
 
 const NAV_ITEMS = [
@@ -46,7 +47,11 @@ export function Sidebar() {
 
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
-    if(error) return;
+    if (error) {
+      toast.error("Logout Failed");
+      return;
+    }
+    toast.success("Logout Successful");
     router.refresh();
   };
 
@@ -61,10 +66,10 @@ export function Sidebar() {
       },
     });
 
-    if(error || !data.url) return;
+    if (error || !data.url) return;
 
     window.location.assign(data.url);
-  }
+  };
 
   useEffect(() => {
     if (error || !data) return;

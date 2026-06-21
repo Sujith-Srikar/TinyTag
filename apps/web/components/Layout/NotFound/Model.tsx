@@ -49,13 +49,13 @@ function Font() {
 
       <Text
         font="/fonts/PPNeueMontreal-Regular.ttf"
-        position={[0, -0.15, -0.1]}
+        position={[0, -0.20, -0.1]}
         fontSize={0.03}
         color="white"
         anchorX="center"
         anchorY="middle"
       >
-        The link is broken
+        The link is not Found
       </Text>
     </group>
   );
@@ -71,7 +71,7 @@ function GlassMesh({ data }: { data: any }) {
           thickness={0.275}
           ior={1.8}
           chromaticAberration={0.3}
-          resolution={128}
+          resolution={32}
         />
       </mesh>
     </Float>
