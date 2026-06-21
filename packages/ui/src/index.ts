@@ -6,4 +6,5 @@ export * from "./components/button";
 export * from "./components/input";
 export * from "./components/badge";
 export * from "./components/tooltip";
-export * from './components/infotooltip';
+export * from "./components/infotooltip";
+export * from "./components/text-particle";

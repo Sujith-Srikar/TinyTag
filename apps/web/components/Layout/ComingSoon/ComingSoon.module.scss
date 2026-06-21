@@ -1,0 +1,145 @@
+.wrapper {
+  min-height: calc(100vh - var(--topbar-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(203, 255, 71, 0.08) 0%,
+    transparent 65%
+  );
+}
+
+.hero {
+  width: 100%;
+  max-width: 1200px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 1rem;
+  z-index: 1;
+
+  canvas {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+.content {
+  margin-top: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 1rem;
+
+  max-width: 700px;
+
+  text-align: center;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--font-display);
+
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  color: var(--text-primary);
+
+  max-width: 600px;
+}
+
+.rotating {
+  min-height: 24px;
+
+  color: var(--text-secondary);
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  animation: fadeMessage 2.5s ease;
+}
+
+.divider {
+  width: 120px;
+  height: 1px;
+
+  background: var(--border);
+
+  margin: 0.5rem 0;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  gap: 1rem;
+
+  color: var(--text-secondary);
+
+  span {
+    padding: 0.45rem 0.85rem;
+
+    border-radius: var(--radius-full);
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+  }
+}
+
+.pending {
+  color: var(--accent);
+  border-color: var(--accent) !important;
+}
+
+@keyframes fadeMessage {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    canvas {
+      height: 120px;
+    }
+  }
+
+  .status {
+    gap: 0.75rem;
+  }
+}

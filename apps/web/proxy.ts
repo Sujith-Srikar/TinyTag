@@ -7,6 +7,22 @@ export async function proxy(request: NextRequest) {
     request,
   });
 
+  const pathname = request.nextUrl.pathname;
+
+  const isProtected =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/analytics") ||
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/links");
+
+  const isAuth = pathname.startsWith("/auth/login");
+
+  const requiresAuthCheck = isProtected || isAuth;
+
+  if (!requiresAuthCheck) {
+    return NextResponse.next();
+  }
+
   const supabase = createServerClient(
     clientEnv.NEXT_PUBLIC_SUPABASE_URL,
     clientEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
@@ -36,11 +52,6 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
 
   const user = data?.claims;
-  const protectedRoutes = ["/dashboard"];
-
-  const isProtected = protectedRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
@@ -48,13 +59,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const authRoutes = ["/auth/login"];
-
-  const isAuthRoute = authRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
-
-  if (user && isAuthRoute) {
+  if (user && isAuth) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
 
@@ -65,7 +70,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
