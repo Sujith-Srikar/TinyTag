@@ -51,7 +51,7 @@ export type Database = {
           password_hash: string | null
           slug: string
           tags: string[] | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           clicks_count?: number
@@ -64,7 +64,7 @@ export type Database = {
           password_hash?: string | null
           slug: string
           tags?: string[] | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           clicks_count?: number
@@ -77,7 +77,7 @@ export type Database = {
           password_hash?: string | null
           slug?: string
           tags?: string[] | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
