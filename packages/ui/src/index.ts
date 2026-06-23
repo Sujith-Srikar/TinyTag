@@ -8,3 +8,6 @@ export * from "./components/badge";
 export * from "./components/tooltip";
 export * from "./components/infotooltip";
 export * from "./components/text-particle";
+export * from "./components/copybutton";
+export * from "./components/animated-container";
+export * from "./components/animated-list";

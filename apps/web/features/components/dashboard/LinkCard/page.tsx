@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Copy, Pencil, Trash } from "lucide-react";
-import { Badge, Button } from "@repo/ui";
+import { Badge, Button, CopyButton } from "@repo/ui";
 import {
   getDomain,
   formatNumber,
@@ -80,19 +80,21 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
           {/* Favicons are loaded from arbitrary user URLs, so native avoids Next.js
           remote hostname restrictions. */}
-          {!faviconFailed && <img
-            src={getFaviconUrl(link.destinationUrl)}
-            alt=""
-            width={20}
-            height={20}
-            onLoad={() => setFaviconLoaded(true)}
-            onError={() => {
-              setFaviconFailed(true);
-              setFaviconLoaded(false);
-            }}
-            loading="lazy"
-            className={styles.faviconImage}
-          />}
+          {!faviconFailed && (
+            <img
+              src={getFaviconUrl(link.destinationUrl)}
+              alt=""
+              width={20}
+              height={20}
+              onLoad={() => setFaviconLoaded(true)}
+              onError={() => {
+                setFaviconFailed(true);
+                setFaviconLoaded(false);
+              }}
+              loading="lazy"
+              className={styles.faviconImage}
+            />
+          )}
         </div>
 
         <div className={styles.info}>
@@ -136,14 +138,15 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
           <span className={styles.slugBase}>{BASE_URL}/</span>
           <span className={styles.slugPart}>{link.slug}</span>
         </Link>
-        <Button
+        <CopyButton value={`https://${shortUrl}`} />
+        {/* <Button
           variant="outline"
           value={`https://${shortUrl}`}
           size="icon-sm"
           onClick={handleCopy}
         >
           <Copy size={14} />
-        </Button>
+        </Button> */}
       </div>
 
       {/* Meta */}

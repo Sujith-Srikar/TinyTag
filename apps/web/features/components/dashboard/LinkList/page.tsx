@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Button, Input } from "@repo/ui";
+import { Button, Input, AnimatedContainer, AnimatedList } from "@repo/ui";
 import { LinkCard } from "../LinkCard/page";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
@@ -134,18 +134,18 @@ export function LinkList({
               {filtered.length} link{filtered.length !== 1 ? "s" : ""}
             </span>
           </div>
-          <ul className={styles.list}>
+          <AnimatedList className={styles.list}>
             {filtered.map((link, i) => (
-              <li key={link.id}>
+              <AnimatedContainer key={link.id} delay={i * 0.03}>
                 <LinkCard
                   link={link}
                   index={i}
                   onEdit={onEdit}
                   onDelete={onDelete}
                 />
-              </li>
+              </AnimatedContainer>
             ))}
-          </ul>
+          </AnimatedList>
         </>
       )}
     </div>
