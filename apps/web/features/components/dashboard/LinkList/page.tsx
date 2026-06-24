@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Button, Input, AnimatedContainer, AnimatedList } from "@repo/ui";
+import {
+  Button,
+  Input,
+  AnimatedContainer,
+  AnimatedList,
+  AnimatedSelect,
+  AnimatedTabs,
+} from "@repo/ui";
 import { LinkCard } from "../LinkCard/page";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
@@ -28,6 +35,27 @@ export function LinkList({
   const [sort, setSort] = useState<SortKey>("createdAt");
   const [filter, setFilter] = useState<FilterStatus>("all");
 
+  const FILTER_TABS = [
+    { id: "all", label: "All" },
+    { id: "active", label: "Active" },
+    { id: "inactive", label: "Inactive" },
+  ];
+
+  const SORT_OPTIONS = [
+    {
+      value: "createdAt",
+      label: "Newest first",
+    },
+    {
+      value: "clicks",
+      label: "Most clicks",
+    },
+    {
+      value: "title",
+      label: "Alphabetical",
+    },
+  ];
+
   const filtered = useMemo(() => {
     let result = links;
 
@@ -51,8 +79,9 @@ export function LinkList({
 
   return (
     <div className={styles.container}>
-      {/* Toolbar */}
+
       <div className={styles.toolbar}>
+
         <div className={styles.toolbarLeft}>
           <div className={styles.searchWrap}>
             <Input
@@ -64,46 +93,19 @@ export function LinkList({
             />
           </div>
 
-          <div className={styles.filterGroup}>
-            {(["all", "active", "inactive"] as FilterStatus[]).map((f) => (
-              <Button
-                key={f}
-                className={[
-                  styles.filterBtn,
-                  filter === f ? styles.filterActive : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setFilter(f)}
-              >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
-              </Button>
-            ))}
-          </div>
+          <AnimatedTabs
+            value={filter}
+            onValueChange={(value) => setFilter(value as FilterStatus)}
+            items={FILTER_TABS}
+          />
         </div>
 
         <div className={styles.toolbarRight}>
-          <div className={styles.sortWrap}>
-            <select
-              className={styles.sortSelect}
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              aria-label="Sort links"
-            >
-              <option value="createdAt">Newest first</option>
-              <option value="clicks">Most clicks</option>
-              <option value="title">Alphabetical</option>
-            </select>
-            <svg className={styles.sortChevron} viewBox="0 0 12 12" fill="none">
-              <path
-                d="M2 4L6 8L10 4"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+          <AnimatedSelect
+            value={sort}
+            onValueChange={(value) => setSort(value as SortKey)}
+            options={SORT_OPTIONS}
+          />
 
           <Button size="sm" onClick={onCreateNew}>
             New Link
@@ -111,7 +113,6 @@ export function LinkList({
         </div>
       </div>
 
-      {/* List */}
       {filtered.length === 0 ? (
         <div className={styles.empty}>
           <Frown />

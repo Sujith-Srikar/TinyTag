@@ -2,100 +2,110 @@
 
 import * as React from "react";
 import { Tooltip as TooltipPrimitive } from "radix-ui";
+import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@repo/ui/lib/utils";
 
-function TooltipProvider({
-  delayDuration = 80,
+export function TooltipProvider({
+  delayDuration = 120,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
-  return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delayDuration={delayDuration}
-      {...props}
-    />
-  );
+  return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
 
-function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
+export function Tooltip(
+  props: React.ComponentProps<typeof TooltipPrimitive.Root>,
+) {
+  return <TooltipPrimitive.Root {...props} />;
 }
 
-function TooltipTrigger(
+export function TooltipTrigger(
   props: React.ComponentProps<typeof TooltipPrimitive.Trigger>,
 ) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+  return <TooltipPrimitive.Trigger {...props} />;
 }
 
-function TooltipContent({
-  className,
-  sideOffset = 8,
-  children,
-  ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+interface TooltipContentProps extends React.ComponentPropsWithoutRef<
+  typeof TooltipPrimitive.Content
+> {}
+
+export const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  TooltipContentProps
+>(({ className, sideOffset = 8, children, ...props }, ref) => {
   return (
     <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        data-slot="tooltip-content"
-        sideOffset={sideOffset}
-        className={cn(
-          `
-          z-50
-          inline-flex
-          w-fit
-          max-w-xs
-          items-center
-          gap-1.5
-          rounded-md
-          bg-foreground
-          px-3
-          py-1.5
-          text-xs
-          text-background
+      <AnimatePresence>
+        <TooltipPrimitive.Content
+          ref={ref}
+          sideOffset={sideOffset}
+          forceMount
+          className="z-[500] outline-none"
+          {...props}
+        >
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.96,
+              y: 4,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.98,
+              y: 2,
+            }}
+            transition={{
+              duration: 0.16,
+              ease: "easeOut",
+            }}
+            className={cn(
+              `
+              inline-flex
+              items-center
+              gap-1.5
 
-          origin-[var(--radix-tooltip-content-transform-origin)]
+              max-w-xs
 
-          shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_2px_6px_rgba(0,0,0,0.05),0_4px_42px_rgba(0,0,0,0.06)]
+              rounded-md
+              border
 
-          transition-[opacity,transform]
-          ease-out
+              bg-[var(--bg-surface)]
+              border-[var(--border)]
 
-          data-[state=closed]:opacity-0
-          data-[state=closed]:scale-[0.98]
+              px-3
+              py-1.5
 
-          data-[state=instant-open]:opacity-100
-          data-[state=instant-open]:scale-100
+              text-xs
+              font-medium
 
-          data-[state=delayed-open]:opacity-100
-          data-[state=delayed-open]:scale-100
+              text-[var(--text-primary)]
 
-          has-data-[slot=kbd]:pr-1.5
-          **:data-[slot=kbd]:relative
-          **:data-[slot=kbd]:isolate
-          **:data-[slot=kbd]:z-50
-          **:data-[slot=kbd]:rounded-sm
-          `,
-          className,
-        )}
-        {...props}
-      >
-        {children}
+              shadow-lg
+              backdrop-blur-sm
+              `,
+              className,
+            )}
+          >
+            {children}
+          </motion.div>
 
-        <TooltipPrimitive.Arrow
-          className="
-            z-50
-            size-2.5
-            translate-y-[calc(-50%_-_2px)]
-            rotate-45
-            rounded-[2px]
-            bg-foreground
-            fill-foreground
-          "
-        />
-      </TooltipPrimitive.Content>
+          <TooltipPrimitive.Arrow
+            className="
+              fill-[var(--bg-surface)]
+              stroke-[var(--border)]
+            "
+            width={10}
+            height={6}
+          />
+        </TooltipPrimitive.Content>
+      </AnimatePresence>
     </TooltipPrimitive.Portal>
   );
-}
+});
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+TooltipContent.displayName = "TooltipContent";

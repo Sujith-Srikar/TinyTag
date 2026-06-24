@@ -11,3 +11,5 @@ export * from "./components/text-particle";
 export * from "./components/copybutton";
 export * from "./components/animated-container";
 export * from "./components/animated-list";
+export * from "./components/animated-select";
+export * from "./components/animated-tabs";

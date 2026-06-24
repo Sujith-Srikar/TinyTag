@@ -3,11 +3,16 @@ import "./globals.scss";
 import { Providers } from "@/providers/Providers";
 import { Geist } from "next/font/google";
 import { Toaster } from "sonner";
+import localfont from 'next/font/local';
 
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+const satoshi = localfont({
+  src: "../public/fonts/Satoshi-Variable.ttf",
+})
 
 export const metadata: Metadata = {
   title: {
@@ -26,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={geist.variable}>
+    <html lang="en" suppressHydrationWarning className={satoshi.className}>
       <body>
         <Providers>
           <Toaster position="top-center" />

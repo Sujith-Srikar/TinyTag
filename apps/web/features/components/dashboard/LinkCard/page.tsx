@@ -51,17 +51,6 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
-  const handleCopy = async () => {
-    if (navigator?.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(`https://${shortUrl}`);
-        return true;
-      } catch (error) {
-        console.error("Modern Clipboard API failed, trying fallback:", error);
-      }
-    }
-  };
-
   return (
     <div
       className={[styles.card, !link.isActive ? styles.inactive : ""]
@@ -134,10 +123,10 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
       {/* Slug + copy */}
       <div className={styles.slugSection}>
-        <Link href={`/links/${link.id}`} className={styles.slug}>
+        <div className={styles.slug}>
           <span className={styles.slugBase}>{BASE_URL}/</span>
           <span className={styles.slugPart}>{link.slug}</span>
-        </Link>
+        </div>
         <CopyButton value={`https://${shortUrl}`} />
         {/* <Button
           variant="outline"
