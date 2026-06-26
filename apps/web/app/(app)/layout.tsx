@@ -1,11 +1,12 @@
 import { Sidebar } from "@/components/Layout";
+import styles from "./layout.module.scss";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="app-shell">
+    <div className={styles.layout}>
       <Sidebar />
 
-      <main className="app-main">{children}</main>
+      <main className={styles.main}>{children}</main>
     </div>
   );
 }

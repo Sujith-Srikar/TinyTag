@@ -1,205 +1,238 @@
 @import "tailwindcss";
 @source "../../../packages/ui";
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+// ─── Fonts ───────────────────────────────────────────────────────────────────
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ─── Tailwind theme bridge ────────────────────────────────────────────────────
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
 
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--bg-surface);
+  --color-card-foreground: var(--text-primary);
 
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--bg-elevated);
+  --color-popover-foreground: var(--text-primary);
 
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--brand-accent);
+  --color-primary-foreground: var(--accent-fg);
 
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--bg-elevated);
+  --color-secondary-foreground: var(--text-primary);
 
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--bg-elevated);
+  --color-muted-foreground: var(--text-muted);
 
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--brand-accent);
+  --color-accent-foreground: var(--text-primary);
 
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: #ffffff;
 
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-border: var(--border-default);
+  --color-input: var(--border-default);
+  --color-ring: var(--brand-accent);
 
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
 
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --radius-full: var(--radius-full);
+
+  --radius: var(--radius-sm);
 }
 
+// ─── Design tokens ────────────────────────────────────────────────────────────
+
 @layer base {
+  // ── Light mode (default) ───────────────────────────────────────────────────
   :root {
-    // Background layers
-    --bg-base: #f7f7f5;
-    --bg-surface: #ffffff;
-    --bg-elevated: #f0f0ed;
-    --bg-overlay: rgba(20, 20, 18, 0.5);
-
-    // Borders
-    --border: #e4e4e0;
-    --border-strong: #c8c8c2;
-    --border-focus: #cbff47;
-
-    // Text
-    --text-primary: #141412;
-    --text-secondary: #6b6b65;
-    --text-muted: #a8a8a0;
-    --text-disabled: #c8c8c2;
-    --text-inverse: #f0f0eb;
-
-    // Accent — acid yellow, the brand signature
-    --accent: #cbff47;
+    --brand-accent: #cbff47;
     --accent-fg: #141412;
     --accent-muted: #e8ffaa;
-    --accent-dim: rgba(203, 255, 71, 0.12);
+    --accent-dim: rgba(203, 255, 71, 0.15);
+
+    --bg-base: #f5f5f3;
+    --bg-surface: #ffffff;
+    --bg-elevated: #fafaf8;
+
+    --border-subtle: rgba(20, 20, 18, 0.06);
+    --border-default: rgba(20, 20, 18, 0.1); // $color-border
+    --border-strong: rgba(
+      20,
+      20,
+      18,
+      0.18
+    ); // $color-border-strong — focused inputs
+    --border-focus: #cbff47; // accent colour reused for focus outlines
+
+    // Text
+    --text-primary: #141412; // $color-text-primary
+    --text-secondary: #666660; // $color-text-secondary
+    --text-muted: #9a9a94; // $color-text-muted — non-critical UI only
+    --text-inverse: #f5f5f0; // text on dark surfaces
 
     // Semantic
-    --destructive: #ff4444;
-    --destructive-muted: rgba(255, 68, 68, 0.1);
-    --success: #22c55e;
+    --success: #22c55e; // $color-success
     --success-muted: rgba(34, 197, 94, 0.1);
-    --warning: #f59e0b;
+    --warning: #f59e0b; // $color-warning
     --warning-muted: rgba(245, 158, 11, 0.1);
+    --danger: #ef4444; // $color-danger — destructive only
+    --danger-muted: rgba(239, 68, 68, 0.1);
+    --danger-ring: rgba(239, 68, 68, 0.2);
 
-    // Shadows
-    --shadow-xs: 0 1px 2px rgba(20, 20, 18, 0.05);
-    --shadow-sm:
-      0 1px 3px rgba(20, 20, 18, 0.08), 0 1px 2px rgba(20, 20, 18, 0.04);
-    --shadow-md:
-      0 4px 6px rgba(20, 20, 18, 0.06), 0 2px 4px rgba(20, 20, 18, 0.04);
-    --shadow-lg:
-      0 10px 15px rgba(20, 20, 18, 0.08), 0 4px 6px rgba(20, 20, 18, 0.04);
-    --shadow-xl:
-      0 20px 25px rgba(20, 20, 18, 0.1), 0 8px 10px rgba(20, 20, 18, 0.04);
+    // Elevation — shadow only at modal level (Level 3)
+    // Level 0: nothing. Level 1: border. Level 2: border-strong. Level 3: shadow.
     --shadow-modal:
-      0 24px 48px rgba(20, 20, 18, 0.16), 0 8px 16px rgba(20, 20, 18, 0.08);
+      0 8px 32px rgba(20, 20, 18, 0.16), 0 2px 8px rgba(20, 20, 18, 0.08);
 
-    // Layout
-    --sidebar-width: 240px;
-    --topbar-height: 60px;
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
-    --radius-full: 9999px;
+    // Blur — floating surfaces only, never on static content
+    --blur-subtle: blur(8px); // modal backdrop, drawer backdrop
+    --blur-medium: blur(12px); // dropdowns over complex content
+
+    // Overlay backdrops
+    --overlay-modal: rgba(20, 20, 18, 0.5);
+    --overlay-drawer: rgba(20, 20, 18, 0.4);
 
     // Typography
-    --font-display: "Bricolage Grotesque", sans-serif;
-    --font-body: "Satoshi", sans-serif;
-    --font-mono: "JetBrains Mono", monospace;
+    --font-display: "PP Neue Montreal", system-ui, sans-serif;
+    --font-body: "Satoshi", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-    // Transitions
-    --transition-fast: 100ms ease;
-    --transition-base: 160ms ease;
-    --transition-slow: 280ms ease;
-    --transition-spring: 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    --text-display-xl: 56px;
+    --text-display-lg: 48px;
+    --text-display-md: 40px;
 
-    // Z-index scale
+    --text-heading-xl: 32px;
+    --text-heading-lg: 24px;
+    --text-heading-md: 20px;
+
+    --text-body-lg: 18px;
+    --text-body: 16px;
+    --text-body-sm: 14px;
+
+    --text-caption: 12px;
+
+    --line-height-display: 1.05;
+    --line-height-heading: 1.15;
+    --line-height-body: 1.6;
+    --line-height-caption: 1.4;
+
+    // Border radius — strict grammar, never mix
+    --radius-xs: 6px; // tags, small chips
+    --radius-sm: 10px; // ALL buttons, ALL inputs
+    --radius-md: 14px; // dropdowns, tooltips
+    --radius-lg: 18px; // ALL cards, panels
+    --radius-xl: 24px; // modals, drawers, bottom sheets
+    --radius-full: 9999px; // badges, chips, toggles
+
+    // Spacing — 4px base unit
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-24: 96px;
+    --space-32: 128px;
+
+    // Motion
+    --motion-fast: 120ms;
+    --motion-normal: 180ms;
+    --motion-slow: 280ms;
+    --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+    // Layout
+    --sidebar-width: 280px; // design system spec — never 240px
+    --topbar-height: 56px;
+    --container-reading: 70ch;
+
+    --content-xs: 480px;
+    --content-sm: 720px;
+    --content-md: 960px;
+    --content-lg: 1280px;
+    --content-xl: 1440px;
+
+    --container-padding-mobile: 16px;
+    --container-padding-tablet: 24px;
+    --container-padding-desktop: 32px;
+    --container-padding-wide: 48px;
+
+    // Z-index scale — documented here, not in design system prose
     --z-base: 1;
     --z-dropdown: 100;
     --z-sticky: 200;
     --z-overlay: 300;
     --z-modal: 400;
     --z-toast: 500;
-
-    --background: var(--bg-surface);
-    --foreground: var(--text-primary);
-
-    --card: var(--bg-surface);
-    --card-foreground: var(--text-primary);
-
-    --popover: var(--bg-surface);
-    --popover-foreground: var(--text-primary);
-
-    --primary: var(--accent);
-    --primary-foreground: var(--accent-fg);
-
-    --secondary: var(--bg-elevated);
-    --secondary-foreground: var(--text-primary);
-
-    --muted: var(--bg-elevated);
-    --muted-foreground: var(--text-muted);
-
-    --destructive-foreground: #ffffff;
-
-    --input: var(--border);
-    --ring: var(--border-focus);
   }
 
+  // ── Dark mode ─────────────────────────────────────────────────────────────
   [data-theme="dark"] {
-    --bg-base: #0c0c0a;
-    --bg-surface: #141412;
-    --bg-elevated: #1c1c19;
-    --bg-overlay: rgba(0, 0, 0, 0.65);
+    // Surfaces
+    --bg-base: #090909; // $color-canvas-dark
+    --bg-surface: #111111; // $color-surface-dark
+    --bg-elevated: #171717; // $color-surface-elevated-dark
 
-    --border: #2a2a26;
-    --border-strong: #3d3d38;
-    --border-focus: #cbff47;
+    // Borders
+    --border-subtle: rgba(255, 255, 255, 0.06); // $color-border-subtle-dark
+    --border-default: rgba(255, 255, 255, 0.1); // $color-border-dark
+    --border-strong: rgba(255, 255, 255, 0.18); // $color-border-strong-dark
+    // --border-focus stays #cbff47 — accent never changes between modes
 
-    --text-primary: #f0f0eb;
-    --text-secondary: #8a8a82;
-    --text-muted: #55554e;
-    --text-disabled: #3d3d38;
+    // Text
+    --text-primary: #f5f5f0; // $color-text-primary-dark
+    --text-secondary: #b3b3ac; // $color-text-secondary-dark
+    --text-muted: #777770; // $color-text-muted-dark
     --text-inverse: #141412;
 
-    --accent: #cbff47;
-    --accent-fg: #141412;
-    --accent-muted: #2d3d0a;
-    --accent-dim: rgba(203, 255, 71, 0.08);
-
-    --destructive: #ff5555;
-    --destructive-muted: rgba(255, 85, 85, 0.12);
+    // Semantic — lighter variants for dark surfaces
     --success: #4ade80;
     --success-muted: rgba(74, 222, 128, 0.1);
-    --warning: #fbb040;
-    --warning-muted: rgba(251, 176, 64, 0.1);
+    --warning: #fbbf24;
+    --warning-muted: rgba(251, 191, 36, 0.1);
+    --danger: #f87171;
+    --danger-muted: rgba(248, 113, 113, 0.1);
+    --danger-ring: rgba(248, 113, 113, 0.2);
 
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.28), 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.16);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.32), 0 4px 6px rgba(0, 0, 0, 0.16);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4), 0 8px 10px rgba(0, 0, 0, 0.16);
-    --shadow-modal:
-      0 24px 48px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.3);
+    // Accent-muted darkens significantly in dark mode
+    --accent-muted: rgba(203, 255, 71, 0.12);
+    --accent-dim: rgba(203, 255, 71, 0.08);
 
-    --background: var(--bg-surface);
-    --foreground: var(--text-primary);
+    // Shadow — heavier in dark mode for visibility
+    --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
 
-    --card: var(--bg-elevated);
-    --card-foreground: var(--text-primary);
-
-    --popover: var(--bg-elevated);
-    --popover-foreground: var(--text-primary);
-
-    --primary: var(--accent);
-    --primary-foreground: var(--accent-fg);
-
-    --secondary: var(--bg-elevated);
-    --secondary-foreground: var(--text-primary);
-
-    --muted: var(--bg-elevated);
-    --muted-foreground: var(--text-muted);
-
-    --destructive-foreground: #ffffff;
-
-    --input: var(--border-strong);
-    --ring: var(--border-focus);
+    // Overlays — darker in dark mode
+    --overlay-modal: rgba(0, 0, 0, 0.65);
+    --overlay-drawer: rgba(0, 0, 0, 0.5);
   }
+
+  // ── Base reset ────────────────────────────────────────────────────────────
 
   *,
   *::before,
@@ -217,33 +250,42 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   body {
     font-family: var(--font-body);
-    font-size: 0.9375rem;
+    font-size: 1rem; // 16px — design system $type-body
     line-height: 1.6;
     color: var(--text-primary);
     background-color: var(--bg-base);
     transition:
-      background-color var(--transition-slow),
-      color var(--transition-slow);
-
-    background-image: radial-gradient(
-      circle,
-      var(--border) 1px,
-      transparent 1px
-    );
-    background-size: 24px 24px;
-    background-attachment: fixed;
+      background-color var(--motion-slow) var(--ease-enter),
+      color var(--motion-slow) var(--ease-enter);
+    // No dot-grid background — violates "UI recedes" principle
   }
 
   a {
     color: inherit;
     text-decoration: none;
   }
+
   img,
   svg {
     display: block;
+    max-width: 100%;
   }
+
   ul,
   ol {
     list-style: none;
@@ -261,6 +303,13 @@
     cursor: pointer;
   }
 
+  // Focus ring — always visible, accent colour, never hidden
+  :focus-visible {
+    outline: 2px solid var(--brand-accent);
+    outline-offset: 2px;
+  }
+
+  // ── Scrollbar ─────────────────────────────────────────────────────────────
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -275,55 +324,5 @@
     &:hover {
       background: var(--text-muted);
     }
-  }
-}
-
-.app-shell {
-  display: flex;
-  min-height: 100vh;
-}
-
-.app-main {
-  flex: 1;
-  min-width: 0;
-  margin-left: var(--sidebar-width);
-  background-color: var(--bg-base);
-  transition: margin-left var(--transition-base);
-}
-
-@media (max-width: 768px) {
-  .app-main {
-    margin-left: 0;
-  }
-}
-
-.labelWithTooltip {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-[data-slot="tooltip-content"] {
-  opacity: 0;
-  transform: scale(0.98);
-
-  transition:
-    opacity 50ms ease-out,
-    transform 50ms ease-out;
-}
-
-[data-slot="tooltip-content"][data-state="instant-open"],
-[data-slot="tooltip-content"][data-state="delayed-open"] {
-  opacity: 1;
-  transform: scale(1);
-
-  transition:
-    opacity 150ms ease-out,
-    transform 150ms ease-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-slot="tooltip-content"] {
-    transition: none !important;
   }
 }

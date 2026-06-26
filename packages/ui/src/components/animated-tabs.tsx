@@ -29,10 +29,10 @@ export function AnimatedTabs({
         items-center
         gap-1
 
-        rounded-md
+        rounded-[var(--radius-md)]
         border
 
-        border-[var(--border)]
+        border-[var(--border-default)]
         bg-[var(--bg-elevated)]
 
         p-1
@@ -59,7 +59,7 @@ export function AnimatedTabs({
 
               transition-colors
 
-              rounded-sm
+              rounded-[calc(var(--radius-md)-4px)]
             "
           >
             {active && (
@@ -74,10 +74,9 @@ export function AnimatedTabs({
                   absolute
                   inset-0
 
-                  rounded-sm
+                  rounded-[calc(var(--radius-md)-4px)]
 
                   bg-[var(--bg-surface)]
-                  shadow-xs
                 "
               />
             )}

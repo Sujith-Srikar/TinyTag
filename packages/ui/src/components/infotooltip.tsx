@@ -18,7 +18,7 @@ export function InfoTooltip({ content, className }: InfoTooltipProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <CircleQuestionMark className={className} size={16} />
+          <CircleQuestionMark className={className} size={14} />
         </TooltipTrigger>
 
         <TooltipContent>{content}</TooltipContent>

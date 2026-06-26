@@ -78,10 +78,10 @@ export function AnimatedSelect({
           items-center
           gap-2
 
-          rounded-md
+          rounded-[var(--radius-sm)]
           border
 
-          border-[var(--border)]
+          border-[var(--border-default)]
           bg-[var(--bg-elevated)]
 
           px-3
@@ -148,15 +148,15 @@ export function AnimatedSelect({
 
               min-w-full
 
-              rounded-lg
+              rounded-[var(--radius-md)]
               border
 
-              border-[var(--border)]
+              border-[var(--border-default)]
               bg-[var(--bg-surface)]
 
               p-1
 
-              shadow-lg
+              border-[var(--border-strong)]
             "
           >
             {options.map((option) => {
@@ -168,9 +168,6 @@ export function AnimatedSelect({
                   type="button"
                   role="option"
                   aria-selected={active}
-                  whileHover={{
-                    x: 2,
-                  }}
                   transition={{
                     duration: 0.12,
                   }}
@@ -184,7 +181,7 @@ export function AnimatedSelect({
                     items-center
                     gap-2
 
-                    rounded-md
+                    rounded-[var(--radius-sm)]
 
                     px-3
                     py-2
@@ -224,7 +221,7 @@ export function AnimatedSelect({
                         rounded-full
 
                         bg-[var(--accent-dim)]
-                        text-[var(--accent)]
+                        text-[var(--brand-accent)]
                       "
                     >
                       <Check size={12} />

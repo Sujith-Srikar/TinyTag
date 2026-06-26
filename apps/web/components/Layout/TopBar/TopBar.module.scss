@@ -1,24 +1,14 @@
-// File: apps/web/components/layout/TopBar.module.scss
-
 .topBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 28px 32px 20px;
-  position: sticky;
-  top: 0;
-  z-index: var(--z-base);
   background-color: var(--bg-base);
-  border-bottom: 1px solid var(--border);
-
-  // Frosted glass feel
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
+  border-bottom: 1px solid var(--border-default);
   @media (max-width: 768px) {
     padding: 18px 20px 16px;
-    padding-top: 64px; // space for mobile hamburger
+    padding-top: 64px;
   }
 }
 

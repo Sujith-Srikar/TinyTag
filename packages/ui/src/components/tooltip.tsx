@@ -68,25 +68,16 @@ export const TooltipContent = React.forwardRef<
               inline-flex
               items-center
               gap-1.5
-
               max-w-xs
-
               rounded-md
               border
-
-              bg-[var(--bg-surface)]
+              bg-[var(--bg-elevated)]
               border-[var(--border)]
-
               px-3
               py-1.5
-
               text-xs
               font-medium
-
               text-[var(--text-primary)]
-
-              shadow-lg
-              backdrop-blur-sm
               `,
               className,
             )}

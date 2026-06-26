@@ -18,18 +18,15 @@ export function AnimatedContainer({
       className={className}
       initial={{
         opacity: 0,
-        y: 12,
-        filter: "blur(6px)",
+        y: 8,
       }}
       animate={{
         opacity: 1,
         y: 0,
-        filter: "blur(0px)",
       }}
       exit={{
         opacity: 0,
-        y: -12,
-        filter: "blur(6px)",
+        y: -8,
       }}
       transition={{
         duration: 0.22,
