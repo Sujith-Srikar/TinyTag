@@ -33,7 +33,7 @@ TinyTags is a URL management platform for developers, creators, and modern busin
 | Name | Token | Value | Use |
 |---|---|---|---|
 | Canvas | `$color-canvas` | `#F5F5F3` | Page background |
-| Surface | `$color-surface` | `#FFFFFF` | Cards, panels, inputs |
+| Surface | `$color-surface` | `#F0EEE9` | Cards, panels, inputs |
 | Surface Elevated | `$color-surface-elevated` | `#FAFAF8` | Dropdowns, hovered rows, disabled inputs |
 | Border Subtle | `$color-border-subtle` | `rgba(20,20,18,0.06)` | Dividers, ghost borders |
 | Border Default | `$color-border` | `rgba(20,20,18,0.10)` | Card borders, input borders at rest |
@@ -263,7 +263,7 @@ Applied as `backdrop-filter: $blur-subtle` on the backdrop element, not the surf
 - Focus: `outline: 2px solid $color-accent`, `outline-offset: 2px`
 - Disabled: `opacity: 0.4`, `pointer-events: none`
 
-**`$component-button-danger`** — Background `$color-danger`, text `#FFFFFF`, `$type-label`, `$radius-sm`, height 44px, padding 0 20px. Destructive actions only — delete link, revoke access, account removal. Never for cancel or navigation.
+**`$component-button-danger`** — Background `$color-danger`, text `#F0EEE9`, `$type-label`, `$radius-sm`, height 44px, padding 0 20px. Destructive actions only — delete link, revoke access, account removal. Never for cancel or navigation.
 - Active: `transform: scale(0.97)`, transition `$motion-fast`
 - Focus: `outline: 2px solid $color-danger`, `outline-offset: 2px`
 
@@ -303,7 +303,7 @@ Applied as `backdrop-filter: $blur-subtle` on the backdrop element, not the surf
 
 **`$component-bottom-sheet`** — Mobile only (< 768px). Replaces `$component-modal`. Full width, bottom-anchored, `$radius-xl` on top corners only. Background `$color-surface`. `$elevation-modal`. Drag handle: 4×32px, `$color-border`, `$radius-full`, centered 12px from top. Safe area padding at bottom. Enters via `translateY(100%) → 0` at `$motion-slow`. Swipe down or backdrop tap to dismiss.
 
-**`$component-badge`** — `$type-caption`, `$radius-full`, padding 3px 8px. Accent variant: background `$color-accent`, text `$color-on-accent`. Success variant: background `$color-success`, text `#FFFFFF`. Danger variant: background `$color-danger`, text `#FFFFFF`. Muted variant: background `$color-surface-elevated`, text `$color-text-secondary`. Max 2 words.
+**`$component-badge`** — `$type-caption`, `$radius-full`, padding 3px 8px. Accent variant: background `$color-accent`, text `$color-on-accent`. Success variant: background `$color-success`, text `#F0EEE9`. Danger variant: background `$color-danger`, text `#F0EEE9`. Muted variant: background `$color-surface-elevated`, text `$color-text-secondary`. Max 2 words.
 
 **`$component-empty-state`** — Centered column layout. Icon 32px / `$color-text-muted` → headline `$type-heading-md` / `$color-text-primary` → description `$type-body` / `$color-text-secondary` (max 2 lines, 48ch max-width) → `$component-button-primary`. Vertical padding `$space-16`.
 

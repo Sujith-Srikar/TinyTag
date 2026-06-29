@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/landing.scss";
 @source "../../../packages/ui";
 
 // ─── Fonts ───────────────────────────────────────────────────────────────────
@@ -44,7 +45,7 @@
   --color-accent-foreground: var(--text-primary);
 
   --color-destructive: var(--danger);
-  --color-destructive-foreground: #ffffff;
+  --color-destructive-foreground: #F0EEE9;
 
   --color-border: var(--border-default);
   --color-input: var(--border-default);
@@ -69,14 +70,14 @@
 @layer base {
   // ── Light mode (default) ───────────────────────────────────────────────────
   :root {
-    --brand-accent: #cbff47;
-    --accent-fg: #141412;
+    --brand-accent: #D0F54A;
+    --accent-fg: #100303;
     --accent-muted: #e8ffaa;
     --accent-dim: rgba(203, 255, 71, 0.15);
 
-    --bg-base: #f5f5f3;
-    --bg-surface: #ffffff;
-    --bg-elevated: #fafaf8;
+    --bg-base: #F3F1EC;
+    --bg-surface: #F0EEE9;
+    --bg-elevated: #EBE8E1;
 
     --border-subtle: rgba(20, 20, 18, 0.06);
     --border-default: rgba(20, 20, 18, 0.1); // $color-border
@@ -90,8 +91,8 @@
 
     // Text
     --text-primary: #141412; // $color-text-primary
-    --text-secondary: #666660; // $color-text-secondary
-    --text-muted: #9a9a94; // $color-text-muted — non-critical UI only
+    --text-secondary: #68655F; // $color-text-secondary
+    --text-muted: #8C8882; // $color-text-muted — non-critical UI only
     --text-inverse: #f5f5f0; // text on dark surfaces
 
     // Semantic
