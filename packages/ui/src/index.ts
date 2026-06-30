@@ -13,3 +13,4 @@ export * from "./components/animated-container";
 export * from "./components/animated-list";
 export * from "./components/animated-select";
 export * from "./components/animated-tabs";
+export * from "./components/animated-container";

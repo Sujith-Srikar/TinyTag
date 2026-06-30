@@ -3,6 +3,11 @@ import { type Redirect, RedirectSchema } from "./schema";
 
 const EXPIRY_TIME = 60 * 60 * 24; // 1 day
 
+const getCacheHealth = async () => {
+  const res = await redis.ping();
+  return res;
+}
+
 const getRedirectData = async (slug: string): Promise<Redirect | null> => {
   const data = await redis.get(redisKeys.redirect(slug));
 
@@ -34,4 +39,4 @@ const deleteData = async (slug: string) => {
   return false;
 }
 
-export { getRedirectData, setRedirectData, setAnalyticsData, deleteData };
+export { getCacheHealth, getRedirectData, setRedirectData, setAnalyticsData, deleteData };

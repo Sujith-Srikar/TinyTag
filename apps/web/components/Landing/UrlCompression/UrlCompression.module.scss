@@ -1,0 +1,14 @@
+.section {
+  position: relative;
+  height: 220vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+
+  height: 100vh;
+
+  display: grid;
+  place-items: center;
+}

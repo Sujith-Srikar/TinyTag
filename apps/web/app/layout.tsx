@@ -20,9 +20,6 @@ export const metadata: Metadata = {
     template: "%s | TinyTag",
   },
   description: "Shorten, track, and analyse every link you share.",
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({

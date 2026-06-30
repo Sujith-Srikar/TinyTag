@@ -1,4 +1,3 @@
-
 # TinyTags
 
 > Because nobody should have to send a URL that looks like a stack trace.

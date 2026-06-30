@@ -47,3 +47,33 @@ export interface LogMessage {
   timestamp: string;
   data?: unknown;
 }
+
+type HealthStatus =
+  | "healthy"
+  | "unhealthy";
+
+type ReadyStatus =
+  | "ok"
+  | "error";
+
+export interface DependencyHealth {
+  status: HealthStatus;
+  latencyMs: number;
+  message?: string;
+}
+
+export interface HealthResponse {
+  status: ReadyStatus;
+  uptime: number;
+  timestamp: string;
+
+  checks: {
+    server: {
+      status: HealthStatus;
+    };
+
+    cache: DependencyHealth;
+
+    db: DependencyHealth;
+  };
+}
