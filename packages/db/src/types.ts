@@ -87,6 +87,7 @@ export type Database = {
     }
     Functions: {
       get_redirect_url: { Args: { target_slug: string }; Returns: string }
+      health_check: { Args: never; Returns: boolean }
       increment_click_count: { Args: { target_slug: string }; Returns: boolean }
     }
     Enums: {
