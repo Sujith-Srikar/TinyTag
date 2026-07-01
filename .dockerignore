@@ -1,0 +1,12 @@
+Dockerfile
+**/node_modules
+.env
+.env.*
+.env.example
+.git
+.next
+out
+.turbo
+turbo.json
+vercel.json
+dist
