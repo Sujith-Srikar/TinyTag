@@ -21,10 +21,10 @@ RUN --mount=type=secret,id=env \
     pnpm run build
 
 FROM base AS runner
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
+RUN addgroup --system --gid 1001 appgroup
+RUN adduser --system --uid 1001 appuser
+USER appuser
 
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=appuser:appgroup /app/apps/web/.next/standalone ./
+COPY --from=installer --chown=appuser:appgroup /app/apps/web/.next/static ./apps/web/.next/static
 CMD ["node", "apps/web/server.js"]

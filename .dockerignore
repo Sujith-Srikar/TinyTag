@@ -7,6 +7,6 @@ Dockerfile
 .next
 out
 .turbo
-turbo.json
 vercel.json
 dist
+README.md
