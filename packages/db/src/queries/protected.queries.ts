@@ -25,6 +25,7 @@ const create_short_url = async (
     expires_at: opts.expiresAt || null,
     password_hash: opts.password || null,
     user_id: userId,
+    has_password: !!opts.password
   });
   return error;
 };
@@ -34,9 +35,10 @@ const edit_long_url = async (opts: LinkBuilderValues, supabase: DBClient) => {
     slug: opts.slug,
     destination_url: opts.destinationUrl,
     ...(opts.comments && { comments: opts.comments }),
-    ...(opts.expiresAt && { expiresAt: opts.expiresAt }),
+    ...(opts.expiresAt && { expires_at: opts.expiresAt }),
     ...(opts.tags && { tags: opts.tags }),
-    ...(opts.password && { password: opts.password }),
+    ...(opts.password && { password_hash: opts.password }),
+    ...(opts.password && { has_password: !!opts.password})
   };
 
   const { error } = await supabase

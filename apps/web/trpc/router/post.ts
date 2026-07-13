@@ -1,10 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../init";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../init";
 import { logger } from "@repo/shared";
 import { z } from "zod";
-import { create_short_url, delete_url, edit_long_url } from "@repo/db";
+import { create_short_url, delete_url, edit_long_url, getLinkPasswordBySlug, updateClicksCount } from "@repo/db";
 import { LinkBuilderFormSchema } from "@repo/shared";
 import { deleteData } from "@repo/cache";
+import { hash, verify } from "@node-rs/argon2";
+import { cookies } from "next/headers";
+
+const COOKIE_PREFIX = "tinytag-pw-";
+const COOKIE_MAX_AGE = 60 * 60 * 24; // 1 day
 
 export const postRouter = createTRPCRouter({
   shortenUrl: protectedProcedure
@@ -21,7 +26,12 @@ export const postRouter = createTRPCRouter({
     .mutation(async (opts) => {
       try {
         const input = opts.input;
-        const error = await create_short_url( input, opts.ctx.user.id, opts.ctx.supabase );
+        const hashedPassword = input.password ? await hash(input.password) : null;
+        const error = await create_short_url(
+          { ...input, password: hashedPassword },
+          opts.ctx.user.id,
+          opts.ctx.supabase,
+        );
 
         if (error) {
           throw new TRPCError({
@@ -58,10 +68,15 @@ export const postRouter = createTRPCRouter({
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const error = await edit_long_url(opts.input, opts.ctx.supabase);
+        const input = opts.input;
+        const hashedPassword = input.password ? await hash(input.password) : null;
+        const error = await edit_long_url(
+          { ...input, password: hashedPassword },
+          opts.ctx.supabase,
+        );
 
         if (!error) {
-          deleteData(opts.input.slug);
+          deleteData(input.slug);
           return {
             success: true,
             message: "Updated Long Url Successfully",
@@ -123,6 +138,68 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erroe while Deleting URL",
+        });
+      }
+    }),
+
+  verifyPassword: publicProcedure
+    .meta({
+      name: "Verify Password",
+      docs: {
+        description:
+          "Verifies a password for a password-protected link. Sets a verification cookie on success.",
+        tags: ["urls", "password", "verify"],
+      },
+    })
+    .input(
+      z.object({
+        slug: z.string().min(3).max(10),
+        password: z.string().min(1),
+      }),
+    )
+    .mutation(async (opts) => {
+      try {
+        const { slug, password } = opts.input;
+
+        const link = await getLinkPasswordBySlug(slug);
+        if (!link || !link.passwordHash) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Link not found",
+          });
+        }
+
+        const valid = await verify(link.passwordHash, password);
+        if (!valid) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Invalid password",
+          });
+        }
+
+        const cookieStore = await cookies();
+        cookieStore.set(`${COOKIE_PREFIX}${slug}`, "1", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: COOKIE_MAX_AGE,
+        });
+
+        void updateClicksCount(slug).catch((err) =>
+          logger.error("Failed to increment click count", { slug, err }),
+        );
+
+        return { redirectUrl: link.destinationUrl };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        logger.error("Password verification failed", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to verify password",
         });
       }
     }),

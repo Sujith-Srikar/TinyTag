@@ -16,10 +16,10 @@ const getRedirectData = async (slug: string): Promise<Redirect | null> => {
   return RedirectSchema.parse(data);
 };
 
-const setRedirectData = async (slug: string, longUrl: string) => {
+const setRedirectData = async (slug: string, opts: Redirect) => {
   const result = await redis.set(
     redisKeys.redirect(slug),
-    { longUrl },
+    opts,
     { ex: EXPIRY_TIME },
   );
 
