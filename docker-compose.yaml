@@ -1,5 +1,9 @@
+name: tinytag
+
 volumes:
   redis-data:
+  db-data:
+  db-config:
 
 services:
   redis:
@@ -45,6 +49,16 @@ services:
       - "3000:3000"
     env_file: .env.docker 
 
+  db:
+    image: supabase/postgres:17.6.1.136
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    env_file: .env.docker
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_min_messages=fatal"]
 
 secrets:
   env:

@@ -12,11 +12,11 @@ export const LinkBuilderFormSchema = z.object({
         "Only lowercase & uppercase letters, numbers, and hyphens",
       ),
   ]),
-  domain: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  comments: z.string().optional(),
-  expiresAt: z.string().optional(),
-  password: z.string().optional(),
+  domain: z.string().nullable(),
+  tags: z.array(z.string()).nullable(),
+  comments: z.string().nullable(),
+  expiresAt: z.string().nullable(),
+  password: z.string().nullable(),
 });
 
 export type LinkBuilderValues = z.infer<typeof LinkBuilderFormSchema>;
@@ -30,8 +30,9 @@ export type LinkRecord = {
   password?: string;
   slug: string;
   tags?: string[];
-  isActive: boolean,
-  createdAt: string
+  isActive: boolean;
+  createdAt: string;
+  hasPassword: boolean;
 }
 
 export interface User {
