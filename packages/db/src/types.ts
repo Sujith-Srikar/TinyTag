@@ -46,6 +46,7 @@ export type Database = {
           created_at: string
           destination_url: string
           expires_at: string | null
+          has_password: boolean
           id: string
           is_active: boolean
           password_hash: string | null
@@ -59,6 +60,7 @@ export type Database = {
           created_at?: string
           destination_url: string
           expires_at?: string | null
+          has_password?: boolean
           id?: string
           is_active?: boolean
           password_hash?: string | null
@@ -72,6 +74,7 @@ export type Database = {
           created_at?: string
           destination_url?: string
           expires_at?: string | null
+          has_password?: boolean
           id?: string
           is_active?: boolean
           password_hash?: string | null
@@ -86,7 +89,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_redirect_url: { Args: { target_slug: string }; Returns: string }
+      get_redirect_url: {
+        Args: { target_slug: string }
+        Returns: {
+          destination_url: string
+          expires_at: string
+          password_hash: string
+        }[]
+      }
       health_check: { Args: never; Returns: boolean }
       increment_click_count: { Args: { target_slug: string }; Returns: boolean }
     }
