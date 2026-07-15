@@ -52,7 +52,7 @@ packages/
 - **Next.js `output: 'standalone'`** — Docker and Vercel use standalone build. Static files copied separately in Dockerfile.
 - **Vercel build** — `pnpm turbo build --filter=web` (not full monorepo build).
 - **tRPC router** — split into `get` (queries) and `post` (mutations) under `apps/web/trpc/router/`. Protected procedures require auth.
-- **Redirect flow** — `apps/web/app/[slug]/route.ts` checks Redis cache first, falls back to DB, then caches result. Uses performance collector.
+- **Redirect flow** — `apps/web/app/[slug]/route.ts` checks Redis cache first, falls back to DB, then caches result. Uses performance collector. Has expired-link and password-protected link checks. Expired → `/link-unavailable?reason=expired`. Not found → `/link-unavailable?reason=not-found`. Password-protected → rewrite to `/password/{slug}` (cookie `tinytag-pw-{slug}` = "1" means verified). No UI for setting passwords yet.
 - **Reserved slugs** — `@repo/shared/constant.ts` defines slugs that cannot be used (auth, dashboard, api, trpc, etc.).
 - **No test suite** — no testing framework or test files exist currently.
 - **No CI workflows** — no `.github/workflows/` directory.

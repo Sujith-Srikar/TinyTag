@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getRedirectData, setRedirectData } from "@repo/cache";
+import { getRedirectData, setRedirectData, deleteData } from "@repo/cache";
 import { StatusCode, createErrorResponse, logger, createPerformance } from "@repo/shared";
 import { getLinkBySlug, updateClicksCount } from "@repo/db";
 import { type Redirect } from "@repo/cache";
@@ -25,13 +25,14 @@ export async function GET(req: Request, context: { params: Promise<{ slug: strin
     if (!redirectData) {
       logger.warn("Slug not found", { slug });
       perf.finish({ cache: "miss", lookup: "miss" });
-      return NextResponse.redirect(new URL("/link-not-found", req.url));
+      return NextResponse.redirect(new URL("/link-unavailable?reason=not-found", req.url));
     }
 
     if (isExpired(redirectData)) {
       logger.info("Link expired", { slug });
+      void deleteData(slug);
       perf.finish({ status: "expired" });
-      return NextResponse.redirect(new URL("/link-expired", req.url));
+      return NextResponse.redirect(new URL("/link-unavailable?reason=expired", req.url));
     }
 
     if (redirectData.hasPassword) {
@@ -57,7 +58,7 @@ export async function GET(req: Request, context: { params: Promise<{ slug: strin
       cause: error instanceof Error && "cause" in error ? error.cause : undefined,
     });
     perf.finish({ status: "error" });
-    return NextResponse.redirect(new URL("/link-not-found", req.url));
+    return NextResponse.redirect(new URL("/link-unavailable?reason=not-found", req.url));
   }
 }
 
@@ -71,7 +72,11 @@ async function resolveRedirectData(
   const dbData = await perf.measure("db", () => getLinkBySlug(slug));
   if (!dbData) return null;
 
-  void setRedirectData(slug, dbData).catch((err) =>
+  const ttl = dbData.expiresAt
+    ? Math.max(0, Math.floor((new Date(dbData.expiresAt).getTime() - Date.now()) / 1000))
+    : undefined;
+
+  void setRedirectData(slug, dbData, ttl).catch((err) =>
     logger.error("Failed to cache redirect", { slug, err }),
   );
   return dbData;
