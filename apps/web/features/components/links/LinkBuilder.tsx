@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Modal } from "@/components/UI";
@@ -20,7 +20,9 @@ import {
   DestinationSection,
   ShortLinkSection,
   CommentSection,
-  QrCodeSection
+  QrCodeSection,
+  ExpirySection,
+  PasswordSection,
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
@@ -52,14 +54,14 @@ export const LinkBuilder = () => {
     trpc.post.shortenUrl.mutationOptions({
       onSuccess: (data) => {
         console.log("Slug Created Successfully:", data);
-        toast.success("Slug Created Successfully");
+        toast.success("Link created successfully");
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {
         console.log("SLug creation error:", err);
-        toast.error("Slug not Created");
+        toast.error("Failed to create link");
       },
     }),
   );
@@ -68,14 +70,14 @@ export const LinkBuilder = () => {
     trpc.post.editLongUrl.mutationOptions({
       onSuccess: (data) => {
         console.log("Slug Ediited Successfully:", data);
-        toast.success("Slug Ediited Successfully");
+        toast.success("Link updated successfully");
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {
         console.log("Slug not Edited error:", err);
-        toast.error("Slug not Edited");
+        toast.error("Failed to update link");
       },
     }),
   );
@@ -87,6 +89,8 @@ export const LinkBuilder = () => {
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
       comments: selectedLink.comments ?? "",
+      expiresAt: selectedLink.expiresAt ?? "",
+      password: selectedLink.password ?? "",
     });
   }, [selectedLink]);
 
@@ -109,7 +113,7 @@ export const LinkBuilder = () => {
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
     try {
       if (selectedLink) {
-        let editObj: LinkBuilderFields = {
+        const editObj: LinkBuilderFields = {
           slug: data.slug,
           destinationUrl: data.destinationUrl,
           ...(dirtyFields.comments && { comments: data.comments }),
@@ -124,6 +128,7 @@ export const LinkBuilder = () => {
           slug: data.slug,
           comments: data.comments,
           expiresAt: data.expiresAt,
+          password: data.password,
         });
       }
       closeModal();
@@ -152,6 +157,10 @@ export const LinkBuilder = () => {
                 <DestinationSection />
 
                 <ShortLinkSection />
+
+                <ExpirySection />
+
+                <PasswordSection />
 
                 <CommentSection />
             </div>

@@ -2,7 +2,6 @@
 
 import {
   Field,
-  FieldDescription,
   FieldLabel,
   FieldError,
   Textarea,
@@ -10,6 +9,7 @@ import {
 } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";
+import styles from "../LinkBuilder.module.scss";
 
 export const CommentSection = () => {
   const {
@@ -18,20 +18,20 @@ export const CommentSection = () => {
   } = useFormContext<LinkBuilderFields>();
 
   return (
-    <>
+    <div className={styles.sectionCard}>
       <Field>
-        <div className="labelWithTooltip">
+        <div className={styles.labelWithTooltip}>
           <FieldLabel htmlFor="comment">Comments</FieldLabel>
           <InfoTooltip content="Use comments to add context to your short links – for you and your team" />
         </div>
         <Textarea
           id="comment"
           placeholder="Add comments"
-          rows={4}
+          rows={3}
           {...register("comments")}
         />
         <FieldError errors={[errors.comments]} />
       </Field>
-    </>
+    </div>
   );
 };
