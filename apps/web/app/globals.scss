@@ -168,8 +168,14 @@
     --ease-enter: cubic-bezier(0, 0, 0.2, 1);
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
+    // Transition shorthand (duration + easing in one token)
+    --transition-fast: var(--motion-fast) var(--ease-enter);
+    --transition-base: var(--motion-normal) var(--ease-enter);
+    --transition-slow: var(--motion-slow) var(--ease-enter);
+
     // Layout
-    --sidebar-width: 280px; // design system spec — never 240px
+    --sidebar-width: 280px;
+    --sidebar-width-collapsed: 52px;
     --topbar-height: 56px;
     --container-reading: 70ch;
 

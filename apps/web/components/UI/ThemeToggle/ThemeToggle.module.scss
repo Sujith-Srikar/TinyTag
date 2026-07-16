@@ -43,8 +43,8 @@
   opacity: 0;
   transform: rotate(-30deg) scale(0.7);
   transition:
-    opacity var(--transition-slow),
-    transform var(--transition-spring);
+    opacity var(--transition-base),
+    transform var(--transition-slow);
 
   &.active {
     opacity: 1;

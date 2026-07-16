@@ -37,6 +37,10 @@
   display: flex;
   flex-direction: column;
   gap: 36px;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong, rgba(20, 20, 18, 0.18)) transparent;
 }
 
 .sectionCard {
@@ -341,6 +345,189 @@
   }
 }
 
+.featureButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.featureBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: min(var(--radius-md), 10px);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms, background 120ms;
+  flex: 1;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-strong, rgba(20, 20, 18, 0.18));
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.featureBtnActive {
+  background-color: rgba(203, 255, 71, 0.15);
+  color: var(--text-primary);
+  border-color: var(--accent);
+
+  &:hover {
+    background-color: rgba(203, 255, 71, 0.15);
+    border-color: var(--accent);
+    filter: brightness(0.95);
+  }
+}
+
+.featureDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.leftColumn::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leftColumn::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.leftColumn::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong, rgba(20, 20, 18, 0.18));
+  border-radius: 3px;
+}
+
+.subModalOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  animation: subModalFadeIn 120ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.subModal {
+  width: min(400px, calc(100% - 32px));
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 16px 70px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: subModalSlideIn 180ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.subModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.subModalTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+
+  svg {
+    color: var(--text-muted);
+  }
+}
+
+.subModalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  border-radius: min(var(--radius-md), 10px);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 120ms, background 120ms;
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+  }
+}
+
+.subModalBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subModalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.subModalFooterRight {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.passwordInputRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@keyframes subModalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes subModalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .expandWrapper {
     transition: none;
@@ -348,6 +535,11 @@
 
   .fadeIn {
     animation: none;
+  }
+
+  .subModalOverlay,
+  .subModal {
+    animation: none !important;
   }
 }
 
@@ -374,5 +566,9 @@
   .previewLinkRow {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .featureButtons {
+    flex-direction: column;
   }
 }

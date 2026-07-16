@@ -23,14 +23,17 @@ import {
   QrCodeSection,
   ExpirySection,
   PasswordSection,
+  PasswordModal,
+  ExpiryModal,
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
-import { Link } from "lucide-react";
-import { useEffect } from "react";
+import { Link, Shield, CalendarClock } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSlugGenerator } from "@/hooks/useSlugGenerator";
+import { useFormContext } from "react-hook-form";
 
 export const LinkBuilder = () => {
   const methods = useForm<LinkBuilderFields>({
@@ -49,6 +52,9 @@ export const LinkBuilder = () => {
   const { modal, closeModal, selectedLink } = useLinkBuilderStore();
   const { generateRandomSlug } = useSlugGenerator();
   const trpc = useTRPC();
+
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showExpiryModal, setShowExpiryModal] = useState(false);
 
   const createLink = useMutation(
     trpc.post.shortenUrl.mutationOptions({
@@ -121,14 +127,23 @@ export const LinkBuilder = () => {
           ...(dirtyFields.password && { password: data.password }),
           ...(dirtyFields.tags && { tags: data.tags }),
         };
-        editSlug.mutate(editObj);
+        editSlug.mutate({
+          ...editObj,
+          domain: editObj.domain ?? null,
+          tags: editObj.tags ?? null,
+          comments: editObj.comments ?? null,
+          expiresAt: editObj.expiresAt ?? null,
+          password: editObj.password ?? null,
+        });
       } else {
         createLink.mutate({
           destinationUrl: data.destinationUrl,
           slug: data.slug,
-          comments: data.comments,
-          expiresAt: data.expiresAt,
-          password: data.password,
+          domain: data.domain ?? null,
+          tags: data.tags ?? null,
+          comments: data.comments ?? null,
+          expiresAt: data.expiresAt ?? null,
+          password: data.password ?? null,
         });
       }
       closeModal();
@@ -163,6 +178,11 @@ export const LinkBuilder = () => {
                 <PasswordSection />
 
                 <CommentSection />
+
+                <FeatureButtons
+                  onPasswordClick={() => setShowPasswordModal(true)}
+                  onExpiryClick={() => setShowExpiryModal(true)}
+                />
             </div>
 
             <aside className={styles.rightColumn}>
@@ -178,8 +198,57 @@ export const LinkBuilder = () => {
               {selectedLink ? "Edit Link" : "Create link"}
             </Button>
           </ModalFooter>
+
+          {showPasswordModal && (
+            <PasswordModal onClose={() => setShowPasswordModal(false)} />
+          )}
+          {showExpiryModal && (
+            <ExpiryModal onClose={() => setShowExpiryModal(false)} />
+          )}
         </form>
       </FormProvider>
     </Modal>
   );
 };
+
+function FeatureButtons({
+  onPasswordClick,
+  onExpiryClick,
+}: {
+  onPasswordClick: () => void;
+  onExpiryClick: () => void;
+}) {
+  const { watch } = useFormContext<LinkBuilderFields>();
+  const password = watch("password");
+  const expiresAt = watch("expiresAt");
+  const hasPassword = !!password;
+  const hasExpiry = !!expiresAt;
+
+  return (
+    <div className={styles.featureButtons}>
+      <button
+        type="button"
+        className={[styles.featureBtn, hasPassword ? styles.featureBtnActive : ""]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={onPasswordClick}
+      >
+        <Shield size={14} />
+        <span>{hasPassword ? "Password set" : "Add password"}</span>
+        {hasPassword && <span className={styles.featureDot} />}
+      </button>
+
+      <button
+        type="button"
+        className={[styles.featureBtn, hasExpiry ? styles.featureBtnActive : ""]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={onExpiryClick}
+      >
+        <CalendarClock size={14} />
+        <span>{hasExpiry ? "Expiry set" : "Add expiry"}</span>
+        {hasExpiry && <span className={styles.featureDot} />}
+      </button>
+    </div>
+  );
+}

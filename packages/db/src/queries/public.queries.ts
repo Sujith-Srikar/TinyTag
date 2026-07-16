@@ -14,6 +14,8 @@ const getLinkBySlug = async (slug: string) => {
   if (error || !data?.length) return null;
 
   const row = data[0];
+  if(!row) return null;
+
   return {
     destinationUrl: row.destination_url,
     expiresAt: row.expires_at,
@@ -27,6 +29,8 @@ const getLinkPasswordBySlug = async (slug: string) => {
   if (error || !data?.length) return null;
 
   const row = data[0];
+  if(!row) return null;
+
   return {
     destinationUrl: row.destination_url,
     passwordHash: row.password_hash,

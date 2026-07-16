@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Logo, ThemeToggle } from "@/components/UI";
+import { Logo } from "@/components/UI";
 import styles from "./Sidebar.module.scss";
-import { LayoutDashboard, ChartNoAxesCombined, Wrench } from "lucide-react";
+import { LayoutDashboard, BarChart3, Settings, LogOut, Sun, Moon, UserPlus } from "lucide-react";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@repo/shared";
 import { createClient } from "@/utils/auth/client";
-import { Button } from "@repo/ui";
 import { useAuthErrors } from "@/hooks/useAuthErrors";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 const supabase = createClient();
 
@@ -24,12 +24,12 @@ const NAV_ITEMS = [
   {
     href: "/analytics",
     label: "Analytics",
-    icon: <ChartNoAxesCombined />,
+    icon: <BarChart3 />,
   },
   {
     href: "/settings",
     label: "Settings",
-    icon: <Wrench />,
+    icon: <Settings />,
   },
 ];
 
@@ -37,8 +37,12 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const trpc = useTRPC();
   const { data, error } = useQuery(trpc.get.getMe.queryOptions());
@@ -46,6 +50,7 @@ export function Sidebar() {
   useAuthErrors();
 
   const handleLogOut = async () => {
+    setMenuOpen(false);
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error("Logout Failed");
@@ -56,6 +61,7 @@ export function Sidebar() {
   };
 
   const handleUpgradeAcc = async () => {
+    setMenuOpen(false);
     const { data, error } = await supabase.auth.linkIdentity({
       provider: "google",
       options: {
@@ -73,9 +79,30 @@ export function Sidebar() {
 
   useEffect(() => {
     if (error || !data) return;
-
     setUser(data);
   }, [data]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpen]);
 
   return (
     <>
@@ -95,33 +122,9 @@ export function Sidebar() {
         aria-label="Toggle sidebar"
       >
         <svg viewBox="0 0 18 18" fill="none">
-          <line
-            x1="2"
-            y1="4.5"
-            x2="16"
-            y2="4.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <line
-            x1="2"
-            y1="9"
-            x2="16"
-            y2="9"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <line
-            x1="2"
-            y1="13.5"
-            x2="16"
-            y2="13.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
+          <line x1="2" y1="4.5" x2="16" y2="4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="2" y1="13.5" x2="16" y2="13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       </button>
 
@@ -156,7 +159,6 @@ export function Sidebar() {
               fill="none"
               style={{
                 transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 200ms ease",
               }}
             >
               <path
@@ -193,9 +195,6 @@ export function Sidebar() {
                     {!collapsed && (
                       <span className={styles.navLabel}>{item.label}</span>
                     )}
-                    {isActive && (
-                      <span className={styles.activePip} aria-hidden="true" />
-                    )}
                   </Link>
                 </li>
               );
@@ -206,21 +205,68 @@ export function Sidebar() {
         {/* Divider */}
         <div className={styles.divider} />
 
-        {/* Footer */}
-        <div className={styles.footer}>
-          <ThemeToggle showLabel={!collapsed} collapsed={collapsed} />
-          <Button onClick={handleLogOut}>Logout</Button>
-
-          {!collapsed && user?.isAnonymous && (
-            <Button className={styles.upgradeButton} onClick={handleUpgradeAcc}>
-              Upgrade with Google
-            </Button>
-          )}
-
+        {/* Footer — user row + popover menu */}
+        <div className={styles.footer} ref={menuRef}>
+          {/* User menu popover */}
           <div
-            className={[styles.userRow, collapsed ? styles.userRowCollapsed : "",]
+            className={[styles.userMenu, menuOpen ? styles.menuOpen : ""]
               .filter(Boolean)
               .join(" ")}
+            role="menu"
+          >
+            <button
+              className={styles.menuItem}
+              role="menuitem"
+              onClick={() => {
+                setTheme(isDark ? "light" : "dark");
+                setMenuOpen(false);
+              }}
+            >
+              {isDark ? <Sun /> : <Moon />}
+              {isDark ? "Light mode" : "Dark mode"}
+            </button>
+
+            {user?.isAnonymous && (
+              <button
+                className={styles.menuItem}
+                role="menuitem"
+                onClick={handleUpgradeAcc}
+              >
+                <UserPlus />
+                Upgrade with Google
+              </button>
+            )}
+
+            <div className={styles.menuDivider} />
+
+            <button
+              className={[styles.menuItem, styles.menuItemDanger]
+                .filter(Boolean)
+                .join(" ")}
+              role="menuitem"
+              onClick={handleLogOut}
+            >
+              <LogOut />
+              Logout
+            </button>
+          </div>
+
+          {/* User row */}
+          <div
+            className={[styles.userRow, collapsed ? styles.userRowCollapsed : ""]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => setMenuOpen((o) => !o)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setMenuOpen((o) => !o);
+              }
+            }}
+            aria-label="User menu"
+            aria-expanded={menuOpen}
           >
             <div className={styles.avatar} title="User account">
               <span>
@@ -235,7 +281,6 @@ export function Sidebar() {
                 <span className={styles.userName}>
                   {user?.isAnonymous ? "Guest User" : user?.email}
                 </span>
-
                 <span className={styles.userPlan}>
                   {user?.isAnonymous ? "Anonymous Session" : "Free Plan"}
                 </span>
