@@ -5,11 +5,10 @@
 import styles from "./Logo.module.scss";
 
 interface LogoProps {
-  collapsed?: boolean;
   size?: "sm" | "md" | "lg";
 }
 
-export function Logo({ collapsed = false, size = "md" }: LogoProps) {
+export function Logo({ size = "md" }: LogoProps) {
   const sizes = {
     sm: { icon: 24, text: 16 },
     md: { icon: 28, text: 18 },
@@ -19,7 +18,7 @@ export function Logo({ collapsed = false, size = "md" }: LogoProps) {
   const s = sizes[size];
 
   return (
-    <div className={styles.logo} data-collapsed={collapsed}>
+    <div className={styles.logo}>
       {/* Chain-link icon — two interlinked rounded rectangles */}
       <svg
         width={s.icon}
@@ -80,11 +79,9 @@ export function Logo({ collapsed = false, size = "md" }: LogoProps) {
         />
       </svg>
 
-      {!collapsed && (
-        <span className={styles.wordmark} style={{ fontSize: s.text }}>
-          Tiny<span className={styles.accent}>Tag</span>
-        </span>
-      )}
+      <span className={styles.wordmark} style={{ fontSize: s.text }}>
+        Tiny<span className={styles.accent}>Tag</span>
+      </span>
     </div>
   );
 }

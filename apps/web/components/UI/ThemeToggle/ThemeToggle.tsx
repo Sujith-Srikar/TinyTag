@@ -29,6 +29,7 @@ export function ThemeToggle({
 
   return (
     <Button
+      variant="ghost"
       className={[styles.toggle, collapsed ? styles.collapsed : ""]
         .filter(Boolean)
         .join(" ")}

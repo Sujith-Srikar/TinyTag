@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/UI";
 import styles from "./Sidebar.module.scss";
-import { LayoutDashboard, BarChart3, Settings, LogOut, Sun, Moon, UserPlus } from "lucide-react";
+import { LayoutDashboard, BarChart3, LogOut, Sun, Moon, UserPlus, ChevronsUpDown } from "lucide-react";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@repo/shared";
@@ -13,6 +13,7 @@ import { createClient } from "@/utils/auth/client";
 import { useAuthErrors } from "@/hooks/useAuthErrors";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { Button } from "@repo/ui";
 const supabase = createClient();
 
 const NAV_ITEMS = [
@@ -25,29 +26,26 @@ const NAV_ITEMS = [
     href: "/analytics",
     label: "Analytics",
     icon: <BarChart3 />,
-  },
-  {
-    href: "/settings",
-    label: "Settings",
-    icon: <Settings />,
-  },
+  }
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const isDark = isMounted && resolvedTheme === "dark";
 
   const trpc = useTRPC();
   const { data, error } = useQuery(trpc.get.getMe.queryOptions());
 
   useAuthErrors();
+
+  useEffect(() => {setIsMounted(true);}, []);
 
   const handleLogOut = async () => {
     setMenuOpen(false);
@@ -122,21 +120,40 @@ export function Sidebar() {
         aria-label="Toggle sidebar"
       >
         <svg viewBox="0 0 18 18" fill="none">
-          <line x1="2" y1="4.5" x2="16" y2="4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="2" y1="13.5" x2="16" y2="13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <line
+            x1="2"
+            y1="4.5"
+            x2="16"
+            y2="4.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="2"
+            y1="9"
+            x2="16"
+            y2="9"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="2"
+            y1="13.5"
+            x2="16"
+            y2="13.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
 
       <aside
-        className={[
-          styles.sidebar,
-          collapsed ? styles.collapsed : "",
-          mobileOpen ? styles.mobileOpen : "",
-        ]
+        className={[styles.sidebar, mobileOpen ? styles.mobileOpen : ""]
           .filter(Boolean)
           .join(" ")}
-        data-collapsed={collapsed}
       >
         {/* Header */}
         <div className={styles.header}>
@@ -145,32 +162,11 @@ export function Sidebar() {
             className={styles.logoLink}
             onClick={() => setMobileOpen(false)}
           >
-            <Logo collapsed={collapsed} size="md" />
+            <Logo size="md" />
           </Link>
-
-          <button
-            className={styles.collapseBtn}
-            onClick={() => setCollapsed((c) => !c)}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <svg
-              viewBox="0 0 16 16"
-              fill="none"
-              style={{
-                transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
-              }}
-            >
-              <path
-                d="M10 3L5 8L10 13"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
         </div>
+
+        <div className={styles.divider} />
 
         {/* Nav */}
         <nav className={styles.nav} aria-label="Main navigation">
@@ -189,12 +185,9 @@ export function Sidebar() {
                       .filter(Boolean)
                       .join(" ")}
                     onClick={() => setMobileOpen(false)}
-                    title={collapsed ? item.label : undefined}
                   >
                     <span className={styles.navIcon}>{item.icon}</span>
-                    {!collapsed && (
-                      <span className={styles.navLabel}>{item.label}</span>
-                    )}
+                    <span className={styles.navLabel}>{item.label}</span>
                   </Link>
                 </li>
               );
@@ -214,32 +207,36 @@ export function Sidebar() {
               .join(" ")}
             role="menu"
           >
-            <button
-              className={styles.menuItem}
-              role="menuitem"
-              onClick={() => {
-                setTheme(isDark ? "light" : "dark");
-                setMenuOpen(false);
-              }}
-            >
-              {isDark ? <Sun /> : <Moon />}
-              {isDark ? "Light mode" : "Dark mode"}
-            </button>
-
             {user?.isAnonymous && (
-              <button
-                className={styles.menuItem}
+              <Button
+                className={[styles.menuItem, styles.menuItemAccent]
+                  .filter(Boolean)
+                  .join(" ")}
                 role="menuitem"
                 onClick={handleUpgradeAcc}
               >
                 <UserPlus />
                 Upgrade with Google
-              </button>
+              </Button>
+            )}
+            {user?.isAnonymous && <div className={styles.menuDivider} />}
+            {isMounted && (
+              <Button
+                className={styles.menuItem}
+                role="menuitem"
+                onClick={() => {
+                  setTheme(isDark ? "light" : "dark");
+                  setMenuOpen(false);
+                }}
+              >
+                {isDark ? <Sun /> : <Moon />}
+                {isDark ? "Light mode" : "Dark mode"}
+              </Button>
             )}
 
             <div className={styles.menuDivider} />
 
-            <button
+            <Button
               className={[styles.menuItem, styles.menuItemDanger]
                 .filter(Boolean)
                 .join(" ")}
@@ -248,14 +245,12 @@ export function Sidebar() {
             >
               <LogOut />
               Logout
-            </button>
+            </Button>
           </div>
 
           {/* User row */}
           <div
-            className={[styles.userRow, collapsed ? styles.userRowCollapsed : ""]
-              .filter(Boolean)
-              .join(" ")}
+            className={styles.userRow}
             onClick={() => setMenuOpen((o) => !o)}
             role="button"
             tabIndex={0}
@@ -276,16 +271,17 @@ export function Sidebar() {
               </span>
             </div>
 
-            {!collapsed && (
-              <div className={styles.userInfo}>
-                <span className={styles.userName}>
-                  {user?.isAnonymous ? "Guest User" : user?.email}
-                </span>
-                <span className={styles.userPlan}>
-                  {user?.isAnonymous ? "Anonymous Session" : "Free Plan"}
-                </span>
-              </div>
-            )}
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>
+                {user?.isAnonymous ? "Guest User" : user?.email}
+              </span>
+              <span className={styles.userPlan}>
+                {user?.isAnonymous ? "Anonymous Session" : "Free Plan"}
+              </span>
+            </div>
+            <span>
+              <ChevronsUpDown size={14} />
+            </span>
           </div>
         </div>
       </aside>

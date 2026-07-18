@@ -174,8 +174,7 @@
     --transition-slow: var(--motion-slow) var(--ease-enter);
 
     // Layout
-    --sidebar-width: 280px;
-    --sidebar-width-collapsed: 52px;
+    --sidebar-width: 240px;
     --topbar-height: 56px;
     --container-reading: 70ch;
 
@@ -193,6 +192,7 @@
     // Z-index scale — documented here, not in design system prose
     --z-base: 1;
     --z-dropdown: 100;
+    --z-overlay-low: 150;
     --z-sticky: 200;
     --z-overlay: 300;
     --z-modal: 400;

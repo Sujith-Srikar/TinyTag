@@ -5,15 +5,11 @@
   align-items: center;
   gap: 10px;
   user-select: none;
-
-  &[data-collapsed='true'] {
-    justify-content: center;
-  }
 }
 
 .icon {
   flex-shrink: 0;
-  transition: transform var(--transition-spring);
+  transition: transform var(--transition-base);
 
   .logo:hover & {
     transform: rotate(-8deg) scale(1.05);

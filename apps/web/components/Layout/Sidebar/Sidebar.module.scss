@@ -2,21 +2,14 @@
   position: fixed;
   top: 0;
   left: 0;
+  height: 100dvh;
   height: 100vh;
   width: var(--sidebar-width);
   background-color: var(--bg-surface);
   border-right: 1px solid var(--border-default);
   display: flex;
   flex-direction: column;
-  transition:
-    width var(--transition-slow),
-    transform var(--transition-slow);
   overflow: hidden;
-  z-index: var(--z-sticky);
-
-  &.collapsed {
-    width: var(--sidebar-width-collapsed);
-  }
 }
 
 // ─── Header ───────────────────────────────────────────────────────────────────
@@ -24,15 +17,8 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 12px 14px 14px;
-  min-height: 52px;
+  padding: var(--space-6) var(--space-6) var(--space-8);
   flex-shrink: 0;
-
-  .collapsed & {
-    padding: 14px 8px;
-    justify-content: center;
-  }
 }
 
 .logoLink {
@@ -42,70 +28,30 @@
   flex: 1;
 }
 
-.collapseBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-xs);
-  color: var(--text-muted);
-  cursor: pointer;
-  flex-shrink: 0;
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base);
-
-  svg {
-    width: 14px;
-    height: 14px;
-    transition: transform var(--transition-base);
-  }
-
-  &:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-elevated);
-  }
-
-  &:active {
-    transform: scale(0.92);
-  }
-
-  .collapsed & {
-    display: none;
-  }
-}
-
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
 .nav {
   flex: 1;
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-4);
   overflow-y: auto;
   overflow-x: hidden;
-
-  .collapsed & {
-    padding: 4px 6px;
-  }
 }
 
 .navList {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   font-family: var(--font-body);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   font-weight: 500;
   text-decoration: none;
   position: relative;
@@ -116,9 +62,30 @@
   white-space: nowrap;
   overflow: hidden;
 
+  &::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 18px;
+    border-radius: 999px;
+    background: transparent;
+    transition:
+      background var(--transition-base),
+      left var(--transition-base);
+  }
+
+  &.active::before {
+    background: var(--brand-accent);
+    left: 0;
+  }
+
   &:hover {
-    background-color: var(--bg-elevated);
+    background: var(--bg-elevated);
     color: var(--text-primary);
+    transform: translateX(2px);
   }
 
   &:active {
@@ -126,18 +93,8 @@
   }
 
   &.active {
-    background-color: var(--brand-accent);
-    color: var(--accent-fg);
-
-    &:hover {
-      filter: brightness(0.95);
-    }
-  }
-
-  .collapsed & {
-    justify-content: center;
-    padding: 9px;
-    gap: 0;
+    color: var(--brand-accent);
+    font-weight: 600;
   }
 }
 
@@ -166,24 +123,19 @@
 .divider {
   height: 1px;
   background-color: var(--border-default);
-  margin: 4px 10px;
+  margin: var(--space-1) var(--space-3);
   flex-shrink: 0;
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 .footer {
-  padding: 6px 8px 12px;
+  padding: var(--space-2) var(--space-2) var(--space-3);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   flex-shrink: 0;
   position: relative;
-
-  .collapsed & {
-    padding: 6px 6px 12px;
-    align-items: center;
-  }
 }
 
 // ─── User Row ─────────────────────────────────────────────────────────────────
@@ -191,8 +143,8 @@
 .userRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
+  gap: var(--space-2);
+  padding: var(--space-2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color var(--transition-base);
@@ -204,28 +156,25 @@
   }
 }
 
-.userRowCollapsed {
-  padding: 6px;
-  justify-content: center;
-}
-
 .avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
   background: var(--brand-accent);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--accent-fg);
   font-family: var(--font-body);
   transition: box-shadow var(--transition-base);
 
   .userRow:hover & {
-    box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 3px var(--border-strong);
+    box-shadow:
+      0 0 0 2px var(--bg-surface),
+      0 0 0 3px var(--border-strong);
   }
 }
 
@@ -238,7 +187,7 @@
 }
 
 .userName {
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   font-weight: 500;
   color: var(--text-primary);
   overflow: hidden;
@@ -247,54 +196,54 @@
 }
 
 .userPlan {
-  font-size: 0.6875rem;
+  font-size: var(--text-caption);
   color: var(--text-muted);
+  line-height: var(--line-height-caption);
 }
 
 // ─── User Menu (popover) ─────────────────────────────────────────────────────
 
 .userMenu {
   position: absolute;
-  bottom: calc(100% + 6px);
-  left: 8px;
-  right: 8px;
+  bottom: calc(100% + var(--space-3));
+  left: var(--space-2);
+  right: var(--space-2);
   background-color: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 4px;
+  padding: var(--space-2);
   z-index: var(--z-dropdown);
   opacity: 0;
-  transform: translateY(4px) scale(0.98);
+  transform: translateY(8px) scale(0.96);
+  transform-origin: bottom center;
   pointer-events: none;
   transition:
     opacity var(--transition-fast),
     transform var(--transition-fast);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,.12),
+  0 2px 8px rgba(0,0,0,.06);
 
   &.menuOpen {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
   }
-
-  .collapsed & {
-    left: 6px;
-    right: 6px;
-  }
 }
 
 .menuItem {
+  justify-content: flex-start;
+  text-align: left;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   width: 100%;
-  padding: 7px 10px;
+  padding: var(--space-2) var(--space-3);
   border: none;
   background: none;
   border-radius: var(--radius-xs);
   color: var(--text-secondary);
   font-family: var(--font-body);
-  font-size: 0.8125rem;
+  font-size: var(--text-body-sm);
   font-weight: 500;
   cursor: pointer;
   transition:
@@ -321,7 +270,7 @@
 .menuDivider {
   height: 1px;
   background-color: var(--border-default);
-  margin: 4px 6px;
+  margin: var(--space-1) var(--space-2);
 }
 
 .menuItemDanger {
@@ -333,18 +282,27 @@
   }
 }
 
+.menuItemAccent {
+  color: var(--brand-accent);
+
+  &:hover {
+    background-color: var(--bg-elevated);
+    color: var(--brand-accent);
+  }
+}
+
 // ─── Mobile ───────────────────────────────────────────────────────────────────
 
 .mobileToggle {
   display: none;
   position: fixed;
-  top: 14px;
-  left: 14px;
-  width: 36px;
-  height: 36px;
+  top: var(--space-3);
+  left: var(--space-3);
+  width: 44px;
+  height: 44px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -355,8 +313,8 @@
     border-color var(--transition-base);
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   &:hover {
@@ -412,7 +370,6 @@
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
   .navItem,
-  .collapseBtn,
   .mobileToggle,
   .userRow,
   .overlay,
@@ -420,4 +377,16 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+.userChevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms ease;
 }

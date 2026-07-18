@@ -3,13 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Modal } from "@/components/UI";
-import { Button } from "@repo/ui";
-import {
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "@/components/UI/Modal/ModalParts";
+import { Dialog, DialogContent, DialogHeader, DialogBody, DialogFooter, Button } from "@repo/ui";
 import { useLinkBuilderStore } from "@/hooks/useLinkBuilder";
 import {
   LINK_BUILDER_DEFAULTS,
@@ -153,61 +147,62 @@ export const LinkBuilder = () => {
   };
 
   return (
-    <Modal
-      showModal={modal === 'create' || modal === 'edit'}
-      setShowModal={closeModal}
-      className={styles.modal}
+    <Dialog
+      open={modal === 'create' || modal === 'edit'}
+      onOpenChange={(open) => { if (!open) closeModal(); }}
     >
-      <FormProvider {...methods}>
-        <form className={styles.builder} onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader
-            title={selectedLink? "Edit Link" : "New link"}
-            description={`${selectedLink ? "Edit" : "Create"} a polished short link`}
-            onClose={closeModal}
-            icon={<Link />}
-          />
+      <DialogContent size="xl">
+        <FormProvider {...methods}>
+          <form className={styles.builder} onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader
+              title={selectedLink? "Edit Link" : "New link"}
+              description={`${selectedLink ? "Edit" : "Create"} a polished short link`}
+              onClose={closeModal}
+              icon={<Link />}
+            />
 
-          <ModalBody className={styles.body}>
-            <div className={styles.leftColumn}>
-                <DestinationSection />
+            <DialogBody className={styles.body}>
+              <div className={styles.leftColumn}>
+                  <DestinationSection />
 
-                <ShortLinkSection />
+                  <ShortLinkSection />
 
-                <ExpirySection />
+                  {/* <ExpirySection />
 
-                <PasswordSection />
+                  <PasswordSection /> */}
 
-                <CommentSection />
+                  <CommentSection />
 
-                <FeatureButtons
-                  onPasswordClick={() => setShowPasswordModal(true)}
-                  onExpiryClick={() => setShowExpiryModal(true)}
-                />
-            </div>
+                  {/* <FeatureButtons
+                    onPasswordClick={() => setShowPasswordModal(true)}
+                    onExpiryClick={() => setShowExpiryModal(true)}
+                  /> */}
+              </div>
 
-            <aside className={styles.rightColumn}>
-              <QrCodeSection />
-            </aside>
-          </ModalBody>
+              <aside className={styles.rightColumn}>
+                <QrCodeSection />
+              </aside>
+            </DialogBody>
 
-          <ModalFooter>
-            <Button variant="ghost" type="button" onClick={closeModal}>
-              Cancel
-            </Button>
-            <Button type="submit">
-              {selectedLink ? "Edit Link" : "Create link"}
-            </Button>
-          </ModalFooter>
+            <DialogFooter>
+              <Button variant="ghost" type="button" onClick={closeModal}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                {selectedLink ? "Edit Link" : "Create link"}
+              </Button>
+            </DialogFooter>
 
-          {showPasswordModal && (
-            <PasswordModal onClose={() => setShowPasswordModal(false)} />
-          )}
-          {showExpiryModal && (
-            <ExpiryModal onClose={() => setShowExpiryModal(false)} />
-          )}
-        </form>
-      </FormProvider>
-    </Modal>
+            {showPasswordModal && (
+              <PasswordModal onClose={() => setShowPasswordModal(false)} />
+            )}
+            {showExpiryModal && (
+              <ExpiryModal onClose={() => setShowExpiryModal(false)} />
+            )}
+          </form>
+        </FormProvider>
+      </DialogContent>
+    </Dialog>
   );
 };
 

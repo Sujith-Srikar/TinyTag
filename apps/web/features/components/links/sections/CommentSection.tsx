@@ -18,7 +18,7 @@ export const CommentSection = () => {
   } = useFormContext<LinkBuilderFields>();
 
   return (
-    <div className={styles.sectionCard}>
+    <div>
       <Field>
         <div className={styles.labelWithTooltip}>
           <FieldLabel htmlFor="comment">Comments</FieldLabel>
