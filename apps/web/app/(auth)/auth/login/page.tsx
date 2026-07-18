@@ -5,7 +5,7 @@ import { createClient } from "@/utils/auth/client";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/UI";
 import styles from "./page.module.scss";
-import { ArrowRight, Globe, User } from "lucide-react";
+import { Globe, User } from "lucide-react";
 import { toast } from "sonner";
 const supabase = createClient();
 
@@ -18,7 +18,7 @@ function Login() {
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
-      toast.error("Unable to Sigin");
+      toast.error("Unable to sign in");
       return;
     }
     router.refresh();
@@ -27,7 +27,7 @@ function Login() {
   const handleSigninAnonymous = async () => {
     const { error } = await supabase.auth.signInAnonymously();
     if (error) {
-      toast.error("Unable to Sigin");
+      toast.error("Unable to sign in");
       return;
     }
     router.refresh();
@@ -35,16 +35,12 @@ function Login() {
 
   return (
     <main className={styles.page}>
-      <div className={styles.glow} />
-
       <div className={styles.card}>
         <div className={styles.logoWrapper}>
           <Logo size="lg" />
         </div>
 
         <div className={styles.content}>
-          <div className={styles.badge}>TinyTags</div>
-
           <h1 className={styles.title}>Shorten. Share. Track.</h1>
 
           <p className={styles.description}>
@@ -73,17 +69,17 @@ function Login() {
 
           <div className={styles.features}>
             <div>
-              <ArrowRight size={14} />
+              <span className={styles.dot} />
               Upgrade to Google later
             </div>
 
             <div>
-              <ArrowRight size={14} />
+              <span className={styles.dot} />
               Keep all your links
             </div>
 
             <div>
-              <ArrowRight size={14} />
+              <span className={styles.dot} />
               No setup required
             </div>
           </div>
