@@ -1,5 +1,5 @@
 import { Database } from "../types.js";
-import { LinkBuilderValues } from "@repo/shared";
+import { LinkBuilderFields } from "@repo/shared";
 import { type DBClient } from "..";
 
 type LinksTable = Database["public"]["Tables"]["links"]["Row"];
@@ -13,7 +13,7 @@ const getMyLinks = async (supabase: DBClient): Promise<LinksTable[] | null> => {
 };
 
 const create_short_url = async (
-  opts: LinkBuilderValues,
+  opts: LinkBuilderFields,
   userId: string,
   supabase: DBClient,
 ) => {
@@ -22,23 +22,23 @@ const create_short_url = async (
     slug: opts.slug,
     tags: opts.tags?.length ? opts.tags : null,
     comments: opts.comments || null,
-    expires_at: opts.expiresAt || null,
+    expires_at: opts.expiresAt?.toISOString() || null,
     password_hash: opts.password || null,
     user_id: userId,
-    has_password: !!opts.password
+    has_password: !!opts.password,
   });
   return error;
 };
 
-const edit_long_url = async (opts: LinkBuilderValues, supabase: DBClient) => {
+const edit_long_url = async (opts: LinkBuilderFields, supabase: DBClient) => {
   let updateObj: Partial<LinksTable> = {
     slug: opts.slug,
     destination_url: opts.destinationUrl,
     ...(opts.comments && { comments: opts.comments }),
-    ...(opts.expiresAt && { expires_at: opts.expiresAt }),
+    ...(opts.expiresAt && { expires_at: opts.expiresAt.toISOString() }),
     ...(opts.tags && { tags: opts.tags }),
     ...(opts.password && { password_hash: opts.password }),
-    ...(opts.password && { has_password: !!opts.password})
+    ...(opts.password && { has_password: !!opts.password }),
   };
 
   const { error } = await supabase

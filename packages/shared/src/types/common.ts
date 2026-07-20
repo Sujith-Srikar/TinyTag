@@ -1,26 +1,5 @@
 import { z } from "zod";
 
-export const LinkBuilderFormSchema = z.object({
-  destinationUrl: z.url("Please enter a valid URL (include https://)"),
-  slug: z.union([
-    z
-      .string()
-      .min(3, "Slug must be at least 3 characters")
-      .max(10, "Slug must be at max 10 characters")
-      .regex(
-        /^[a-zA-Z0-9-]+$/,
-        "Only lowercase & uppercase letters, numbers, and hyphens",
-      ),
-  ]),
-  domain: z.string().nullable(),
-  tags: z.array(z.string()).nullable(),
-  comments: z.string().nullable(),
-  expiresAt: z.string().nullable(),
-  password: z.string().nullable(),
-});
-
-export type LinkBuilderValues = z.infer<typeof LinkBuilderFormSchema>;
-
 export type LinkRecord = {
   clicksCount: number;
   comments?: string;
@@ -33,10 +12,42 @@ export type LinkRecord = {
   isActive: boolean;
   createdAt: string;
   hasPassword: boolean;
-}
+};
 
 export interface User {
   id: string;
   isAnonymous: boolean;
   email: string | null;
 }
+
+export const LinkBuilderFormSchema = z.object({
+  destinationUrl: z.url("Please enter a valid URL (include https://)"),
+  slug: z.union([
+    z
+      .string()
+      .min(3, "Slug must be at least 3 characters")
+      .max(10, "Slug must be at max 10 characters")
+      .regex(
+        /^[a-zA-Z0-9-]+$/,
+        "Only lowercase & uppercase letters, numbers, and hyphens",
+      ),
+    z.literal(""),
+  ]),
+  domain: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  comments: z.string().optional(),
+  expiresAt: z.date().optional(),
+  password: z.string().optional(),
+});
+
+export type LinkBuilderFields = z.infer<typeof LinkBuilderFormSchema>;
+
+export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
+  destinationUrl: "",
+  slug: "",
+  domain: "ttags.vercel.app",
+  tags: undefined,
+  comments: undefined,
+  expiresAt: undefined,
+  password: undefined,
+};

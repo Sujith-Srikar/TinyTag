@@ -1,75 +1,52 @@
 "use client";
 
-import { InfoTooltip, Button } from "@repo/ui";
+import { DateTimeField } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";
-import { CalendarClock, X } from "lucide-react";
-import styles from "../LinkBuilder.module.scss";
-import { useRef } from "react";
 
-export const ExpirySection = () => {
+function formatExpiry(date: Date): string {
+  const now = new Date();
+  const diffDays = Math.ceil((date.getTime() - now.getTime()) / 86_400_000);
+
+  if (diffDays <= 0) return "Expired";
+  if (diffDays === 1) return "Tomorrow";
+  if (diffDays < 7) return `Expires in ${diffDays} days`;
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+  });
+}
+
+const isPastDate = (date: Date) =>
+  date < new Date(new Date().setHours(0, 0, 0, 0));
+
+export function ExpirySection() {
   const {
     watch,
     setValue,
+    formState: { errors },
   } = useFormContext<LinkBuilderFields>();
 
   const expiresAt = watch("expiresAt");
-  const enabled = !!expiresAt;
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleToggle = () => {
-    if (enabled) {
-      setValue("expiresAt", "", { shouldDirty: true });
-    } else {
-      setValue("expiresAt", "", { shouldDirty: true });
-      setTimeout(() => inputRef.current?.showPicker?.(), 50);
-    }
-  };
+  const value =
+    expiresAt instanceof Date
+      ? expiresAt
+      : expiresAt
+        ? new Date(expiresAt)
+        : undefined;
 
   return (
-    <div className={styles.sectionCard}>
-      <div className={styles.toggleRow}>
-        <div className={styles.toggleLabel}>
-          <CalendarClock size={14} className="text-muted-foreground" />
-          <span className={styles.toggleLabelTitle}>Expiry</span>
-          <InfoTooltip content="Set a date and time after which this link will no longer work. Leave empty for no expiry." />
-        </div>
-
-        <Button
-          variant={enabled ? "destructive" : "ghost"}
-          size="xs"
-          type="button"
-          onClick={handleToggle}
-        >
-          {enabled ? (
-            <>
-              <X size={10} />
-              Remove
-            </>
-          ) : (
-            "Add expiry"
-          )}
-        </Button>
-      </div>
-
-      <div className={`${styles.expandWrapper} ${enabled ? styles.expanded : ""}`}>
-        <div className={styles.expandInner}>
-          <div className={styles.expandContent}>
-            <input
-              ref={inputRef}
-              type="datetime-local"
-              className={styles.datetimeInput}
-              value={expiresAt ?? ""}
-              onChange={(e) =>
-                setValue("expiresAt", e.target.value, { shouldDirty: true })
-              }
-            />
-            <span className={styles.hint}>
-              Link will stop working after this date and time.
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <DateTimeField
+      value={value}
+      onChange={(date) => setValue("expiresAt", date, { shouldDirty: true })}
+      label="Link Expiration"
+      description="Automatically disable this link after a specific date and time."
+      placeholder="Expiration"
+      clearLabel="Remove Expiration"
+      disabledDates={isPastDate}
+      formatValue={formatExpiry}
+      error={errors.expiresAt?.message as string | undefined}
+    />
   );
-};
+}

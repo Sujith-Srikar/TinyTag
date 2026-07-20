@@ -3,53 +3,70 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";
-import { Button } from "@repo/ui";
-import { X, CalendarClock } from "lucide-react";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@repo/ui";
+import { CalendarClock } from "lucide-react";
 import styles from "../LinkBuilder.module.scss";
 
 interface ExpiryModalProps {
   onClose: () => void;
 }
 
+function dateToLocalString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const h = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  return `${y}-${m}-${d}T${h}:${min}`;
+}
+
+function localStringToDate(value: string): Date | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
 export const ExpiryModal = ({ onClose }: ExpiryModalProps) => {
   const { watch, setValue } = useFormContext<LinkBuilderFields>();
   const currentExpiry = watch("expiresAt");
-  const [draft, setDraft] = useState(currentExpiry ?? "");
+  const [draft, setDraft] = useState(
+    currentExpiry instanceof Date ? dateToLocalString(currentExpiry) : "",
+  );
 
   const handleConfirm = () => {
-    setValue("expiresAt", draft, { shouldDirty: true });
+    const date = localStringToDate(draft);
+    setValue("expiresAt", date, { shouldDirty: true });
     onClose();
   };
 
   const handleRemove = () => {
-    setValue("expiresAt", "", { shouldDirty: true });
+    setValue("expiresAt", undefined, { shouldDirty: true });
     onClose();
   };
 
   return (
-    <div className={styles.subModalOverlay} onClick={onClose}>
-      <div
-        className={styles.subModal}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-label="Link expiration"
-      >
-        <div className={styles.subModalHeader}>
-          <div className={styles.subModalTitle}>
-            <CalendarClock size={14} />
-            <span>Link Expiration</span>
-          </div>
-          <button
-            type="button"
-            className={styles.subModalClose}
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X size={14} />
-          </button>
-        </div>
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      variant="sub"
+    >
+      <DialogContent size="sm">
+        <DialogHeader
+          title="Link Expiration"
+          onClose={onClose}
+          icon={<CalendarClock size={18} />}
+        />
 
-        <div className={styles.subModalBody}>
+        <DialogBody>
           <input
             type="datetime-local"
             className={styles.datetimeInput}
@@ -60,9 +77,9 @@ export const ExpiryModal = ({ onClose }: ExpiryModalProps) => {
           <span className={styles.hint}>
             Link will stop working after this date and time.
           </span>
-        </div>
+        </DialogBody>
 
-        <div className={styles.subModalFooter}>
+        <DialogFooter className="justify-between">
           {currentExpiry && (
             <Button
               variant="destructive"
@@ -73,7 +90,7 @@ export const ExpiryModal = ({ onClose }: ExpiryModalProps) => {
               Remove
             </Button>
           )}
-          <div className={styles.subModalFooterRight}>
+          <div className="flex gap-2 ml-auto">
             <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               Cancel
             </Button>
@@ -81,8 +98,8 @@ export const ExpiryModal = ({ onClose }: ExpiryModalProps) => {
               Confirm
             </Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

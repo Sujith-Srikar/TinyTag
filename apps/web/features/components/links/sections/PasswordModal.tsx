@@ -3,8 +3,8 @@
 import { useState, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { LinkBuilderFields } from "@/types/linkBuilder";
-import { Button } from "@repo/ui";
-import { Eye, EyeOff, Dices, X, Shield } from "lucide-react";
+import { Button, Dialog, DialogContent, DialogHeader, DialogBody, DialogFooter } from "@repo/ui";
+import { Eye, EyeOff, Dices, Shield } from "lucide-react";
 import styles from "../LinkBuilder.module.scss";
 
 function generatePassword(): string {
@@ -48,29 +48,15 @@ export const PasswordModal = ({ onClose }: PasswordModalProps) => {
   };
 
   return (
-    <div className={styles.subModalOverlay} onClick={onClose}>
-      <div
-        className={styles.subModal}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-label="Password protection"
-      >
-        <div className={styles.subModalHeader}>
-          <div className={styles.subModalTitle}>
-            <Shield size={14} />
-            <span>Password Protection</span>
-          </div>
-          <button
-            type="button"
-            className={styles.subModalClose}
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X size={14} />
-          </button>
-        </div>
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }} variant="sub">
+      <DialogContent size="sm">
+        <DialogHeader
+          title="Password Protection"
+          onClose={onClose}
+          icon={<Shield size={18} />}
+        />
 
-        <div className={styles.subModalBody}>
+        <DialogBody>
           <div className={styles.passwordInputRow}>
             <input
               type={visible ? "text" : "password"}
@@ -105,9 +91,9 @@ export const PasswordModal = ({ onClose }: PasswordModalProps) => {
           <span className={styles.hint}>
             Only you can view or change this password.
           </span>
-        </div>
+        </DialogBody>
 
-        <div className={styles.subModalFooter}>
+        <DialogFooter className="justify-between">
           {currentPassword && (
             <Button
               variant="destructive"
@@ -118,7 +104,7 @@ export const PasswordModal = ({ onClose }: PasswordModalProps) => {
               Remove
             </Button>
           )}
-          <div className={styles.subModalFooterRight}>
+          <div className="flex gap-2 ml-auto">
             <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               Cancel
             </Button>
@@ -126,8 +112,8 @@ export const PasswordModal = ({ onClose }: PasswordModalProps) => {
               Confirm
             </Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

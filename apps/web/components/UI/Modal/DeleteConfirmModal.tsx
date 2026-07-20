@@ -1,23 +1,14 @@
 "use client";
 
-import { Button } from "@repo/ui";
+import { Button, Dialog, DialogContent, DialogHeader, DialogBody, DialogFooter } from "@repo/ui";
 import { AlertTriangle } from "lucide-react";
-
-import { Modal } from "@/components/UI";
-import {
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "@/components/UI/Modal/ModalParts";
 
 import { useLinkBuilderStore } from "@/hooks/useLinkBuilder";
 
-import styles from "./DeleteConfirmModal.module.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
-import { useEffect } from "react";
 
 export function DeleteConfirmModal() {
   const { modal, selectedLink, closeModal } = useLinkBuilderStore();
@@ -47,37 +38,38 @@ export function DeleteConfirmModal() {
   }
 
   return (
-    <Modal
-      showModal={modal === "delete"}
-      setShowModal={closeModal}
-      className={styles.modal}
+    <Dialog
+      open={modal === "delete"}
+      onOpenChange={(open) => { if (!open) closeModal(); }}
     >
-      <ModalHeader
-        title="Delete link?"
-        description="This action cannot be undone."
-        onClose={closeModal}
-        icon={<AlertTriangle />}
-        iconVariant="danger"
-      />
+      <DialogContent size="sm">
+        <DialogHeader
+          title="Delete link?"
+          description="This action cannot be undone."
+          onClose={closeModal}
+          icon={<AlertTriangle />}
+          iconVariant="danger"
+        />
 
-      <ModalBody>
-        <div className={styles.content}>
-          <p className={styles.body}>
-            <span className={styles.slug}>/{selectedLink?.slug}</span> will be
-            permanently deleted.
+        <DialogBody>
+          <p className="text-[0.875rem] text-muted leading-relaxed">
+            <span className="font-mono font-semibold text-foreground bg-elevated px-1.5 py-px rounded-[var(--radius-sm)]">
+              /{selectedLink?.slug}
+            </span>{" "}
+            will be permanently deleted.
           </p>
-        </div>
-      </ModalBody>
+        </DialogBody>
 
-      <ModalFooter>
-        <Button variant="ghost" type="button" onClick={closeModal}>
-          Cancel
-        </Button>
+        <DialogFooter>
+          <Button variant="ghost" type="button" onClick={closeModal}>
+            Cancel
+          </Button>
 
-        <Button variant="destructive" type="button" onClick={handleDelete}>
-          Delete
-        </Button>
-      </ModalFooter>
-    </Modal>
+          <Button variant="destructive" type="button" onClick={handleDelete}>
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

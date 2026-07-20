@@ -16,7 +16,7 @@ export const LinkBuilderFormSchema = z.object({
   domain: z.string().optional(),
   tags: z.array(z.string()).optional(),
   comments: z.string().optional(),
-  expiresAt: z.string().optional(),
+  expiresAt: z.date().optional(),
   password: z.string().optional(),
 });
 
@@ -25,9 +25,9 @@ export type LinkBuilderFields = z.infer<typeof LinkBuilderFormSchema>;
 export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
   destinationUrl: "",
   slug: "",
-  domain: "tt.vercel.app",
-  tags: [""],
-  comments: "",
-  expiresAt: "",
-  password: "",
+  domain: "ttags.vercel.app",
+  tags: undefined,
+  comments: undefined,
+  expiresAt: undefined,
+  password: undefined,
 };

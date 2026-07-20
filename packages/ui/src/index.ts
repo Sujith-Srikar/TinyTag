@@ -15,3 +15,4 @@ export * from "./components/animated-select";
 export * from "./components/animated-tabs";
 export * from "./components/modal";
 export * from "./components/animated-container";
+export * from "./components/date-time";

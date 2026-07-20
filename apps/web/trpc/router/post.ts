@@ -26,7 +26,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async (opts) => {
       try {
         const input = opts.input;
-        const hashedPassword = input.password ? await hash(input.password) : null;
+        const hashedPassword = input.password ? await hash(input.password) : undefined;
         const error = await create_short_url(
           { ...input, password: hashedPassword },
           opts.ctx.user.id,
@@ -69,7 +69,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async (opts) => {
       try {
         const input = opts.input;
-        const hashedPassword = input.password ? await hash(input.password) : null;
+        const hashedPassword = input.password ? await hash(input.password) : undefined;
         const error = await edit_long_url(
           { ...input, password: hashedPassword },
           opts.ctx.supabase,

@@ -18,7 +18,6 @@ import {
   ExpirySection,
   PasswordSection,
   PasswordModal,
-  ExpiryModal,
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
@@ -48,19 +47,17 @@ export const LinkBuilder = () => {
   const trpc = useTRPC();
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showExpiryModal, setShowExpiryModal] = useState(false);
 
   const createLink = useMutation(
     trpc.post.shortenUrl.mutationOptions({
-      onSuccess: (data) => {
-        console.log("Slug Created Successfully:", data);
+      onSuccess: () => {
         toast.success("Link created successfully");
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {
-        console.log("SLug creation error:", err);
+        logger.error("SLug creation error:", err);
         toast.error("Failed to create link");
       },
     }),
@@ -68,15 +65,14 @@ export const LinkBuilder = () => {
 
   const editSlug = useMutation(
     trpc.post.editLongUrl.mutationOptions({
-      onSuccess: (data) => {
-        console.log("Slug Ediited Successfully:", data);
+      onSuccess: () => {
         toast.success("Link updated successfully");
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
       },
       onError: (err) => {
-        console.log("Slug not Edited error:", err);
+        logger.error("Slug not Edited error:", err);
         toast.error("Failed to update link");
       },
     }),
@@ -88,9 +84,9 @@ export const LinkBuilder = () => {
     reset({
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
-      comments: selectedLink.comments ?? "",
-      expiresAt: selectedLink.expiresAt ?? "",
-      password: selectedLink.password ?? "",
+      comments: selectedLink.comments ?? undefined,
+      expiresAt: selectedLink.expiresAt ?? undefined,
+      password: selectedLink.password ?? undefined,
     });
   }, [selectedLink]);
 
@@ -123,21 +119,21 @@ export const LinkBuilder = () => {
         };
         editSlug.mutate({
           ...editObj,
-          domain: editObj.domain ?? null,
-          tags: editObj.tags ?? null,
-          comments: editObj.comments ?? null,
-          expiresAt: editObj.expiresAt ?? null,
-          password: editObj.password ?? null,
+          domain: editObj.domain ?? undefined,
+          tags: editObj.tags ?? undefined,
+          comments: editObj.comments ?? undefined,
+          expiresAt: editObj.expiresAt ?? undefined,
+          password: editObj.password ?? undefined,
         });
       } else {
         createLink.mutate({
           destinationUrl: data.destinationUrl,
           slug: data.slug,
-          domain: data.domain ?? null,
-          tags: data.tags ?? null,
-          comments: data.comments ?? null,
-          expiresAt: data.expiresAt ?? null,
-          password: data.password ?? null,
+          domain: data.domain ?? undefined,
+          tags: data.tags ?? undefined,
+          comments: data.comments ?? undefined,
+          expiresAt: data.expiresAt ?? undefined,
+          password: data.password ?? undefined,
         });
       }
       closeModal();
@@ -148,14 +144,16 @@ export const LinkBuilder = () => {
 
   return (
     <Dialog
-      open={modal === 'create' || modal === 'edit'}
-      onOpenChange={(open) => { if (!open) closeModal(); }}
+      open={modal === "create" || modal === "edit"}
+      onOpenChange={(open) => {
+        if (!open) closeModal();
+      }}
     >
       <DialogContent size="xl">
         <FormProvider {...methods}>
           <form className={styles.builder} onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader
-              title={selectedLink? "Edit Link" : "New link"}
+              title={selectedLink ? "Edit Link" : "New link"}
               description={`${selectedLink ? "Edit" : "Create"} a polished short link`}
               onClose={closeModal}
               icon={<Link />}
@@ -163,20 +161,15 @@ export const LinkBuilder = () => {
 
             <DialogBody className={styles.body}>
               <div className={styles.leftColumn}>
-                  <DestinationSection />
+                <DestinationSection />
 
-                  <ShortLinkSection />
+                <ShortLinkSection />
 
-                  {/* <ExpirySection />
+                {/* <ExpirySection />
 
                   <PasswordSection /> */}
 
-                  <CommentSection />
-
-                  {/* <FeatureButtons
-                    onPasswordClick={() => setShowPasswordModal(true)}
-                    onExpiryClick={() => setShowExpiryModal(true)}
-                  /> */}
+                <CommentSection />
               </div>
 
               <aside className={styles.rightColumn}>
@@ -184,20 +177,20 @@ export const LinkBuilder = () => {
               </aside>
             </DialogBody>
 
-            <DialogFooter>
-              <Button variant="ghost" type="button" onClick={closeModal}>
-                Cancel
-              </Button>
-              <Button type="submit">
-                {selectedLink ? "Edit Link" : "Create link"}
-              </Button>
+            <DialogFooter className="justify-between">
+              <ExpirySection />
+              <div>
+                <Button variant="ghost" type="button" onClick={closeModal}>
+                  Cancel
+                </Button>
+                <Button type="submit">
+                  {selectedLink ? "Edit Link" : "Create link"}
+                </Button>
+              </div>
             </DialogFooter>
 
             {showPasswordModal && (
               <PasswordModal onClose={() => setShowPasswordModal(false)} />
-            )}
-            {showExpiryModal && (
-              <ExpiryModal onClose={() => setShowExpiryModal(false)} />
             )}
           </form>
         </FormProvider>
@@ -205,45 +198,3 @@ export const LinkBuilder = () => {
     </Dialog>
   );
 };
-
-function FeatureButtons({
-  onPasswordClick,
-  onExpiryClick,
-}: {
-  onPasswordClick: () => void;
-  onExpiryClick: () => void;
-}) {
-  const { watch } = useFormContext<LinkBuilderFields>();
-  const password = watch("password");
-  const expiresAt = watch("expiresAt");
-  const hasPassword = !!password;
-  const hasExpiry = !!expiresAt;
-
-  return (
-    <div className={styles.featureButtons}>
-      <button
-        type="button"
-        className={[styles.featureBtn, hasPassword ? styles.featureBtnActive : ""]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={onPasswordClick}
-      >
-        <Shield size={14} />
-        <span>{hasPassword ? "Password set" : "Add password"}</span>
-        {hasPassword && <span className={styles.featureDot} />}
-      </button>
-
-      <button
-        type="button"
-        className={[styles.featureBtn, hasExpiry ? styles.featureBtnActive : ""]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={onExpiryClick}
-      >
-        <CalendarClock size={14} />
-        <span>{hasExpiry ? "Expiry set" : "Add expiry"}</span>
-        {hasExpiry && <span className={styles.featureDot} />}
-      </button>
-    </div>
-  );
-}
