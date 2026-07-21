@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import { Providers } from "@/providers/Providers";
-import { Geist } from "next/font/google";
 import { Toaster } from "sonner";
-import localfont from 'next/font/local';
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import localfont from "next/font/local";
 
 const satoshi = localfont({
   src: "../public/fonts/Satoshi-Variable.ttf",
-})
+  variable: "--font-body",
+  display: "swap",
+});
+
+const ppNeueMontreal = localfont({
+  src: "../public/fonts/PPNeueMontreal-Regular.ttf",
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +30,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={satoshi.className}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${satoshi.variable} ${ppNeueMontreal.variable}`}
+    >
       <body>
         <Providers>
           <Toaster position="top-center" />

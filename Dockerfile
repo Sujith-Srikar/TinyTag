@@ -26,4 +26,5 @@ USER appuser
 
 COPY --from=installer --chown=appuser:appgroup /app/apps/web/.next/standalone ./
 COPY --from=installer --chown=appuser:appgroup /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=appuser:appgroup /app/apps/web/public ./apps/web/public
 CMD ["node", "apps/web/server.js"]
