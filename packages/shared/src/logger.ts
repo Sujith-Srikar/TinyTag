@@ -1,14 +1,47 @@
 import type { LogLevel, LogMessage } from "./types/web";
 
 class Logger {
-  private isProduction = process.env.NODE_ENV === "production";
+  private readonly isProduction = process.env.NODE_ENV === "production";
 
   private shouldLog(level: LogLevel) {
-    if (this.isProduction && level === "debug") {
-      return false;
+    return !(this.isProduction && level === "debug");
+  }
+
+  private serialize(value: unknown): unknown {
+    if (value instanceof Error) {
+      const error = value as Error & {
+        cause?: unknown;
+        data?: unknown;
+        shape?: unknown;
+      };
+
+      return {
+        name: error.name,
+        message: error.message,
+        stack: this.isProduction ? undefined : error.stack,
+        cause:
+          error.cause !== undefined ? this.serialize(error.cause) : undefined,
+        data: error.data !== undefined ? this.serialize(error.data) : undefined,
+        shape:
+          error.shape !== undefined ? this.serialize(error.shape) : undefined,
+      };
     }
 
-    return true;
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    if (Array.isArray(value)) {
+      return value.map((item) => this.serialize(item));
+    }
+
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value).map(([key, val]) => [key, this.serialize(val)]),
+      );
+    }
+
+    return value;
   }
 
   private formatLog(
@@ -20,30 +53,32 @@ class Logger {
       level,
       message,
       timestamp: new Date().toISOString(),
-      ...(data !== undefined && { data }),
+      ...(data !== undefined && {
+        data: this.serialize(data),
+      }),
     };
   }
 
   private log(level: LogLevel, message: string, data?: unknown) {
     if (!this.shouldLog(level)) return;
 
-    const log = this.formatLog(level, message, data);
+    const entry = this.formatLog(level, message, data);
 
     switch (level) {
       case "error":
-        console.error(log);
+        console.error(entry);
         break;
 
       case "warn":
-        console.warn(log);
+        console.warn(entry);
         break;
 
       case "debug":
-        console.debug(log);
+        console.debug(entry);
         break;
 
       default:
-        console.log(log);
+        console.info(entry);
     }
   }
 
