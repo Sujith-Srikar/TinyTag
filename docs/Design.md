@@ -60,7 +60,7 @@ Restrained. Tinted neutrals plus one accent used at ≤10% of surface area. Acce
 | `--border-subtle` | `rgba(20,20,18,0.06)` | `rgba(255,255,255,0.06)` | Dividers, ghost borders |
 | `--border-default` | `rgba(20,20,18,0.10)` | `rgba(255,255,255,0.10)` | Card borders, input borders at rest |
 | `--border-strong` | `rgba(20,20,18,0.18)` | `rgba(255,255,255,0.18)` | Focused inputs, active rows |
-| `--border-focus` | `#cbff47` | `#cbff47` | Focus outlines only — accent reused |
+| `--border-focus` | `var(--brand-accent)` | `var(--brand-accent)` | Focus outlines only — accent reused |
 
 #### Text
 
@@ -107,7 +107,7 @@ PP Neue Montreal pairs with Satoshi on a geometric-vs-humanist axis — the cont
 
 #### Type scale
 
-Base size: 16px. Scale ratio: major second (×1.125) for body, golden ratio (×1.618) for display.
+Base size: 16px. Scale ratio: major second (×1.125) for body, larger steps for display.
 
 | Token | Size | Weight | Line Height | Letter Spacing | Use |
 |---|---|---|---|---|---|
@@ -117,8 +117,8 @@ Base size: 16px. Scale ratio: major second (×1.125) for body, golden ratio (×1
 | `heading-xl` | 32px | 600 | 1.15 | -0.02em | Card group headers |
 | `heading-lg` | 24px | 600 | 1.20 | -0.02em | Card titles, sidebar sections |
 | `heading-md` | 20px | 600 | 1.25 | -0.01em | Sub-section heads |
-| `body-lg` | 18px | 400 | 1.55 | 0 | Lead paragraphs, onboarding |
-| `body` | 16px | 400 | 1.55 | 0 | Default body copy |
+| `body-lg` | 18px | 400 | 1.60 | 0 | Lead paragraphs, onboarding |
+| `body` | 16px | 400 | 1.60 | 0 | Default body copy |
 | `body-sm` | 14px | 400 | 1.50 | 0 | Help text, secondary descriptions |
 | `label` | 14px | 500 | 1.00 | 0 | Input labels, button text, nav items |
 | `caption` | 12px | 400 | 1.40 | 0.01em | Timestamps, table headers, fine print |
@@ -198,7 +198,15 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 
 ---
 
-### 2.7 Motion
+### 2.7 Opacity
+
+| Token | Value | Use |
+|---|---|---|
+| `opacity-disabled` | 0.4 | Disabled interactive elements |
+
+---
+
+### 2.8 Motion
 
 | Token | Duration | Use |
 |---|---|---|
@@ -220,7 +228,7 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 
 ---
 
-### 2.8 Shadow and Overlay
+### 2.9 Shadow and Overlay
 
 | Token | Value | Use |
 |---|---|---|
@@ -321,7 +329,7 @@ All interactive components share these states. Component specs reference this se
 
 | Context | Max width | Side padding |
 |---|---|---|
-| Mobile | 100% | `space-4` (16px) |
+| Mobile | `content-xs` (480px) | `space-4` (16px) |
 | Tablet | 720px | `space-6` (24px) |
 | Desktop | 1280px | `space-8` (32px) |
 | Large desktop | 1440px | `space-12` (48px) |
@@ -454,7 +462,7 @@ Component specs define purpose, behavior, and hierarchy — not pixel values. Im
 
 **Hierarchy:** One primary button per view. Supporting buttons use secondary or ghost. Danger is never used for cancel or navigation.
 
-**Accessibility:** Icon-only buttons must carry `aria-label`. Focus ring: `2px solid border-focus`, `outline-offset: 2px`.
+**Accessibility:** Icon-only buttons must carry `aria-label`. Focus ring: `2px solid var(--brand-accent)`, `outline-offset: 2px`.
 
 ### Inputs
 
@@ -565,7 +573,7 @@ Structure: label → value → trend. Label is `caption` / `foreground-subtle`. 
 | Touch target | Minimum 44 × 44px |
 | Body text contrast | WCAG AA — 4.5:1 |
 | Large text contrast | WCAG AA — 3:1 (≥ 18px bold or ≥ 24px) |
-| Focus ring | `2px solid border-focus`, `outline-offset: 2px` |
+| Focus ring | `2px solid var(--brand-accent)`, `outline-offset: 2px` |
 | Keyboard | Full tab order; DOM order matches visual order |
 | Reduced motion | `prefers-reduced-motion: reduce` — transforms and transitions disabled |
 | Icon-only buttons | Must carry `aria-label` |
