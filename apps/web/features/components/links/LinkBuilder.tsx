@@ -16,17 +16,15 @@ import {
   CommentSection,
   QrCodeSection,
   ExpirySection,
-  PasswordSection,
   PasswordModal,
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
-import { Link, Shield, CalendarClock } from "lucide-react";
+import { Link } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSlugGenerator } from "@/hooks/useSlugGenerator";
-import { useFormContext } from "react-hook-form";
 
 export const LinkBuilder = () => {
   const methods = useForm<LinkBuilderFields>({
@@ -165,10 +163,6 @@ export const LinkBuilder = () => {
 
                 <ShortLinkSection />
 
-                {/* <ExpirySection />
-
-                  <PasswordSection /> */}
-
                 <CommentSection />
               </div>
 
@@ -179,7 +173,7 @@ export const LinkBuilder = () => {
 
             <DialogFooter className="justify-between">
               <ExpirySection />
-              <div>
+              <div className="flex items-center gap-2">
                 <Button variant="ghost" type="button" onClick={closeModal}>
                   Cancel
                 </Button>
