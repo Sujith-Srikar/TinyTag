@@ -13,7 +13,7 @@ import {
   DateTimePicker,
   Field,
   FieldLabel,
-  FieldDescription,
+  getExpiryInfo
 } from "@repo/ui";
 import { CalendarClock } from "lucide-react";
 
@@ -57,20 +57,21 @@ export function ExpirySection() {
 
   const handleRemove = () => {
     setValue("expiresAt", undefined, { shouldDirty: true });
+    setDraft(null);
     setOpen(false);
   };
 
   return (
     <>
       <Button
-        variant="ghost"
+        variant="outline"
         size="sm"
         type="button"
         onClick={handleOpen}
         className="gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
       >
         <CalendarClock size={14} />
-        {value ? formatExpiry(value) : "Set expiration"}
+        {value ? getExpiryInfo(value).label : "Set expiration"}
       </Button>
 
       <Dialog
@@ -91,9 +92,6 @@ export function ExpirySection() {
             <Field>
               <FieldLabel>Expiration date and time</FieldLabel>
               <DateTimePicker value={draft} onChange={setDraft} />
-              <FieldDescription>
-                Link will stop working after this date and time.
-              </FieldDescription>
             </Field>
           </DialogBody>
 

@@ -17,3 +17,4 @@ export * from "./components/modal";
 export * from "./components/dialog-stack";
 export * from "./components/animated-container";
 export * from "./components/date-time";
+export * from "./lib/expiry";

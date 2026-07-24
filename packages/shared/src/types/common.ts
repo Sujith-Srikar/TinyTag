@@ -51,3 +51,21 @@ export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
   expiresAt: undefined,
   password: undefined,
 };
+
+export const EXPIRY_STATE = {
+  EXPIRED: "expired",
+  NOW: "now",
+  MINUTES: "minutes",
+  HOURS: "hours",
+  TOMORROW: "tomorrow",
+  DAYS: "days",
+  DATE: "date",
+} as const;
+
+export type ExpiryState = (typeof EXPIRY_STATE)[keyof typeof EXPIRY_STATE];
+
+export interface ExpiryInfo {
+  state: ExpiryState;
+  label: string;
+  expiresAt: Date;
+}

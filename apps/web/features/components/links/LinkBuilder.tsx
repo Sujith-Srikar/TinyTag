@@ -35,11 +35,7 @@ export const LinkBuilder = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    handleSubmit,
-    formState: { dirtyFields },
-    reset
-  } = methods;
+  const { handleSubmit, formState: { dirtyFields },reset } = methods;
   const { modal, closeModal, selectedLink } = useLinkBuilderStore();
   const { generateRandomSlug } = useSlugGenerator();
   const trpc = useTRPC();
@@ -78,7 +74,7 @@ export const LinkBuilder = () => {
 
   useEffect(() => {
     if (!selectedLink) return;
-
+    
     reset({
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
@@ -86,11 +82,11 @@ export const LinkBuilder = () => {
       expiresAt: selectedLink.expiresAt ?? undefined,
       password: selectedLink.password ?? undefined,
     });
-  }, [selectedLink]);
+  }, [selectedLink, generateRandomSlug, reset]);
 
   useEffect(() => {
     if (modal !== "create") return;
-
+    
     const initialize = async () => {
       const slug = await generateRandomSlug();
 
@@ -102,7 +98,12 @@ export const LinkBuilder = () => {
     };
 
     initialize();
-  }, [modal]);
+  }, [modal, reset]);
+
+  const handleClose = () =>  {
+    reset({ destinationUrl: "", slug: "", comments: "",});
+    closeModal();
+  }
 
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
     try {
@@ -144,7 +145,7 @@ export const LinkBuilder = () => {
     <Dialog
       open={modal === "create" || modal === "edit"}
       onOpenChange={(open) => {
-        if (!open) closeModal();
+        if (!open) handleClose();
       }}
     >
       <DialogContent size="xl">
@@ -174,7 +175,7 @@ export const LinkBuilder = () => {
             <DialogFooter className="justify-between">
               <ExpirySection />
               <div className="flex items-center gap-2">
-                <Button variant="ghost" type="button" onClick={closeModal}>
+                <Button variant="ghost" type="button" onClick={handleClose}>
                   Cancel
                 </Button>
                 <Button type="submit">
@@ -182,10 +183,6 @@ export const LinkBuilder = () => {
                 </Button>
               </div>
             </DialogFooter>
-
-            {showPasswordModal && (
-              <PasswordModal onClose={() => setShowPasswordModal(false)} />
-            )}
           </form>
         </FormProvider>
       </DialogContent>

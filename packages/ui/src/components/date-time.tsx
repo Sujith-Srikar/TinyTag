@@ -24,7 +24,7 @@ interface DateTimePickerProps {
 export function DateTimePicker({
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder = "Pick a date & time",
   className,
 }: DateTimePickerProps) {
   const handleSelect = (newDay: Date | undefined) => {
@@ -59,16 +59,16 @@ export function DateTimePicker({
             <CalendarIcon className="size-4 shrink-0" />
             {value ? format(value, "PPP HH:mm:ss") : <span>{placeholder}</span>}
           </Button>
-          {value && (
-            <button
-              type="button"
+          {/* {value && (
+            <Button
+              variant="ghost"
               onClick={handleClear}
-              className="absolute right-2 top-1/2 z-10 flex size-5 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground"
+              // className="absolute right-2 top-1/2 z-10 flex size-5 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground"
               aria-label="Clear date"
             >
               <X className="size-3.5" />
-            </button>
-          )}
+            </Button>
+          )} */}
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
