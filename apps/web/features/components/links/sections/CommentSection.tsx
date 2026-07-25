@@ -8,7 +8,7 @@ import {
   InfoTooltip,
 } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import styles from "../LinkBuilder.module.scss";
 
 export const CommentSection = () => {

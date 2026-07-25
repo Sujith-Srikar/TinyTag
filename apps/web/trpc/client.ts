@@ -1,5 +1,6 @@
 "use client";
 
+import superjson from "superjson";
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { AppRouter } from "./router/app";
@@ -24,6 +25,7 @@ export function makeTRPCClient(){
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
+          transformer: superjson,
         }),
       ],
     });

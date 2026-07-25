@@ -9,24 +9,22 @@ import {
   LINK_BUILDER_DEFAULTS,
   LinkBuilderFields,
   LinkBuilderFormSchema,
-} from "@/types/linkBuilder";
+} from "@repo/shared";
 import {
   DestinationSection,
   ShortLinkSection,
   CommentSection,
   QrCodeSection,
   ExpirySection,
-  PasswordSection,
   PasswordModal,
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
-import { Link, Shield, CalendarClock } from "lucide-react";
+import { Link } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSlugGenerator } from "@/hooks/useSlugGenerator";
-import { useFormContext } from "react-hook-form";
 
 export const LinkBuilder = () => {
   const methods = useForm<LinkBuilderFields>({
@@ -37,11 +35,7 @@ export const LinkBuilder = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    handleSubmit,
-    formState: { dirtyFields },
-    reset
-  } = methods;
+  const { handleSubmit, formState: { dirtyFields },reset } = methods;
   const { modal, closeModal, selectedLink } = useLinkBuilderStore();
   const { generateRandomSlug } = useSlugGenerator();
   const trpc = useTRPC();
@@ -80,7 +74,7 @@ export const LinkBuilder = () => {
 
   useEffect(() => {
     if (!selectedLink) return;
-
+    
     reset({
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
@@ -88,11 +82,11 @@ export const LinkBuilder = () => {
       expiresAt: selectedLink.expiresAt ?? undefined,
       password: selectedLink.password ?? undefined,
     });
-  }, [selectedLink]);
+  }, [selectedLink, reset]);
 
   useEffect(() => {
     if (modal !== "create") return;
-
+    
     const initialize = async () => {
       const slug = await generateRandomSlug();
 
@@ -104,7 +98,12 @@ export const LinkBuilder = () => {
     };
 
     initialize();
-  }, [modal]);
+  }, [modal, reset]);
+
+  const handleClose = () =>  {
+    reset({ destinationUrl: "", slug: "", comments: "",});
+    closeModal();
+  }
 
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
     try {
@@ -146,7 +145,7 @@ export const LinkBuilder = () => {
     <Dialog
       open={modal === "create" || modal === "edit"}
       onOpenChange={(open) => {
-        if (!open) closeModal();
+        if (!open) handleClose();
       }}
     >
       <DialogContent size="xl">
@@ -165,10 +164,6 @@ export const LinkBuilder = () => {
 
                 <ShortLinkSection />
 
-                {/* <ExpirySection />
-
-                  <PasswordSection /> */}
-
                 <CommentSection />
               </div>
 
@@ -179,8 +174,8 @@ export const LinkBuilder = () => {
 
             <DialogFooter className="justify-between">
               <ExpirySection />
-              <div>
-                <Button variant="ghost" type="button" onClick={closeModal}>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" type="button" onClick={handleClose}>
                   Cancel
                 </Button>
                 <Button type="submit">
@@ -188,10 +183,6 @@ export const LinkBuilder = () => {
                 </Button>
               </div>
             </DialogFooter>
-
-            {showPasswordModal && (
-              <PasswordModal onClose={() => setShowPasswordModal(false)} />
-            )}
           </form>
         </FormProvider>
       </DialogContent>

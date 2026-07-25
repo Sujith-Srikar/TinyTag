@@ -1,6 +1,9 @@
 "use client";
 
-import { Dialog as DialogPrimitive, VisuallyHidden as VisuallyHiddenPrimitive } from "radix-ui";
+import {
+  Dialog as DialogPrimitive,
+  VisuallyHidden as VisuallyHiddenPrimitive,
+} from "radix-ui";
 import { Drawer } from "vaul";
 import {
   createContext,
@@ -13,8 +16,6 @@ import {
 } from "react";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
-
-// ─── Hooks ───────────────────────────────────────────────────────────────────
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
@@ -34,37 +35,56 @@ function useIsMobile(): boolean {
   return useMediaQuery("(max-width: 640px)");
 }
 
-// ─── Context ─────────────────────────────────────────────────────────────────
-
 type DialogVariant = "default" | "sub";
 
-const DialogContext = createContext<{ variant: DialogVariant }>({
-  variant: "default",
-});
+type DialogContextValue = {
+  variant: DialogVariant;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
 
-// ─── Dialog (Root) ───────────────────────────────────────────────────────────
+const DialogContext = createContext<DialogContextValue>({
+  variant: "default",
+  open: false,
+  onOpenChange: () => {},
+});
 
 type DialogRootProps = ComponentProps<typeof DialogPrimitive.Root>;
 
 function Dialog({
   variant = "default",
+  open,
+  onOpenChange,
   ...props
 }: DialogRootProps & { variant?: DialogVariant }) {
-  const ctx = useMemo(() => ({ variant }), [variant]);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const resolvedOpen = isControlled ? open : uncontrolledOpen;
+
+  const handleOpenChange = (next: boolean) => {
+    if (!isControlled) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
+
+  const ctx = useMemo(
+    () => ({ variant, open: resolvedOpen, onOpenChange: handleOpenChange }),
+    [variant, resolvedOpen],
+  );
+
   return (
     <DialogContext.Provider value={ctx}>
-      <DialogPrimitive.Root {...props} />
+      <DialogPrimitive.Root
+        open={resolvedOpen}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
     </DialogContext.Provider>
   );
 }
 
-// ─── DialogTrigger ───────────────────────────────────────────────────────────
-
 function DialogTrigger(props: ComponentProps<typeof DialogPrimitive.Trigger>) {
   return <DialogPrimitive.Trigger {...props} />;
 }
-
-// ─── Size definitions ────────────────────────────────────────────────────────
 
 const sizeStyles = {
   sm: "w-[min(400px,calc(100vw-32px))]",
@@ -75,14 +95,10 @@ const sizeStyles = {
 
 type DialogSize = "sm" | "md" | "lg" | "xl";
 
-// ─── DialogContent ───────────────────────────────────────────────────────────
-
 type DialogContentProps = {
   children: ReactNode;
   className?: string;
   size?: DialogSize;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   onEscapeKeyDown?: ComponentProps<
     typeof DialogPrimitive.Content
   >["onEscapeKeyDown"];
@@ -92,22 +108,20 @@ type DialogContentProps = {
   drawerRootProps?: ComponentProps<typeof Drawer.Root>;
 } & Omit<
   ComponentProps<typeof DialogPrimitive.Content>,
-  "children" | "className" | "open" | "onOpenChange"
+  "children" | "className"
 >;
 
 function DialogContent({
   children,
   className,
   size = "md",
-  open,
-  onOpenChange,
   onEscapeKeyDown,
   onInteractOutside,
   drawerRootProps,
   ...props
 }: DialogContentProps) {
   const isMobile = useIsMobile();
-  const { variant } = useContext(DialogContext);
+  const { variant, open, onOpenChange } = useContext(DialogContext);
   const isSub = variant === "sub";
 
   if (isMobile && !isSub) {
@@ -154,15 +168,15 @@ function DialogContent({
       >
         <VisuallyHiddenPrimitive.Root>
           <DialogPrimitive.Title>Dialog</DialogPrimitive.Title>
-          <DialogPrimitive.Description>Dialog content</DialogPrimitive.Description>
+          <DialogPrimitive.Description>
+            Dialog content
+          </DialogPrimitive.Description>
         </VisuallyHiddenPrimitive.Root>
         {children}
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   );
 }
-
-// ─── Sheet (Mobile Drawer) ───────────────────────────────────────────────────
 
 type SheetProps = {
   children: ReactNode;
@@ -180,11 +194,7 @@ function Sheet({
   drawerRootProps,
 }: SheetProps) {
   return (
-    <Drawer.Root
-      open={open}
-      onOpenChange={onOpenChange}
-      {...drawerRootProps}
-    >
+    <Drawer.Root open={open} onOpenChange={onOpenChange} {...drawerRootProps}>
       <Drawer.Portal>
         <Drawer.Overlay
           className={cn(
@@ -215,8 +225,6 @@ function Sheet({
   );
 }
 
-// ─── Drawer Handle ───────────────────────────────────────────────────────────
-
 function DrawerHandle() {
   return (
     <div
@@ -227,8 +235,6 @@ function DrawerHandle() {
     </div>
   );
 }
-
-// ─── DialogHeader ────────────────────────────────────────────────────────────
 
 type DialogHeaderProps = {
   title: string;
@@ -301,8 +307,6 @@ function DialogHeader({
   );
 }
 
-// ─── DialogBody ──────────────────────────────────────────────────────────────
-
 type DialogBodyProps = {
   children: ReactNode;
   className?: string;
@@ -324,8 +328,6 @@ function DialogBody({ children, className }: DialogBodyProps) {
     </div>
   );
 }
-
-// ─── DialogFooter ────────────────────────────────────────────────────────────
 
 type DialogFooterProps = {
   children: ReactNode;
@@ -353,13 +355,9 @@ function DialogFooter({
   );
 }
 
-// ─── DialogClose ─────────────────────────────────────────────────────────────
-
 function DialogClose(props: ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close {...props} />;
 }
-
-// ─── Shared ──────────────────────────────────────────────────────────────────
 
 function CloseIcon() {
   return (
@@ -379,8 +377,6 @@ function CloseIcon() {
     </svg>
   );
 }
-
-// ─── Exports ─────────────────────────────────────────────────────────────────
 
 export {
   Dialog,

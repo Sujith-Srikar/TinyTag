@@ -3,7 +3,7 @@
 import { Field, FieldLabel, FieldError } from "@repo/ui";
 import { Button, Input } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import { Shuffle, Sparkles } from "lucide-react";
 import { useEffect } from "react";
 import styles from "../LinkBuilder.module.scss";

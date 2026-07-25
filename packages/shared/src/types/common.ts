@@ -1,17 +1,22 @@
 import { z } from "zod";
 
-export type LinkRecord = {
-  clicksCount: number;
-  comments?: string;
+export interface RedirectData {
   destinationUrl: string;
-  expiresAt?: string;
-  id: string;
-  password?: string;
-  slug: string;
-  tags?: string[];
-  isActive: boolean;
-  createdAt: string;
+  expiresAt: string | null;
   hasPassword: boolean;
+}
+
+export type LinkRecord = {
+  id: string;
+  slug: string;
+  destinationUrl: string;
+  clicksCount: number;
+  expiresAt: string | null;
+  createdAt: string;
+  isActive: boolean;
+  hasPassword: boolean;
+  comments?: string;
+  tags?: string[];
 };
 
 export interface User {
@@ -51,3 +56,21 @@ export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
   expiresAt: undefined,
   password: undefined,
 };
+
+export const EXPIRY_STATE = {
+  EXPIRED: "expired",
+  NOW: "now",
+  MINUTES: "minutes",
+  HOURS: "hours",
+  TOMORROW: "tomorrow",
+  DAYS: "days",
+  DATE: "date",
+} as const;
+
+export type ExpiryState = (typeof EXPIRY_STATE)[keyof typeof EXPIRY_STATE];
+
+export interface ExpiryInfo {
+  state: ExpiryState;
+  label: string;
+  expiresAt: Date;
+}

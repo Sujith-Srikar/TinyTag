@@ -2,18 +2,16 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Copy, Pencil, Trash } from "lucide-react";
-import { Badge, Button, CopyButton } from "@repo/ui";
+import { Pencil, Trash } from "lucide-react";
+import { Badge, Button, CopyButton, getExpiryInfo } from "@repo/ui";
 import {
   getDomain,
   formatNumber,
-  formatDate,
   getFaviconUrl,
 } from "@/utils/formatters";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 
 interface LinkCardProps {
   link: LinkRecord;
@@ -34,10 +32,9 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const editLink: LinkBuilderFields = {
     destinationUrl: link.destinationUrl,
     slug: link.slug,
-    expiresAt: link.expiresAt,
+    expiresAt: link.expiresAt ? new Date(link.expiresAt) : undefined,
     comments: link.comments,
     tags: link.tags,
-    password: link.password,
   };
 
   useEffect(() => {
@@ -92,7 +89,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
             {!link.isActive && <Badge variant="destructive">Inactive</Badge>}
             {link.expiresAt && link.isActive && (
               <Badge variant="outline">
-                Expires {formatDate(link.expiresAt)}
+                {getExpiryInfo(link.expiresAt).label}
               </Badge>
             )}
           </div>
@@ -151,7 +148,6 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
           </svg>
           <span>{formatNumber(link.clicksCount)}</span>
         </div>
-        <span className={styles.date}>{formatDate(link.createdAt)}</span>
       </div>
 
       {/* Actions */}
@@ -201,7 +197,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
             <Button
               onClick={() => {
                 setMenuOpen(false);
-                onDelete?.(link);
+                onDelete?.(editLink);
               }}
               variant="destructive"
               size="sm"

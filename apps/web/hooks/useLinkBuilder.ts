@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 
 type LinkBuilderStore = {
   modal: "create" | "edit" | "delete" | null;

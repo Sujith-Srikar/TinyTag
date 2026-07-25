@@ -93,8 +93,8 @@ export type Database = {
         Args: { target_slug: string }
         Returns: {
           destination_url: string
-          expires_at: string
-          password_hash: string
+          expires_at: string | null
+          password_hash: string | null
         }[]
       }
       health_check: { Args: never; Returns: boolean }

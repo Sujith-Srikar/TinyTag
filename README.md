@@ -245,15 +245,8 @@ This project is open source and available under the MIT License.
 -----------
 
 ```
-TinyTag/
-├── .env.example
-├── .gitignore
-├── .npmrc
-├── README.md
 ├── apps/
 │   └── web/
-│       ├── .gitignore
-│       ├── README.md
 │       ├── app/
 │       │   ├── (app)/
 │       │   │   ├── analytics/
@@ -261,14 +254,14 @@ TinyTag/
 │       │   │   ├── dashboard/
 │       │   │   │   ├── page.module.scss
 │       │   │   │   └── page.tsx
-│       │   │   ├── layout.module.scss
-│       │   │   ├── layout.tsx
 │       │   │   ├── links/
 │       │   │   │   └── [id]/
 │       │   │   │       ├── page.module.scss
 │       │   │   │       └── page.tsx
-│       │   │   └── settings/
-│       │   │       └── page.tsx
+│       │   │   ├── settings/
+│       │   │   │   └── page.tsx
+│       │   │   ├── layout.module.scss
+│       │   │   └── layout.tsx
 │       │   ├── (auth)/
 │       │   │   └── auth/
 │       │   │       ├── callback/
@@ -277,8 +270,13 @@ TinyTag/
 │       │   │           ├── page.module.scss
 │       │   │           └── page.tsx
 │       │   ├── (public)/
-│       │   │   ├── link-not-found/
+│       │   │   ├── health/
+│       │   │   │   └── route.ts
+│       │   │   ├── link-unavailable/
 │       │   │   │   └── page.tsx
+│       │   │   ├── password/
+│       │   │   │   └── [slug]/
+│       │   │   │       └── page.tsx
 │       │   │   ├── page.module.css
 │       │   │   └── page.tsx
 │       │   ├── [slug]/
@@ -289,11 +287,20 @@ TinyTag/
 │       │   │           └── route.ts
 │       │   ├── docs/
 │       │   │   └── route.ts
+│       │   ├── styles/
+│       │   │   └── landing.scss
 │       │   ├── globals.scss
 │       │   ├── layout.tsx
 │       │   └── not-found.tsx
-│       ├── components.json
 │       ├── components/
+│       │   ├── Landing/
+│       │   │   ├── Hero/
+│       │   │   │   ├── Hero.module.scss
+│       │   │   │   └── Hero.tsx
+│       │   │   ├── UrlCompression/
+│       │   │   │   ├── UrlCompression.module.scss
+│       │   │   │   └── UrlCompression.tsx
+│       │   │   └── index.ts
 │       │   ├── Layout/
 │       │   │   ├── ComingSoon/
 │       │   │   │   ├── ComingSoon.module.scss
@@ -324,7 +331,6 @@ TinyTag/
 │       │       │   ├── ThemeToggle.module.scss
 │       │       │   └── ThemeToggle.tsx
 │       │       └── index.ts
-│       ├── eslint.config.js
 │       ├── features/
 │       │   └── components/
 │       │       ├── dashboard/
@@ -339,27 +345,26 @@ TinyTag/
 │       │       │   │   └── page.tsx
 │       │       │   └── index.ts
 │       │       └── links/
+│       │           ├── sections/
+│       │           │   ├── CommentSection.tsx
+│       │           │   ├── DestinationSection.tsx
+│       │           │   ├── ExpirySection.tsx
+│       │           │   ├── index.ts
+│       │           │   ├── PasswordModal.tsx
+│       │           │   ├── PasswordSection.tsx
+│       │           │   ├── QrCodeSection.tsx
+│       │           │   └── ShortLinksSection.tsx
 │       │           ├── LinkBuilder.module.scss
-│       │           ├── LinkBuilder.tsx
-│       │           └── sections/
-│       │               ├── CommentSection.tsx
-│       │               ├── DestinationSection.tsx
-│       │               ├── QrCodeSection.tsx
-│       │               ├── ShortLinksSection.tsx
-│       │               └── index.ts
+│       │           └── LinkBuilder.tsx
 │       ├── hooks/
 │       │   ├── useAuthErrors.ts
 │       │   ├── useBreakPoint.ts
 │       │   ├── useLinkBuilder.ts
 │       │   └── useSlugGenerator.ts
-│       ├── next.config.js
-│       ├── package.json
-│       ├── postcss.config.mjs
 │       ├── providers/
 │       │   ├── Providers.tsx
-│       │   ├── TRPCProvider.tsx
-│       │   └── ThemeProvider.tsx
-│       ├── proxy.ts
+│       │   ├── ThemeProvider.tsx
+│       │   └── TRPCProvider.tsx
 │       ├── public/
 │       │   ├── fonts/
 │       │   │   ├── PPNeueMontreal-Regular.ttf
@@ -367,76 +372,87 @@ TinyTag/
 │       │   └── media/
 │       │       └── shards.glb
 │       ├── trpc/
+│       │   ├── router/
+│       │   │   ├── app.ts
+│       │   │   ├── get.ts
+│       │   │   └── post.ts
 │       │   ├── client.ts
 │       │   ├── context.ts
-│       │   ├── init.ts
-│       │   └── router/
-│       │       ├── app.ts
-│       │       ├── get.ts
-│       │       └── post.ts
-│       ├── tsconfig.json
-│       ├── types/
-│       │   └── linkBuilder.ts
-│       └── utils/
-│           ├── auth/
-│           │   ├── client.ts
-│           │   └── server.ts
-│           ├── formatters.ts
-│           └── generate-slug.ts
+│       │   └── init.ts
+│       ├── utils/
+│       │   ├── auth/
+│       │   │   ├── client.ts
+│       │   │   └── server.ts
+│       │   ├── formatters.ts
+│       │   └── generate-slug.ts
+│       ├── .gitignore
+│       ├── components.json
+│       ├── eslint.config.js
+│       ├── next.config.js
+│       ├── package.json
+│       ├── postcss.config.mjs
+│       ├── proxy.ts
+│       ├── README.md
+│       └── tsconfig.json
 ├── docs/
+│   ├── architecture.png
 │   ├── Auth.md
 │   ├── Design.md
-│   └── architecture.png
-├── package.json
+│   └── PRODUCT.md
 ├── packages/
 │   ├── cache/
-│   │   ├── package.json
 │   │   ├── src/
 │   │   │   ├── client.ts
 │   │   │   ├── index.ts
 │   │   │   ├── schema.ts
 │   │   │   └── service.ts
+│   │   ├── package.json
 │   │   └── tsconfig.json
 │   ├── db/
-│   │   ├── package.json
 │   │   ├── src/
-│   │   │   ├── client.ts
-│   │   │   ├── index.ts
 │   │   │   ├── queries/
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── protected.queries.ts
 │   │   │   │   └── public.queries.ts
+│   │   │   ├── client.ts
+│   │   │   ├── index.ts
 │   │   │   └── types.ts
 │   │   ├── supabase/
-│   │   │   ├── config.toml
-│   │   │   └── migrations/
-│   │   │       ├── 20260516170122_create_links_table.sql
-│   │   │       ├── 20260531034846_rename-link-columns.sql
-│   │   │       ├── 20260531042533_rename-description-to-comments.sql
-│   │   │       ├── 20260531052151_add-isActive-column.sql
-│   │   │       ├── 20260618012541_add user_id.sql
-│   │   │       ├── 20260618014633_add index for user_id.sql
-│   │   │       ├── 20260619015256_add-rls-policies.sql
-│   │   │       └── 20260621050438_make_user_id_not_null.sql
+│   │   │   ├── migrations/
+│   │   │   │   ├── 20260516170122_create_links_table.sql
+│   │   │   │   ├── 20260531034846_rename-link-columns.sql
+│   │   │   │   ├── 20260531042533_rename-description-to-comments.sql
+│   │   │   │   ├── 20260531052151_add-isActive-column.sql
+│   │   │   │   ├── 20260618012541_add user_id.sql
+│   │   │   │   ├── 20260618014633_add index for user_id.sql
+│   │   │   │   ├── 20260619015256_add-rls-policies.sql
+│   │   │   │   ├── 20260621050438_make_user_id_not_null.sql
+│   │   │   │   ├── 20260630124055_create-health-rpc.sql
+│   │   │   │   ├── 20260713100920_extend_the_exisitng_get_redirect_url_rpc.sql
+│   │   │   │   ├── 20260725070232_increment_click_count-rls.sql
+│   │   │   │   └── 20260725072116_increment_count_rls_making_public.sql
+│   │   │   └── config.toml
+│   │   ├── package.json
 │   │   └── tsconfig.json
 │   ├── eslint-config/
-│   │   ├── README.md
 │   │   ├── base.js
 │   │   ├── next.js
 │   │   ├── package.json
-│   │   └── react-internal.js
+│   │   ├── react-internal.js
+│   │   └── README.md
 │   ├── shared/
-│   │   ├── package.json
 │   │   ├── src/
-│   │   │   ├── constant.ts
 │   │   │   ├── env/
 │   │   │   │   ├── client.ts
 │   │   │   │   └── server.ts
+│   │   │   ├── types/
+│   │   │   │   ├── common.ts
+│   │   │   │   └── web.ts
+│   │   │   ├── constant.ts
 │   │   │   ├── index.ts
 │   │   │   ├── logger.ts
-│   │   │   └── types/
-│   │   │       ├── common.ts
-│   │   │       └── web.ts
+│   │   │   └── performance.ts
+│   │   ├── package.json
 │   │   └── tsconfig.json
 │   ├── typescript-config/
 │   │   ├── base.json
@@ -444,8 +460,6 @@ TinyTag/
 │   │   ├── package.json
 │   │   └── react-library.json
 │   └── ui/
-│       ├── eslint.config.mjs
-│       ├── package.json
 │       ├── src/
 │       │   ├── components/
 │       │   │   ├── animated-container.tsx
@@ -454,22 +468,43 @@ TinyTag/
 │       │   │   ├── animated-tabs.tsx
 │       │   │   ├── badge.tsx
 │       │   │   ├── button.tsx
+│       │   │   ├── calendar.tsx
 │       │   │   ├── copybutton.tsx
+│       │   │   ├── date-time.tsx
+│       │   │   ├── dialog-stack.tsx
 │       │   │   ├── field.tsx
 │       │   │   ├── infotooltip.tsx
 │       │   │   ├── input.tsx
 │       │   │   ├── label.tsx
+│       │   │   ├── modal.tsx
+│       │   │   ├── popover.tsx
 │       │   │   ├── separator.tsx
 │       │   │   ├── text-particle.tsx
 │       │   │   ├── textarea.tsx
-│       │   │   └── tooltip.tsx
-│       │   ├── index.ts
-│       │   └── lib/
-│       │       └── utils.ts
+│       │   │   ├── time.tsx
+│       │   │   ├── tooltip.tsx
+│       │   │   └── url-compression.tsx
+│       │   ├── lib/
+│       │   │   ├── expiry.ts
+│       │   │   ├── time-picker-utils.ts
+│       │   │   └── utils.ts
+│       │   └── index.ts
+│       ├── eslint.config.mjs
+│       ├── package.json
 │       └── tsconfig.json
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── .npmrc
+├── AGENTS.md
+├── docker-compose.yaml
+├── Dockerfile
+├── package.json
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml
+├── README.md
 ├── turbo.json
 └── vercel.json
+
 
 ```
