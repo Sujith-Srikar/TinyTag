@@ -21,24 +21,25 @@ import { EXPIRY_STATE, type ExpiryState, ExpiryInfo } from "@repo/shared";
  * - >= 7 days             -> Jul 30 / Jul 30, 2027
  */
 export function getExpiryInfo(
-  expiresAt: Date,
+  expiresAt: string | Date,
   now: Date = new Date(),
 ): ExpiryInfo {
-  if (isPast(expiresAt)) {
+  const expiryDate = typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt;
+  if (isPast(expiryDate)) {
     return {
       state: EXPIRY_STATE.EXPIRED,
       label: "Expired",
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
-  const minutes = differenceInMinutes(expiresAt, now);
+  const minutes = differenceInMinutes(expiryDate, now);
 
   if (minutes < 1) {
     return {
       state: EXPIRY_STATE.NOW,
       label: "Expires now",
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
@@ -46,27 +47,27 @@ export function getExpiryInfo(
     return {
       state: EXPIRY_STATE.MINUTES,
       label: `Expires in ${minutes} min`,
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
-  const hours = differenceInHours(expiresAt, now);
+  const hours = differenceInHours(expiryDate, now);
 
   if (hours < 24) {
     return {
       state: EXPIRY_STATE.HOURS,
       label: `Expires in ${hours} hr`,
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
-  const calendarDays = differenceInCalendarDays(expiresAt, now);
+  const calendarDays = differenceInCalendarDays(expiryDate, now);
 
   if (calendarDays === 1) {
     return {
       state: EXPIRY_STATE.TOMORROW,
       label: "Expires tomorrow",
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
@@ -74,16 +75,16 @@ export function getExpiryInfo(
     return {
       state: EXPIRY_STATE.DAYS,
       label: `Expires in ${calendarDays} days`,
-      expiresAt,
+      expiresAt: expiryDate,
     };
   }
 
   return {
     state: EXPIRY_STATE.DATE,
     label: format(
-      expiresAt,
-      isSameYear(expiresAt, now) ? "MMM d" : "MMM d, yyyy",
+      expiryDate,
+      isSameYear(expiryDate, now) ? "MMM d" : "MMM d, yyyy",
     ),
-    expiresAt,
+    expiresAt: expiryDate,
   };
 }

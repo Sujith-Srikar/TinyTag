@@ -4,14 +4,6 @@ export function formatNumber(n: number): string {
   return n.toString();
 }
 
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
 export function getDomain(url: string): string {
   try {
     return new URL(url).hostname.replace("www.", "");

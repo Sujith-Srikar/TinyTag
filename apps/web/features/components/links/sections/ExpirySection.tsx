@@ -17,20 +17,6 @@ import {
 } from "@repo/ui";
 import { CalendarClock } from "lucide-react";
 
-function formatExpiry(date: Date): string {
-  const now = new Date();
-  const diffDays = Math.ceil((date.getTime() - now.getTime()) / 86_400_000);
-
-  if (diffDays <= 0) return "Expired";
-  if (diffDays === 1) return "Expires tomorrow";
-  if (diffDays < 7) return `Expires in ${diffDays} days`;
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-  });
-}
-
 export function ExpirySection() {
   const { watch, setValue } = useFormContext<LinkBuilderFields>();
   const [open, setOpen] = useState(false);
