@@ -6,7 +6,7 @@ import {
   isPast,
   isSameYear,
 } from "date-fns";
-import { EXPIRY_STATE, type ExpiryState, ExpiryInfo } from "@repo/shared";
+import { EXPIRY_STATE, ExpiryInfo } from "@repo/shared";
 
 /**
  * Returns a user-friendly expiry label.

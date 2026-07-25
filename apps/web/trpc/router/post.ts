@@ -27,7 +27,7 @@ export const postRouter = createTRPCRouter({
       try {
         const input = opts.input;
         const hashedPassword = input.password ? await hash(input.password) : undefined;
-        const error = await create_short_url(
+        await create_short_url(
           input,
           opts.ctx.user.id,
           opts.ctx.supabase,

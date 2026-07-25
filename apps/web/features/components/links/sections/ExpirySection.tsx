@@ -76,7 +76,7 @@ export function ExpirySection() {
 
           <DialogBody>
             <Field>
-              <FieldLabel>Expiration date and time</FieldLabel>
+              <FieldLabel>Date & Time</FieldLabel>
               <DateTimePicker value={draft} onChange={setDraft} />
             </Field>
           </DialogBody>
