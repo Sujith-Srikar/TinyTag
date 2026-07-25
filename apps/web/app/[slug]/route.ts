@@ -83,7 +83,10 @@ async function resolveRedirectData(
 }
 
 function isExpired(data: Redirect): boolean {
-  return Boolean(data.expiresAt && new Date(data.expiresAt) < new Date());
+  if (!data.expiresAt) return false;
+  const expiryDate = new Date(data.expiresAt);
+  if (isNaN(expiryDate.getTime())) return true;
+  return expiryDate < new Date();
 }
 
 async function isPasswordVerified(slug: string): Promise<boolean> {

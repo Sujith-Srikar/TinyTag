@@ -10,5 +10,5 @@ export default redis;
 
 export const redisKeys = {
   redirect: (slug: string) => `redirect:${slug}`,
-  analytics: (slug: string) => `analytics: ${slug}`,
+  analytics: (slug: string) => `analytics:${slug}`,
 };

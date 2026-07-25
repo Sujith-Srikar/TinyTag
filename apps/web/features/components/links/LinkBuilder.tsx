@@ -9,7 +9,7 @@ import {
   LINK_BUILDER_DEFAULTS,
   LinkBuilderFields,
   LinkBuilderFormSchema,
-} from "@/types/linkBuilder";
+} from "@repo/shared";
 import {
   DestinationSection,
   ShortLinkSection,
@@ -82,7 +82,7 @@ export const LinkBuilder = () => {
       expiresAt: selectedLink.expiresAt ?? undefined,
       password: selectedLink.password ?? undefined,
     });
-  }, [selectedLink, generateRandomSlug, reset]);
+  }, [selectedLink, reset]);
 
   useEffect(() => {
     if (modal !== "create") return;

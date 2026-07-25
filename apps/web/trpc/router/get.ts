@@ -47,20 +47,17 @@ export const getRouter = createTRPCRouter({
       try {
         const res = await getMyLinks(ctx.supabase);
 
-        if (!res) return null;
-
         const mappedResponse: LinkRecord[] = res.map((link) => ({
-          destinationUrl: link.destination_url,
+          id: link.id,
           slug: link.slug,
+          destinationUrl: link.destination_url,
+          clicksCount: link.clicks_count,
+          expiresAt: link.expires_at,
+          createdAt: link.created_at,
+          isActive: link.is_active,
+          hasPassword: link.has_password,
           comments: link.comments ?? undefined,
           tags: link.tags ?? undefined,
-          clicksCount: link.clicks_count,
-          expiresAt: link.expires_at ?? undefined,
-          id: link.id,
-          password: link.password_hash ?? undefined,
-          isActive: link.is_active,
-          createdAt: link.created_at,
-          hasPassword: link.has_password,
         }));
 
         return mappedResponse;
@@ -100,8 +97,11 @@ export const getRouter = createTRPCRouter({
     })
     .input(z.object({ destinationUrl: z.string().optional() }))
     .query(async (opts) => {
+      const MAX_ATTEMPTS = 20;
       const prevSlugs: string[] = [];
-      while (true) {
+      let attempts = 0;
+      while (attempts < MAX_ATTEMPTS) {
+        attempts++;
         const slug = opts.input.destinationUrl
           ? generateSlugFromUrl(opts.input.destinationUrl)
           : generateRandomSlug();
@@ -116,6 +116,10 @@ export const getRouter = createTRPCRouter({
         }
         prevSlugs.push(slug);
       }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to generate available slug after multiple attempts",
+      });
     }),
 
   validateSlugAvailability: publicProcedure

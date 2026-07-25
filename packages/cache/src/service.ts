@@ -35,7 +35,7 @@ const setAnalyticsData = async (slug: string) => {
 
 const deleteData = async (slug: string) => {
   const result = await redis.del(redisKeys.redirect(slug), redisKeys.analytics(slug));
-  if(result == 2)
+  if(result === 2)
     return true;
   return false;
 }

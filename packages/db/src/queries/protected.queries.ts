@@ -1,21 +1,24 @@
 import { Database } from "../types.js";
-import { LinkBuilderFields } from "@repo/shared";
+import { type LinkBuilderFields } from "@repo/shared";
 import { type DBClient } from "..";
 
 type LinksTable = Database["public"]["Tables"]["links"]["Row"];
 
-const getMyLinks = async (supabase: DBClient): Promise<LinksTable[] | null> => {
+const getMyLinks = async (supabase: DBClient): Promise<LinksTable[]> => {
   const { data, error } = await supabase.from("links").select("*");
 
-  if (error) return null;
+  if (error) {
+    throw new Error(`Failed to fetch user links: ${error.message}`);
+  }
 
-  return data;
+  return data ?? [];
 };
 
 const create_short_url = async (
   opts: LinkBuilderFields,
   userId: string,
   supabase: DBClient,
+  hashedPassword?: string,
 ) => {
   const { error } = await supabase.from("links").insert({
     destination_url: opts.destinationUrl,
@@ -23,40 +26,60 @@ const create_short_url = async (
     tags: opts.tags?.length ? opts.tags : null,
     comments: opts.comments || null,
     expires_at: opts.expiresAt?.toISOString() || null,
-    password_hash: opts.password || null,
+    password_hash: hashedPassword ?? null,
     user_id: userId,
-    has_password: !!opts.password,
+    has_password: !!hashedPassword,
   });
-  return error;
+
+  if (error) {
+    throw new Error(`Failed to create short url: ${error.message}`);
+  }
 };
 
-const edit_long_url = async (opts: LinkBuilderFields, supabase: DBClient) => {
-  let updateObj: Partial<LinksTable> = {
+const edit_long_url = async (
+  opts: LinkBuilderFields,
+  userId: string,
+  supabase: DBClient,
+  hashedPassword?: string,
+) => {
+  const updateObj: Partial<LinksTable> = {
     slug: opts.slug,
     destination_url: opts.destinationUrl,
-    ...(opts.comments && { comments: opts.comments }),
-    ...(opts.expiresAt && { expires_at: opts.expiresAt.toISOString() }),
-    ...(opts.tags && { tags: opts.tags }),
-    ...(opts.password && { password_hash: opts.password }),
-    ...(opts.password && { has_password: !!opts.password }),
+    expires_at: opts.expiresAt ? opts.expiresAt.toISOString() : null,
+    comments: opts.comments ? opts.comments : null,
+    tags: opts.tags ? opts.tags : null,
+    password_hash: hashedPassword ?? null,
+    has_password: !!hashedPassword,
   };
 
   const { error } = await supabase
     .from("links")
     .update(updateObj)
-    .eq("slug", opts.slug);
+    .eq("slug", opts.slug)
+    .eq("user_id", userId);
 
-  return error;
+  if (error) {
+    throw new Error(`Failed to edit link: ${error.message}`);
+  }
 };
 
-const delete_url = async (slug: string, supabase: DBClient) => {
-  const res = await supabase
+const delete_url = async (
+  slug: string,
+  userId: string,
+  supabase: DBClient,
+): Promise<boolean> => {
+  const { data, error } = await supabase
     .from("links")
     .delete()
     .eq("slug", slug)
+    .eq("user_id", userId)
     .select();
 
-  return res;
+  if (error) {
+    throw new Error(`Failed to delete link: ${error.message}`);
+  }
+
+  return (data?.length ?? 0) > 0;
 };
 
 export { getMyLinks, create_short_url, edit_long_url, delete_url };

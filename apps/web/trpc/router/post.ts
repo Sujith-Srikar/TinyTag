@@ -28,18 +28,11 @@ export const postRouter = createTRPCRouter({
         const input = opts.input;
         const hashedPassword = input.password ? await hash(input.password) : undefined;
         const error = await create_short_url(
-          { ...input, password: hashedPassword },
+          input,
           opts.ctx.user.id,
           opts.ctx.supabase,
+          hashedPassword,
         );
-
-        if (error) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to create short url",
-          });
-        }
-
         return {
           success: true,
           message: "ShortUrl Created Successfully",
@@ -70,26 +63,20 @@ export const postRouter = createTRPCRouter({
       try {
         const input = opts.input;
         const hashedPassword = input.password ? await hash(input.password) : undefined;
-        const error = await edit_long_url(
-          { ...input, password: hashedPassword },
+        await edit_long_url(
+          input,
+          opts.ctx.user.id,
           opts.ctx.supabase,
+          hashedPassword,
         );
 
-        if (!error) {
-          deleteData(input.slug);
-          return {
-            success: true,
-            message: "Updated Long Url Successfully",
-          };
-        }
-
-        throw error;
+        deleteData(input.slug);
+        return {
+          success: true,
+          message: "Updated Long Url Successfully",
+        };
       } catch (error) {
         logger.error("Error while updating the longurl", error);
-
-        if (error instanceof TRPCError) {
-          throw error;
-        }
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -115,9 +102,10 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async (opts) => {
       try {
-        const { data } = await delete_url(opts.input.slug, opts.ctx.supabase);
+        const deleted = await delete_url(opts.input.slug, opts.ctx.user.id, opts.ctx.supabase);
 
-        if (data && data.length != 0) {
+        if (deleted) {
+          deleteData(opts.input.slug);
           return {
             success: true,
             message: "Deleted URL Successfully",
@@ -137,7 +125,7 @@ export const postRouter = createTRPCRouter({
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Erroe while Deleting URL",
+          message: "Error while Deleting URL",
         });
       }
     }),
