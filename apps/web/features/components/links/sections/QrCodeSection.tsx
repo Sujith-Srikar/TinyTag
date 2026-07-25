@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import QrCode from "qrcode";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

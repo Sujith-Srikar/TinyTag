@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import {
   Button,
   Dialog,

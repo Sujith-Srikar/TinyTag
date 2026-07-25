@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import { Button, Dialog, DialogContent, DialogHeader, DialogBody, DialogFooter } from "@repo/ui";
 import { Eye, EyeOff, Dices, Shield } from "lucide-react";
 import styles from "../LinkBuilder.module.scss";

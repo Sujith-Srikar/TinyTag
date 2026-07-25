@@ -12,7 +12,7 @@ import {
 import { LinkCard } from "../LinkCard/page";
 import { type LinkRecord } from "@repo/shared";
 import styles from "./page.module.scss";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import { Frown } from "lucide-react";
 
 type SortKey = "clicks" | "createdAt" | "title";

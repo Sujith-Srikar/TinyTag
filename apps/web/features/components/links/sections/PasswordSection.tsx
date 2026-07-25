@@ -2,7 +2,7 @@
 
 import { InfoTooltip, Button } from "@repo/ui";
 import { useFormContext } from "react-hook-form";
-import { LinkBuilderFields } from "@/types/linkBuilder";
+import { LinkBuilderFields } from "@repo/shared";
 import { Shield, Eye, EyeOff, X, Dices } from "lucide-react";
 import styles from "../LinkBuilder.module.scss";
 import { useState, useCallback } from "react";
