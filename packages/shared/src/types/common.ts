@@ -43,6 +43,7 @@ export const LinkBuilderFormSchema = z.object({
   comments: z.string().optional(),
   expiresAt: z.date().optional(),
   password: z.string().optional(),
+  hasPassword: z.boolean().optional(),
 });
 
 export type LinkBuilderFields = z.infer<typeof LinkBuilderFormSchema>;
@@ -74,3 +75,6 @@ export interface ExpiryInfo {
   label: string;
   expiresAt: Date;
 }
+
+export const COOKIE_PREFIX = "tinytag-pw-";
+export const COOKIE_MAX_AGE = 60 * 60 * 24; // 1 day

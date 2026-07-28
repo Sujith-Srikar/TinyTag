@@ -45,12 +45,21 @@ const edit_long_url = async (
   const updateObj: Partial<LinksTable> = {
     slug: opts.slug,
     destination_url: opts.destinationUrl,
-    expires_at: opts.expiresAt ? opts.expiresAt.toISOString() : null,
-    comments: opts.comments ? opts.comments : null,
-    tags: opts.tags ? opts.tags : null,
-    password_hash: hashedPassword ?? null,
-    has_password: !!hashedPassword,
   };
+
+  if (opts.expiresAt !== undefined) {
+    updateObj.expires_at = opts.expiresAt ? opts.expiresAt.toISOString() : null;
+  }
+  if (opts.comments !== undefined) {
+    updateObj.comments = opts.comments || null;
+  }
+  if (opts.tags !== undefined) {
+    updateObj.tags = opts.tags?.length ? opts.tags : null;
+  }
+  if (hashedPassword !== undefined) {
+    updateObj.password_hash = hashedPassword || null;
+    updateObj.has_password = !!hashedPassword;
+  }
 
   const { error } = await supabase
     .from("links")

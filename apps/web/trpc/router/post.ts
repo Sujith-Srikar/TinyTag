@@ -1,15 +1,14 @@
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../init";
-import { logger } from "@repo/shared";
+import { logger, COOKIE_MAX_AGE } from "@repo/shared";
 import { z } from "zod";
 import { create_short_url, delete_url, edit_long_url, getLinkPasswordBySlug, updateClicksCount } from "@repo/db";
 import { LinkBuilderFormSchema } from "@repo/shared";
 import { deleteData } from "@repo/cache";
 import { hash, verify } from "@node-rs/argon2";
 import { cookies } from "next/headers";
-
-const COOKIE_PREFIX = "tinytag-pw-";
-const COOKIE_MAX_AGE = 60 * 60 * 24; // 1 day
+import { createPasswordToken, createPasswordCookieName } from "@/utils/password";
+import { serverEnv } from "@repo/shared/env/server";
 
 export const postRouter = createTRPCRouter({
   shortenUrl: protectedProcedure
@@ -166,9 +165,9 @@ export const postRouter = createTRPCRouter({
         }
 
         const cookieStore = await cookies();
-        cookieStore.set(`${COOKIE_PREFIX}${slug}`, "1", {
+        cookieStore.set(createPasswordCookieName(slug), createPasswordToken(slug), {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: serverEnv.NODE_ENV === 'production',
           sameSite: "lax",
           path: "/",
           maxAge: COOKIE_MAX_AGE,

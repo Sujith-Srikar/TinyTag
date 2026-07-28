@@ -4,6 +4,8 @@ import { getRedirectData, setRedirectData, deleteData } from "@repo/cache";
 import { StatusCode, createErrorResponse, logger, createPerformance } from "@repo/shared";
 import { getLinkBySlug, updateClicksCount } from "@repo/db";
 import { type Redirect } from "@repo/cache";
+import { createPasswordCookieName, createPasswordToken } from "@/utils/password";
+import { timingSafeEqual } from "node:crypto";
 
 const COOKIE_PREFIX = "tinytag-pw-";
 
@@ -40,7 +42,7 @@ export async function GET(req: Request, context: { params: Promise<{ slug: strin
 
       if (!verified) {
         perf.finish({ status: "password_required" });
-        return NextResponse.rewrite(new URL(`/password/${slug}`, req.url));
+        return NextResponse.redirect(new URL(`/password/${slug}`, req.url));
       }
     }
 
@@ -91,5 +93,18 @@ function isExpired(data: Redirect): boolean {
 
 async function isPasswordVerified(slug: string): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get(`${COOKIE_PREFIX}${slug}`)?.value === "1";
+
+  const token = cookieStore.get(createPasswordCookieName(slug))?.value;
+  if (!token) return false;
+
+  const expected = createPasswordToken(slug);
+
+  if (token.length !== expected.length) {
+    return false;
+  }
+
+  return timingSafeEqual(
+    Buffer.from(token),
+    Buffer.from(expected),
+  );
 }

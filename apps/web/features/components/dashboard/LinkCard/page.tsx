@@ -35,6 +35,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
     expiresAt: link.expiresAt ? new Date(link.expiresAt) : undefined,
     comments: link.comments,
     tags: link.tags,
+    hasPassword: link.hasPassword,
   };
 
   useEffect(() => {
@@ -167,21 +168,6 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
         {menuOpen && (
           <div className={styles.menu}>
-            <Link
-              href={`/links/${link.id}`}
-              className={styles.menuItem}
-              onClick={() => setMenuOpen(false)}
-            >
-              <svg viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M2 9L9.5 1.5L12.5 4.5L5 12H2V9Z"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Analytics
-            </Link>
             <Button
               variant="secondary"
               size="sm"

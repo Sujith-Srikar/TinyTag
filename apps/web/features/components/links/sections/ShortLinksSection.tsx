@@ -40,10 +40,7 @@ export const ShortLinkSection = () => {
   useEffect(() => {
     if (!slug) return;
 
-    if (selectedLink && selectedLink.slug === slug) {
-      clearErrors("slug");
-      return;
-    }
+    if (selectedLink && selectedLink.slug === slug) return;
 
     const timer = setTimeout(async () => {
       const isValid = await trigger("slug");
@@ -60,7 +57,7 @@ export const ShortLinkSection = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [slug]);
+  }, [slug, selectedLink]);
 
   const handleShuffle = async () => {
     const slug = await generateRandomSlug();

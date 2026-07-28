@@ -101,7 +101,7 @@ export function ExpirySection() {
               >
                 Cancel
               </Button>
-              <Button size="sm" type="button" onClick={handleConfirm}>
+              <Button size="sm" type="button" onClick={handleConfirm} disabled={!draft}>
                 Save
               </Button>
             </div>
