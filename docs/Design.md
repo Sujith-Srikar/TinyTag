@@ -2,6 +2,16 @@
 
 URL management platform. Warm neutral canvas, single acid-green accent. Interface recedes; links, slugs, and analytics take the stage.
 
+| Characteristic | Value |
+|---|---|
+| Platform | Web-only (Next.js) — no native app constraints |
+| Styling | Tailwind CSS + SCSS modules |
+| Component library | shadcn/ui (Radix + Tailwind) |
+| Icon library | Phosphor (`@phosphor-icons/react`), Heroicons fallback |
+| Font stack | PP Neue Montreal (display) + Satoshi (body), local `next/font/local` |
+| Accent | `#D0F54A` — single, never decorative |
+| Dark mode | Full parity, `data-theme="dark"` attribute |
+
 ---
 
 ## 1. Philosophy
@@ -19,6 +29,14 @@ URL management platform. Warm neutral canvas, single acid-green accent. Interfac
 ### Color strategy
 
 Restrained. Tinted neutrals plus one accent used at ≤10% of surface area. Accent is reserved for primary actions, current selection, and state indicators.
+
+### Do's
+
+- Use the accent color exclusively for primary actions, selection states, and focus indicators
+- Build depth through border contrast and spacing before reaching for shadow
+- Animate only to clarify state transitions — entrance, exit, focus, and completion
+- Let the browser handle form controls; override appearance only when necessary for brand consistency
+- Keep motion brief and purposeful — every animation should answer "what changed?"
 
 ### Anti-patterns (avoid)
 
@@ -105,25 +123,27 @@ When accent is used as a text color (e.g., slug in link row, active sort indicat
 
 PP Neue Montreal pairs with Satoshi on a geometric-vs-humanist axis — the contrast between them creates hierarchy without visual noise.
 
+**Fallback strategy:** If PP Neue Montreal fails to load, `system-ui, sans-serif` kicks in (already in the stack). Satoshi falls back to `system-ui` the same way. No Flash of Invisible Text (FOIT) — `next/font/local` uses `display: swap` by default.
+
 #### Type scale
 
 Base size: 16px. Scale ratio: major second (×1.125) for body, larger steps for display.
 
 | Token | Size | Weight | Line Height | Letter Spacing | Use |
 |---|---|---|---|---|---|
-| `display-xl` | 56px | 600 | 1.05 | -0.03em | Landing hero |
-| `display-lg` | 48px | 600 | 1.05 | -0.03em | Section hero |
-| `display-md` | 40px | 600 | 1.10 | -0.02em | Page titles |
-| `heading-xl` | 32px | 600 | 1.15 | -0.02em | Card group headers |
-| `heading-lg` | 24px | 600 | 1.20 | -0.02em | Card titles, sidebar sections |
-| `heading-md` | 20px | 600 | 1.25 | -0.01em | Sub-section heads |
-| `body-lg` | 18px | 400 | 1.60 | 0 | Lead paragraphs, onboarding |
-| `body` | 16px | 400 | 1.60 | 0 | Default body copy |
-| `body-sm` | 14px | 400 | 1.50 | 0 | Help text, secondary descriptions |
-| `label` | 14px | 500 | 1.00 | 0 | Input labels, button text, nav items |
-| `caption` | 12px | 400 | 1.40 | 0.01em | Timestamps, table headers, fine print |
-| `mono-lg` | 24px | 500 | 1.20 | -0.01em | Large stat numbers |
-| `mono` | 14px | 400 | 1.50 | -0.01em | URLs, slugs, click counts, IDs |
+| `--text-display-xl` | 56px | 600 | 1.05 | -0.03em | Landing hero |
+| `--text-display-lg` | 48px | 600 | 1.05 | -0.03em | Section hero |
+| `--text-display-md` | 40px | 600 | 1.10 | -0.02em | Page titles |
+| `--text-heading-xl` | 32px | 600 | 1.15 | -0.02em | Card group headers |
+| `--text-heading-lg` | 24px | 600 | 1.20 | -0.02em | Card titles, sidebar sections |
+| `--text-heading-md` | 20px | 600 | 1.25 | -0.01em | Sub-section heads |
+| `--text-body-lg` | 18px | 400 | 1.60 | 0 | Lead paragraphs, onboarding |
+| `--text-body` | 16px | 400 | 1.60 | 0 | Default body copy |
+| `--text-body-sm` | 14px | 400 | 1.50 | 0 | Help text, secondary descriptions |
+| `--text-label` | 14px | 500 | 1.00 | 0 | Input labels, button text, nav items |
+| `--text-caption` | 12px | 400 | 1.40 | 0.01em | Timestamps, table headers, fine print |
+| `--text-mono-lg` | 24px | 500 | 1.20 | -0.01em | Large stat numbers |
+| `--text-mono` | 14px | 400 | 1.50 | -0.01em | URLs, slugs, click counts, IDs |
 
 #### Typographic rules
 
@@ -174,7 +194,7 @@ Base unit: 4px. All values are multiples of this unit.
 
 ### 2.5 Elevation
 
-Depth comes from border contrast and spacing, not shadow. Shadow is reserved for the overlay layer.
+Depth comes from border contrast and spacing first. Shadow is reserved for the overlay layer — modals, drawers, and toasts. Subtle shadow may appear on dropdowns and elevated cards, but never as default card treatment.
 
 | Level | Treatment | Use |
 |---|---|---|
@@ -209,21 +229,35 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 ### 2.8 Motion
 
 | Token | Duration | Use |
-|---|---|---|
+|---|---|---|---|
 | `motion-fast` | 120ms | Button press, badge appear, tooltip |
 | `motion-normal` | 180ms | Card hover, dropdown open, input focus |
 | `motion-slow` | 280ms | Modal enter/exit, drawer slide, toast enter |
+| `motion-exit-fast` | 84ms | Button press release, badge dismiss |
+| `motion-exit-normal` | 126ms | Dropdown close, tooltip hide |
+| `motion-exit-slow` | 196ms | Modal exit, drawer close, toast dismiss |
 
 | Token | Curve | Use |
 |---|---|---|
 | `ease-enter` | `cubic-bezier(0, 0, 0.2, 1)` | All entering elements |
 | `ease-exit` | `cubic-bezier(0.4, 0, 1, 1)` | All exiting elements |
 
+#### Transition shorthands
+
+| Token | Value | Use |
+|---|---|---|
+| `--transition-fast` | `var(--motion-fast) var(--ease-enter)` | Quick property transitions (color, bg) |
+| `--transition-base` | `var(--motion-normal) var(--ease-enter)` | Default transition |
+| `--transition-slow` | `var(--motion-slow) var(--ease-enter)` | Theme-switch, layout transitions |
+| `--transition-exit-fast` | `var(--motion-exit-fast) var(--ease-exit)` | Quick exit transitions |
+| `--transition-exit-base` | `var(--motion-exit-normal) var(--ease-exit)` | Default exit transition |
+| `--transition-exit-slow` | `var(--motion-exit-slow) var(--ease-exit)` | Slow exit transitions |
+
 #### Motion rules
 
 - Animate only: opacity, transform (translate, scale), color, background-color, border-color.
 - Avoid animating layout properties (width, height, padding, margin).
-- Exit animations run at 70% of enter duration.
+- Exit animations use the dedicated `--motion-exit-*` tokens (70% of corresponding enter duration).
 - Respect `prefers-reduced-motion: reduce` — disable all transforms and opacity transitions.
 
 ---
@@ -235,6 +269,18 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 | `shadow-modal` | `0 8px 32px rgba(20,20,18,0.16), 0 2px 8px rgba(20,20,18,0.08)` | Modal surfaces |
 | `overlay-modal` | `rgba(20,20,18,0.5)` | Modal backdrop |
 | `overlay-drawer` | `rgba(20,20,18,0.4)` | Drawer backdrop |
+
+### 2.10 Z-index
+
+| Token | Value | Use |
+|---|---|---|
+| `--z-base` | 1 | Base stacking |
+| `--z-dropdown` | 100 | Dropdowns, tooltips, popovers |
+| `--z-overlay-low` | 150 | Lower overlay elements |
+| `--z-sticky` | 200 | Sticky headers, sticky columns |
+| `--z-overlay` | 300 | Backdrops, overlay containers |
+| `--z-modal` | 400 | Modals, drawers, bottom sheets |
+| `--z-toast` | 500 | Toasts, notifications |
 
 ---
 
@@ -276,8 +322,8 @@ Semantic tokens map intent to primitives. Components consume semantic tokens, ne
 | Token | Maps to | Use |
 |---|---|---|
 | `interactive` | `--brand-accent` | Primary action color |
-| `interactive-hover` | `--brand-accent/80` | Hovered primary action |
-| `interactive-active` | `--brand-accent/60` | Pressed primary action |
+| `interactive-hover` | `color-mix(in srgb, var(--brand-accent) 80%, #000)` | Hovered primary action |
+| `interactive-active` | `color-mix(in srgb, var(--brand-accent) 60%, #000)` | Pressed primary action |
 | `interactive-muted` | `--accent-muted` | Subtle interactive tints |
 
 ### Status
@@ -298,17 +344,17 @@ Semantic tokens map intent to primitives. Components consume semantic tokens, ne
 
 All interactive components share these states. Component specs reference this section.
 
-| State | Description |
-|---|---|
-| **Default** | Resting state. Component is visible and ready for interaction. |
-| **Hover** | Pointer is over the component. Subtle visual feedback signals interactivity. |
-| **Focused** | Keyboard focus indicator. Visible outline on the component. |
-| **Active/Pressed** | User is pressing. Subtle scale-down feedback. |
-| **Disabled** | Component is non-interactive. Reduced opacity, pointer events disabled. |
-| **Loading** | Async action in progress. Visual indicator replaces or augments content. |
-| **Error** | Validation or operation failure. Red border or ring, error message below. |
-| **Success** | Operation completed. Brief confirmation, then return to default. |
-| **Selected** | Item is currently active or chosen. Accent-tinted background. |
+| State | Visual rule | Applied to |
+|---|---|---|
+| **Default** | Resting appearance. Component is visible and ready for interaction. | All components |
+| **Hover** | `--surface-hover` background for containers; `--interactive-hover` for accent actions; cursor: pointer. | Buttons, cards, dropdown items, table rows |
+| **Focused** | `2px solid var(--brand-accent)` outline, `outline-offset: 2px`. Never hidden. | All interactive elements |
+| **Active/Pressed** | `--interactive-active` for accent actions; `transform: scale(0.97)` for buttons. | Buttons, toggle switches |
+| **Disabled** | `--opacity-disabled` (0.4), `--surface-disabled` background, pointer-events: none. | Buttons, inputs, dropdowns |
+| **Loading** | Spinner replaces content. Button retains size. Skeleton for content areas after 300ms. | Buttons, stat cards, tables |
+| **Error** | `--status-danger-ring` border + ring, `status-danger` message below with `role="alert"`. | Inputs, form fields |
+| **Success** | `--status-success` brief flash on completion, then return to default. | Forms, save actions |
+| **Selected** | `--surface-selected` background, `--interactive` text or checkmark. | Nav items, list rows, filter chips |
 
 ---
 
@@ -381,9 +427,9 @@ Helper text or validation
 **Between sections:** `space-12` (48px).
 **Max form width:** 720px.
 
-**Label:** Always above the input. `label` style / `foreground`. Avoid using placeholder text as label.
-**Placeholder:** Hint text only, not a substitute for label. `$foreground-subtle`.
-**Error message:** Below input, `$body-sm` / `status-danger`. `role="alert"`.
+**Label:** Always above the input. `--text-label` style / `--foreground`. Avoid using placeholder text as label.
+**Placeholder:** Hint text only, not a substitute for label. `--foreground-subtle`.
+**Error message:** Below input, `--text-body-sm` / `status-danger`. `role="alert"`.
 **Disabled state:** `surface-disabled` background, reduced opacity, `cursor: not-allowed`.
 
 ### 6.2 Navigation
@@ -569,17 +615,21 @@ Structure: label → value → trend. Label is `caption` / `foreground-subtle`. 
 ## 10. Accessibility
 
 | Requirement | Standard |
-|---|---|
+|---|---|---|
 | Touch target | Minimum 44 × 44px |
 | Body text contrast | WCAG AA — 4.5:1 |
 | Large text contrast | WCAG AA — 3:1 (≥ 18px bold or ≥ 24px) |
 | Focus ring | `2px solid var(--brand-accent)`, `outline-offset: 2px` |
 | Keyboard | Full tab order; DOM order matches visual order |
+| Skip link | Visible on first Tab press, bypasses nav to main content |
+| Heading hierarchy | Single `h1` per page, semantic nesting (`h1` → `h2` → `h3`), no skipping levels |
 | Reduced motion | `prefers-reduced-motion: reduce` — transforms and transitions disabled |
 | Icon-only buttons | Must carry `aria-label` |
 | Form errors | `role="alert"` or `aria-live="polite"` |
+| Form labels | Every input has a visible `<label>`, `htmlFor` matches input `id` |
 | Toast notifications | `aria-live="polite"` (success/info), `aria-live="assertive"` (errors) |
 | Color alone | Never the sole indicator of state — pair with icon or text |
+| Screen reader | Status messages use `aria-live` regions. Dynamic content updates announced. |
 
 ---
 

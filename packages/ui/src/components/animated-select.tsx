@@ -98,7 +98,7 @@ export function AnimatedSelect({
           focus:border-[var(--border-focus)]
 
           disabled:pointer-events-none
-          disabled:opacity-50
+          disabled:opacity-[var(--opacity-disabled)]
         "
       >
         <span className="truncate">{selected?.label ?? placeholder}</span>
@@ -137,14 +137,14 @@ export function AnimatedSelect({
               y: -4,
             }}
             transition={{
-              duration: 0.16,
+              duration: 0.12,
               ease: "easeOut",
             }}
             className="
               absolute
               right-0
               top-[calc(100%+8px)]
-              z-[100]
+              z-[var(--z-dropdown)]
 
               min-w-full
 

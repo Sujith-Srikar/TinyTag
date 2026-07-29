@@ -150,6 +150,48 @@
     --transition-base: var(--motion-normal) var(--ease-enter);
     --transition-slow: var(--motion-slow) var(--ease-enter);
 
+    // ── Semantic tokens — intent → primitive mapping ────────────────────────
+    // Components consume these, never primitives directly
+    --foreground: var(--text-primary);
+    --foreground-muted: var(--text-secondary);
+    --foreground-subtle: var(--text-muted);
+    --foreground-inverse: var(--text-inverse);
+
+    --surface: var(--bg-surface);
+    --surface-elevated: var(--bg-elevated);
+    --surface-base: var(--bg-base);
+    --surface-hover: var(--bg-elevated);
+    --surface-selected: var(--accent-muted);
+    --surface-disabled: var(--bg-elevated);
+
+    --border: var(--border-default);
+    --border-subtle: var(--border-subtle);
+    --border-strong: var(--border-strong);
+    --border-focus: var(--border-focus);
+
+    --interactive: var(--brand-accent);
+    --interactive-hover: color-mix(in srgb, var(--brand-accent) 80%, #000);
+    --interactive-active: color-mix(in srgb, var(--brand-accent) 60%, #000);
+    --interactive-muted: var(--accent-muted);
+
+    --status-success: var(--success);
+    --status-success-muted: var(--success-muted);
+    --status-warning: var(--warning);
+    --status-warning-muted: var(--warning-muted);
+    --status-danger: var(--danger);
+    --status-danger-muted: var(--danger-muted);
+    --status-danger-ring: var(--danger-ring);
+
+    // ── Exit motion — 70% of enter duration ─────────────────────────────────
+    --motion-exit-fast: 84ms;
+    --motion-exit-normal: 126ms;
+    --motion-exit-slow: 196ms;
+
+    // Exit transition shorthands
+    --transition-exit-fast: var(--motion-exit-fast) var(--ease-exit);
+    --transition-exit-base: var(--motion-exit-normal) var(--ease-exit);
+    --transition-exit-slow: var(--motion-exit-slow) var(--ease-exit);
+
     // Layout
     --sidebar-width: 240px;
     --topbar-height: 56px;
