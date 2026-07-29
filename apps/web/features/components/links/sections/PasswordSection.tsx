@@ -46,7 +46,7 @@ export const PasswordSection = () => {
     if (masked) {
       setValue('password', MASK_PLACEHOLDER);
     }
-  }, [masked]);
+  }, [masked, setValue]);
 
   const handleOpen = () => {
     if (selectedLink?.hasPassword) {
@@ -57,7 +57,7 @@ export const PasswordSection = () => {
   };
 
   const handleRemove = () => {
-    setValue('password', undefined, { shouldDirty: true });
+    setValue('password', null, { shouldDirty: true });
     setMasked(false);
     setOpen(false);
   };

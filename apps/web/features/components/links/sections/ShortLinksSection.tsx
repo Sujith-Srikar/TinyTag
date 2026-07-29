@@ -61,24 +61,16 @@ export const ShortLinkSection = () => {
 
   const handleShuffle = async () => {
     const slug = await generateRandomSlug();
-
     clearErrors("slug");
-
-    setValue("slug", slug, {
-      shouldDirty: true,
-    });
+    setValue("slug", slug, {shouldDirty: true});
   };
 
   const handleSmartShuffle = async () => {
     if (!destinationUrl) return;
 
     const slug = await generateSmartSlug(destinationUrl);
-
     clearErrors("slug");
-
-    setValue("slug", slug, {
-      shouldDirty: true,
-    });
+    setValue("slug", slug, {shouldDirty: true});
   };
 
   return (

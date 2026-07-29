@@ -98,7 +98,7 @@ export const LinkBuilder = () => {
     };
 
     initialize();
-  }, [modal, reset]);
+  }, [modal, reset, generateRandomSlug]);
 
   const handleClose = () =>  {
     reset(LINK_BUILDER_DEFAULTS);
@@ -113,7 +113,7 @@ export const LinkBuilder = () => {
         domain: data.domain ?? undefined,
         ...(dirtyFields.comments && { comments: data.comments ?? undefined }),
         ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt ?? undefined }),
-        ...(dirtyFields.password && { password: data.password ?? undefined }),
+        ...(dirtyFields.password && { password: data.password }),
         ...(dirtyFields.tags && { tags: data.tags ?? undefined }),
       });
     } else {
@@ -124,7 +124,7 @@ export const LinkBuilder = () => {
         tags: data.tags ?? undefined,
         comments: data.comments ?? undefined,
         expiresAt: data.expiresAt ?? undefined,
-        password: data.password ?? undefined,
+        password: data.password,
       });
     }
   };
