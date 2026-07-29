@@ -1,9 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../init";
-import { logger, COOKIE_MAX_AGE } from "@repo/shared";
+import { logger, COOKIE_MAX_AGE, LinkMutationInput, LinkBuilderFormSchema } from "@repo/shared";
 import { z } from "zod";
 import { create_short_url, delete_url, edit_long_url, getLinkPasswordBySlug, updateClicksCount } from "@repo/db";
-import { LinkBuilderFormSchema } from "@repo/shared";
 import { deleteData } from "@repo/cache";
 import { hash, verify } from "@node-rs/argon2";
 import { cookies } from "next/headers";
@@ -24,18 +23,24 @@ export const postRouter = createTRPCRouter({
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const input = opts.input;
-        const hashedPassword = input.password ? await hash(input.password) : undefined;
-        await create_short_url(
-          input,
-          opts.ctx.user.id,
-          opts.ctx.supabase,
+        const hashedPassword = opts.input.password ? await hash(opts.input.password) : null;
+        const passwordToken = hashedPassword ? createPasswordToken() : null;
+
+        const link: LinkMutationInput = {
+          ...opts.input,
+          userId: opts.ctx.user.id,
           hashedPassword,
+          passwordToken
+        }
+
+        await create_short_url(
+          link,
+          opts.ctx.supabase,
         );
         return {
           success: true,
           message: "ShortUrl Created Successfully",
-          slug: input.slug,
+          slug: opts.input.slug,
         };
       } catch (error) {
         logger.error("Error while creating a shortUrl", error);
@@ -60,16 +65,33 @@ export const postRouter = createTRPCRouter({
     .input(LinkBuilderFormSchema)
     .mutation(async (opts) => {
       try {
-        const input = opts.input;
-        const hashedPassword = input.password ? await hash(input.password) : undefined;
-        await edit_long_url(
-          input,
-          opts.ctx.user.id,
-          opts.ctx.supabase,
+        let hashedPassword: string | null | undefined;
+        let passwordToken: string | null | undefined;
+
+        if (opts.input.password === undefined) {
+          hashedPassword = undefined;
+          passwordToken = undefined;
+        } else if (opts.input.password === null) {
+          hashedPassword = null;
+          passwordToken = null;
+        } else {
+          hashedPassword = await hash(opts.input.password);
+          passwordToken = createPasswordToken();
+        }
+
+        const link: LinkMutationInput = {
+          ...opts.input,
+          userId: opts.ctx.user.id,
           hashedPassword,
+          passwordToken
+        }
+
+        await edit_long_url(
+          link,
+          opts.ctx.supabase,
         );
 
-        deleteData(input.slug);
+        deleteData(opts.input.slug);
         return {
           success: true,
           message: "Updated Long Url Successfully",
@@ -149,7 +171,7 @@ export const postRouter = createTRPCRouter({
         const { slug, password } = opts.input;
 
         const link = await getLinkPasswordBySlug(slug);
-        if (!link || !link.passwordHash) {
+        if (!link || !link.passwordHash || !link.passwordToken) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "Link not found",
@@ -165,7 +187,7 @@ export const postRouter = createTRPCRouter({
         }
 
         const cookieStore = await cookies();
-        cookieStore.set(createPasswordCookieName(slug), createPasswordToken(slug), {
+        cookieStore.set(createPasswordCookieName(slug), link.passwordToken, {
           httpOnly: true,
           secure: serverEnv.NODE_ENV === 'production',
           sameSite: "lax",

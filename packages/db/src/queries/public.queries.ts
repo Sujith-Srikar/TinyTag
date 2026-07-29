@@ -25,10 +25,11 @@ const getLinkBySlug = async (slug: string): Promise<RedirectData | null> => {
     destinationUrl: row.destination_url,
     expiresAt: row.expires_at,
     hasPassword: row.password_hash !== null,
+    passwordToken: row.password_token ?? null,
   };
 };
 
-const getLinkPasswordBySlug = async (slug: string): Promise<{ destinationUrl: string; passwordHash: string | null } | null> => {
+const getLinkPasswordBySlug = async (slug: string): Promise<{ destinationUrl: string; passwordHash: string | null; passwordToken: string | null } | null> => {
   const { data, error } = await db.rpc("get_redirect_url", {target_slug: slug});
 
   if (error) {
@@ -43,6 +44,7 @@ const getLinkPasswordBySlug = async (slug: string): Promise<{ destinationUrl: st
   return {
     destinationUrl: row.destination_url,
     passwordHash: row.password_hash,
+    passwordToken: row.password_token ?? null,
   };
 };
 

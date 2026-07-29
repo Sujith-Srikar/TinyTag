@@ -4,6 +4,7 @@ export interface RedirectData {
   destinationUrl: string;
   expiresAt: string | null;
   hasPassword: boolean;
+  passwordToken: string | null;
 }
 
 export type LinkRecord = {
@@ -42,11 +43,13 @@ export const LinkBuilderFormSchema = z.object({
   tags: z.array(z.string()).optional(),
   comments: z.string().optional(),
   expiresAt: z.date().optional(),
-  password: z.string().optional(),
+  password: z.union([z.string(), z.null()]).optional(),
   hasPassword: z.boolean().optional(),
 });
 
 export type LinkBuilderFields = z.infer<typeof LinkBuilderFormSchema>;
+
+export type LinkMutationInput = Omit<LinkBuilderFields, 'password' | 'hasPassword'> & {userId: string; hashedPassword?: string | null; passwordToken?: string | null}
 
 export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
   destinationUrl: "",

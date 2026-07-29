@@ -1,5 +1,5 @@
 import { Database } from "../types.js";
-import { type LinkBuilderFields } from "@repo/shared";
+import { type LinkMutationInput } from "@repo/shared";
 import { type DBClient } from "..";
 
 type LinksTable = Database["public"]["Tables"]["links"]["Row"];
@@ -15,20 +15,19 @@ const getMyLinks = async (supabase: DBClient): Promise<LinksTable[]> => {
 };
 
 const create_short_url = async (
-  opts: LinkBuilderFields,
-  userId: string,
+  link: LinkMutationInput,
   supabase: DBClient,
-  hashedPassword?: string,
 ) => {
   const { error } = await supabase.from("links").insert({
-    destination_url: opts.destinationUrl,
-    slug: opts.slug,
-    tags: opts.tags?.length ? opts.tags : null,
-    comments: opts.comments || null,
-    expires_at: opts.expiresAt?.toISOString() || null,
-    password_hash: hashedPassword ?? null,
-    user_id: userId,
-    has_password: !!hashedPassword,
+    destination_url: link.destinationUrl,
+    slug: link.slug,
+    tags: link.tags?.length ? link.tags : null,
+    comments: link.comments || null,
+    expires_at: link.expiresAt?.toISOString() ?? null,
+    password_hash: link.hashedPassword,
+    password_token: link.passwordToken,
+    user_id: link.userId,
+    has_password: !!link.hashedPassword,
   });
 
   if (error) {
@@ -37,35 +36,34 @@ const create_short_url = async (
 };
 
 const edit_long_url = async (
-  opts: LinkBuilderFields,
-  userId: string,
-  supabase: DBClient,
-  hashedPassword?: string,
+  link: LinkMutationInput,
+  supabase: DBClient
 ) => {
   const updateObj: Partial<LinksTable> = {
-    slug: opts.slug,
-    destination_url: opts.destinationUrl,
+    slug: link.slug,
+    destination_url: link.destinationUrl,
   };
 
-  if (opts.expiresAt !== undefined) {
-    updateObj.expires_at = opts.expiresAt ? opts.expiresAt.toISOString() : null;
+  if (link.expiresAt !== undefined) {
+    updateObj.expires_at = link.expiresAt ? link.expiresAt.toISOString() : null;
   }
-  if (opts.comments !== undefined) {
-    updateObj.comments = opts.comments || null;
+  if (link.comments !== undefined) {
+    updateObj.comments = link.comments || null;
   }
-  if (opts.tags !== undefined) {
-    updateObj.tags = opts.tags?.length ? opts.tags : null;
+  if (link.tags !== undefined) {
+    updateObj.tags = link.tags?.length ? link.tags : null;
   }
-  if (hashedPassword !== undefined) {
-    updateObj.password_hash = hashedPassword || null;
-    updateObj.has_password = !!hashedPassword;
+  if (link.hashedPassword !== undefined) {
+    updateObj.password_hash = link.hashedPassword;
+    updateObj.password_token = link.passwordToken ?? null;
+    updateObj.has_password = !!link.hashedPassword;
   }
 
   const { error } = await supabase
     .from("links")
     .update(updateObj)
-    .eq("slug", opts.slug)
-    .eq("user_id", userId);
+    .eq("slug", link.slug)
+    .eq("user_id", link.userId);
 
   if (error) {
     throw new Error(`Failed to edit link: ${error.message}`);
