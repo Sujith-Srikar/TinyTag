@@ -8,9 +8,10 @@ import { Shuffle, Sparkles } from "lucide-react";
 import { useEffect } from "react";
 import styles from "../LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLinkBuilderStore } from "@/hooks/useLinkBuilder";
 import { useSlugGenerator } from "@/hooks/useSlugGenerator";
+import { TRPCError } from "@trpc/server";
 
 export const ShortLinkSection = () => {
   const {
@@ -30,12 +31,7 @@ export const ShortLinkSection = () => {
   const slug = watch("slug");
 
   const trpc = useTRPC();
-  const checkUniqueSlug = useQuery(
-    trpc.get.validateSlugAvailability.queryOptions(
-      { slug },
-      { enabled: false, retry: false },
-    ),
-  );
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!slug) return;
@@ -45,19 +41,20 @@ export const ShortLinkSection = () => {
     const timer = setTimeout(async () => {
       const isValid = await trigger("slug");
       if (!isValid) return;
-      const result = await checkUniqueSlug.refetch();
-      if (result.error) {
-        setError("slug", {
-          type: "manual",
-          message: result.error.message,
-        });
-      } else {
+
+      try {
+        await queryClient.fetchQuery(
+          trpc.get.validateSlugAvailability.queryOptions({ slug }),
+        );
         clearErrors("slug");
+      } catch (err) {
+        const message = err instanceof TRPCError ? err.message : "Slug is not available";
+        setError("slug", { type: "manual", message });
       }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [slug, selectedLink]);
+  }, [slug, selectedLink, trigger, queryClient, trpc, clearErrors, setError]);
 
   const handleShuffle = async () => {
     const slug = await generateRandomSlug();

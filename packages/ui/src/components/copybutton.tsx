@@ -21,8 +21,8 @@ export function CopyButton({ value }: CopyButtonProps) {
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Clipboard write failure is non-critical
     }
   };
 

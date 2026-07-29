@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { Pencil, Trash } from "lucide-react";
 import { Badge, Button, CopyButton, getExpiryInfo } from "@repo/ui";
 import {
@@ -9,9 +8,8 @@ import {
   formatNumber,
   getFaviconUrl,
 } from "@/utils/formatters";
-import { type LinkRecord } from "@repo/shared";
+import { type LinkRecord, APP_URL, LinkBuilderFields } from "@repo/shared";
 import styles from "./page.module.scss";
-import { LinkBuilderFields } from "@repo/shared";
 
 interface LinkCardProps {
   link: LinkRecord;
@@ -20,14 +18,12 @@ interface LinkCardProps {
   onDelete?: (link: LinkBuilderFields) => void;
 }
 
-const BASE_URL = "ttags.vercel.app";
-
 export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [faviconLoaded, setFaviconLoaded] = useState<boolean>(false);
   const [faviconFailed, setFaviconFailed] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const shortUrl = `${BASE_URL}/${link.slug}`;
+  const shortUrl = `${APP_URL}/${link.slug}`;
 
   const editLink: LinkBuilderFields = {
     destinationUrl: link.destinationUrl,
@@ -122,7 +118,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
       {/* Slug + copy */}
       <div className={styles.slugSection}>
         <div className={styles.slug}>
-          <span className={styles.slugBase}>{BASE_URL}/</span>
+          <span className={styles.slugBase}>{APP_URL}/</span>
           <span className={styles.slugPart}>{link.slug}</span>
         </div>
         <CopyButton value={`https://${shortUrl}`} />
