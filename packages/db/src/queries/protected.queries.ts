@@ -22,7 +22,7 @@ const create_short_url = async (
     destination_url: link.destinationUrl,
     slug: link.slug,
     tags: link.tags?.length ? link.tags : null,
-    comments: link.comments || null,
+    title: link.title || null,
     expires_at: link.expiresAt?.toISOString() ?? null,
     password_hash: link.hashedPassword,
     password_token: link.passwordToken,
@@ -47,8 +47,8 @@ const edit_long_url = async (
   if (link.expiresAt !== undefined) {
     updateObj.expires_at = link.expiresAt ? link.expiresAt.toISOString() : null;
   }
-  if (link.comments !== undefined) {
-    updateObj.comments = link.comments || null;
+  if (link.title !== undefined) {
+    updateObj.title = link.title || null;
   }
   if (link.tags !== undefined) {
     updateObj.tags = link.tags?.length ? link.tags : null;

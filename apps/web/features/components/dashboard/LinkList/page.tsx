@@ -76,7 +76,8 @@ export function LinkList({
       result = result.filter(
         (l) =>
           l.slug.toLowerCase().includes(q) ||
-          l.destinationUrl.toLowerCase().includes(q),
+          l.destinationUrl.toLowerCase().includes(q) ||
+          l.title?.toLowerCase().includes(q),
       );
     }
 
@@ -93,7 +94,7 @@ export function LinkList({
           <div className={styles.searchWrap}>
             <Input
               id="search-link"
-              placeholder="Search via Slug or URL"
+              placeholder="Search via Slug,URL or Title"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={styles.searchLink}

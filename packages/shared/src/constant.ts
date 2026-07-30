@@ -27,4 +27,6 @@ export const RESERVED_SLUGS = new Set([
   "link-unavailable",
 ]);
 
+export const TITLE_MAX_LENGTH = 40;
+
 export {APP_URL};
