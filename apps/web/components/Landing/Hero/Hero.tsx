@@ -36,14 +36,6 @@ export function Hero() {
             Get Started
             <ArrowRight className={styles.arrow} />
           </Button>
-          <Button
-            size="lg"
-            variant="ghost"
-            className={styles.ctaSecondary}
-            onClick={handleClick}
-          >
-            Learn more
-          </Button>
         </div>
       </div>
     </section>
