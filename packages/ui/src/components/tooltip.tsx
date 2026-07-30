@@ -40,7 +40,7 @@ export const TooltipContent = React.forwardRef<
           ref={ref}
           sideOffset={sideOffset}
           forceMount
-          className="z-[500] outline-none"
+          className="z-[var(--z-dropdown)] outline-none"
           {...props}
         >
           <motion.div
@@ -60,7 +60,7 @@ export const TooltipContent = React.forwardRef<
               y: 2,
             }}
             transition={{
-              duration: 0.16,
+              duration: 0.12,
               ease: "easeOut",
             }}
             className={cn(
@@ -69,15 +69,15 @@ export const TooltipContent = React.forwardRef<
               items-center
               gap-1.5
               max-w-xs
-              rounded-md
+              rounded-[var(--radius-md)]
               border
-              bg-[var(--bg-elevated)]
-              border-[var(--border)]
+              bg-[var(--color-surface-elevated)]
+              border-[var(--color-border)]
               px-3
               py-1.5
               text-xs
               font-medium
-              text-[var(--text-primary)]
+              text-[var(--color-text-primary)]
               `,
               className,
             )}
@@ -87,8 +87,8 @@ export const TooltipContent = React.forwardRef<
 
           <TooltipPrimitive.Arrow
             className="
-              fill-[var(--bg-surface)]
-              stroke-[var(--border)]
+              fill-[var(--color-surface)]
+              stroke-[var(--color-border)]
             "
             width={10}
             height={6}

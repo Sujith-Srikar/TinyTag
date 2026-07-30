@@ -1,17 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, Lock } from "lucide-react";
 import { Badge, Button, CopyButton, getExpiryInfo } from "@repo/ui";
 import {
   getDomain,
   formatNumber,
   getFaviconUrl,
 } from "@/utils/formatters";
-import { type LinkRecord } from "@repo/shared";
+import { type LinkRecord, APP_URL, LinkBuilderFields } from "@repo/shared";
 import styles from "./page.module.scss";
-import { LinkBuilderFields } from "@repo/shared";
 
 interface LinkCardProps {
   link: LinkRecord;
@@ -20,14 +18,12 @@ interface LinkCardProps {
   onDelete?: (link: LinkBuilderFields) => void;
 }
 
-const BASE_URL = "ttags.vercel.app";
-
 export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [faviconLoaded, setFaviconLoaded] = useState<boolean>(false);
   const [faviconFailed, setFaviconFailed] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const shortUrl = `${BASE_URL}/${link.slug}`;
+  const shortUrl = `${APP_URL}/${link.slug}`;
 
   const editLink: LinkBuilderFields = {
     destinationUrl: link.destinationUrl,
@@ -35,6 +31,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
     expiresAt: link.expiresAt ? new Date(link.expiresAt) : undefined,
     comments: link.comments,
     tags: link.tags,
+    hasPassword: link.hasPassword,
   };
 
   useEffect(() => {
@@ -92,6 +89,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
                 {getExpiryInfo(link.expiresAt).label}
               </Badge>
             )}
+            {link.hasPassword && ( <Lock size={14} />)}
           </div>
           <a
             href={link.destinationUrl}
@@ -121,7 +119,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
       {/* Slug + copy */}
       <div className={styles.slugSection}>
         <div className={styles.slug}>
-          <span className={styles.slugBase}>{BASE_URL}/</span>
+          <span className={styles.slugBase}>{APP_URL}/</span>
           <span className={styles.slugPart}>{link.slug}</span>
         </div>
         <CopyButton value={`https://${shortUrl}`} />
@@ -152,7 +150,9 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
       {/* Actions */}
       <div className={styles.actions} ref={menuRef}>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-sm"
           className={styles.menuBtn}
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Link actions"
@@ -163,25 +163,10 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
             <circle cx="8" cy="8" r="1.2" fill="currentColor" />
             <circle cx="8" cy="13" r="1.2" fill="currentColor" />
           </svg>
-        </button>
+        </Button>
 
         {menuOpen && (
           <div className={styles.menu}>
-            <Link
-              href={`/links/${link.id}`}
-              className={styles.menuItem}
-              onClick={() => setMenuOpen(false)}
-            >
-              <svg viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M2 9L9.5 1.5L12.5 4.5L5 12H2V9Z"
-                  stroke="currentColor"
-                  strokeWidth="1.3"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Analytics
-            </Link>
             <Button
               variant="secondary"
               size="sm"

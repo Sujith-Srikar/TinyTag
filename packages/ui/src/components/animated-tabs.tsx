@@ -32,8 +32,8 @@ export function AnimatedTabs({
         rounded-[var(--radius-md)]
         border
 
-        border-[var(--border-default)]
-        bg-[var(--bg-elevated)]
+        border-[var(--color-border)]
+        bg-[var(--color-surface-elevated)]
 
         p-1
         `,
@@ -76,7 +76,7 @@ export function AnimatedTabs({
 
                   rounded-[calc(var(--radius-md)-4px)]
 
-                  bg-[var(--bg-surface)]
+                  bg-[var(--color-surface)]
                 "
               />
             )}
@@ -89,8 +89,8 @@ export function AnimatedTabs({
                 transition-colors
                 `,
                 active
-                  ? "text-[var(--text-primary)]"
-                  : "text-[var(--text-muted)]",
+                  ? "text-[var(--color-text-primary)]"
+                  : "text-[var(--color-text-muted)]",
               )}
             >
               {item.label}

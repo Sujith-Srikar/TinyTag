@@ -15,7 +15,7 @@ export * from "./components/animated-select";
 export * from "./components/animated-tabs";
 export * from "./components/modal";
 export * from "./components/dialog-stack";
-export * from "./components/animated-container";
 export * from "./components/date-time";
+export * from "./components/loader";
 export * from "./lib/expiry";
 export * from "./lib/parse-datetime";

@@ -13,18 +13,25 @@ export const QrCodeSection = () => {
   const {watch} = useFormContext<LinkBuilderFields>();
   const slug = watch('slug');
 
-  const generateQR = async () => {
-    const url = await QrCode.toString(`${APP_URL}/${slug}`, {
-      errorCorrectionLevel: "H",
-      width: 156,
-      margin: 2,
-    });
-
-    setSvg(url);
-  };
   useEffect(() => {
     if(!slug) return;
+    let cancelled = false;
+
+    const generateQR = async () => {
+      try {
+        const url = await QrCode.toString(`${APP_URL}/${slug}`, {
+          errorCorrectionLevel: "H",
+          width: 156,
+          margin: 2,
+        });
+        if (!cancelled) setSvg(url);
+      } catch {
+        // QR generation is non-critical
+      }
+    };
+
     generateQR();
+    return () => { cancelled = true; };
   }, [slug]);
 
   return (

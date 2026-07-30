@@ -21,8 +21,8 @@ export function CopyButton({ value }: CopyButtonProps) {
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Clipboard write failure is non-critical
     }
   };
 
@@ -51,7 +51,7 @@ export function CopyButton({ value }: CopyButtonProps) {
             rotate: 20,
           }}
           transition={{
-            duration: 0.2,
+            duration: 0.12,
           }}
         >
           {copied ? (

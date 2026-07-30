@@ -21,11 +21,11 @@ export const CommentSection = () => {
     <div>
       <Field>
         <div className={styles.labelWithTooltip}>
-          <FieldLabel htmlFor="comment">Comments</FieldLabel>
+          <FieldLabel htmlFor="comments">Comments</FieldLabel>
           <InfoTooltip content="Use comments to add context to your short links – for you and your team" />
         </div>
         <Textarea
-          id="comment"
+          id="comments"
           placeholder="Add comments"
           rows={3}
           {...register("comments")}

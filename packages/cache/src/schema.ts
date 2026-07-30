@@ -5,6 +5,7 @@ const RedirectSchema = z.object({
   destinationUrl: z.url(),
   hasPassword: z.boolean(),
   expiresAt: z.string().nullable(),
+  passwordToken: z.string().nullable(),
 }) satisfies z.ZodType<RedirectData>;
 
 type Redirect = z.infer<typeof RedirectSchema>;

@@ -4,4 +4,3 @@ export * from "./ShortLinksSection";
 export * from "./QrCodeSection";
 export * from "./ExpirySection";
 export * from "./PasswordSection";
-export * from "./PasswordModal";

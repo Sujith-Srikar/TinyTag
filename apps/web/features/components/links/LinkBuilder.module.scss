@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  height: 100%;
+  flex: 1;
   background:
     radial-gradient(
       circle at top right,
@@ -38,16 +38,13 @@
   flex-direction: column;
   gap: 36px;
   min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong, rgba(20, 20, 18, 0.18)) transparent;
 }
 
 .sectionCard {
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 18px;
-  background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
 }
 
@@ -74,7 +71,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
 }
 
 .previewValue {
@@ -82,7 +79,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.875rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .previewLinkRow {
@@ -97,9 +94,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--font-mono);
+  font-family: var(--font-family-mono);
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 
   strong {
     color: var(--accent);
@@ -113,20 +110,20 @@
   gap: 6px;
   padding: 14px;
   border-radius: 18px;
-  background: var(--bg-elevated);
+  background: var(--color-surface-elevated);
   border: 1px solid var(--border);
 }
 
 .previewHintTitle {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .previewHintText {
   font-size: 0.8125rem;
   line-height: 1.55;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .shortLinkHeaderRow {
@@ -144,7 +141,7 @@
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 16px;
-  background: var(--bg-surface);
+  background: var(--color-surface);
 
   display: flex;
   flex-direction: column;
@@ -179,7 +176,7 @@
       transparent 1px
     )
     0 0 / 8px 8px,
-    var(--bg-elevated);
+    var(--color-surface-elevated);
 
   overflow: hidden;
 }
@@ -213,7 +210,7 @@
 .toggleLabelTitle {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .expandWrapper {
@@ -258,15 +255,15 @@
   height: 32px;
   border-radius: min(var(--radius-md), 10px);
   border: 1px solid var(--border);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: color 120ms, border-color 120ms, background 120ms;
 
   &:hover {
-    color: var(--text-primary);
-    border-color: var(--border-strong, rgba(20, 20, 18, 0.18));
-    background: var(--bg-elevated);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong, rgba(20, 20, 18, 0.18));
+    background: var(--color-surface-elevated);
   }
 
   &:focus-visible {
@@ -277,7 +274,7 @@
 
 .hint {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
 }
 
 @keyframes fadeIn {
@@ -296,15 +293,15 @@
   border-radius: min(var(--radius-md), 10px);
   border: 1px solid var(--border);
   background: transparent;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 0.875rem;
-  font-family: var(--font-body, inherit);
+  font-family: var(--font-family-body, inherit);
   outline: none;
   transition: border-color 180ms, box-shadow 180ms;
   box-sizing: border-box;
 
   &:focus-visible {
-    border-color: var(--border-strong, rgba(20, 20, 18, 0.18));
+    border-color: var(--color-border-strong, rgba(20, 20, 18, 0.18));
     box-shadow: 0 0 0 3px rgba(203, 255, 71, 0.15);
   }
 
@@ -327,20 +324,20 @@
   border-radius: min(var(--radius-md), 10px);
   border: 1px solid var(--border);
   background: transparent;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 0.875rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-family-mono, monospace);
   outline: none;
   transition: border-color 180ms, box-shadow 180ms;
   box-sizing: border-box;
 
   &::placeholder {
-    font-family: var(--font-body, inherit);
-    color: var(--text-muted);
+    font-family: var(--font-family-body, inherit);
+    color: var(--color-text-muted);
   }
 
   &:focus-visible {
-    border-color: var(--border-strong, rgba(20, 20, 18, 0.18));
+    border-color: var(--color-border-strong, rgba(20, 20, 18, 0.18));
     box-shadow: 0 0 0 3px rgba(203, 255, 71, 0.15);
   }
 }
@@ -357,9 +354,9 @@
   padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: min(var(--radius-md), 10px);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -371,9 +368,9 @@
   }
 
   &:hover {
-    background-color: var(--bg-elevated);
-    color: var(--text-primary);
-    border-color: var(--border-strong, rgba(20, 20, 18, 0.18));
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong, rgba(20, 20, 18, 0.18));
   }
 
   &:active {
@@ -388,7 +385,7 @@
 
 .featureBtnActive {
   background-color: rgba(203, 255, 71, 0.15);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   border-color: var(--accent);
 
   &:hover {
@@ -407,18 +404,8 @@
   margin-left: auto;
 }
 
-.leftColumn::-webkit-scrollbar {
-  width: 6px;
-}
 
-.leftColumn::-webkit-scrollbar-track {
-  background: transparent;
-}
 
-.leftColumn::-webkit-scrollbar-thumb {
-  background-color: var(--border-strong, rgba(20, 20, 18, 0.18));
-  border-radius: 3px;
-}
 
 .subModalOverlay {
   position: absolute;
@@ -435,7 +422,7 @@
 
 .subModal {
   width: min(400px, calc(100% - 32px));
-  background: var(--bg-surface);
+  background: var(--color-surface);
   border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: 0 16px 70px rgba(0, 0, 0, 0.25);
@@ -455,13 +442,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-body);
+  font-family: var(--font-family-body);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 
   svg {
-    color: var(--text-muted);
+    color: var(--color-text-muted);
   }
 }
 
@@ -474,13 +461,13 @@
   border: none;
   background: none;
   border-radius: min(var(--radius-md), 10px);
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: color 120ms, background 120ms;
 
   &:hover {
-    color: var(--text-primary);
-    background: var(--bg-elevated);
+    color: var(--color-text-primary);
+    background: var(--color-surface-elevated);
   }
 }
 
@@ -497,7 +484,7 @@
   justify-content: space-between;
   padding: 12px 16px;
   border-top: 1px solid var(--border);
-  background: var(--bg-elevated);
+  background: var(--color-surface-elevated);
 }
 
 .subModalFooterRight {
@@ -555,6 +542,10 @@
 }
 
 @media (max-width: 640px) {
+  .leftColumn {
+    gap: 24px;
+  }
+
   .sectionCard {
     border-radius: 20px;
   }

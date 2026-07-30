@@ -141,10 +141,10 @@ function DialogContent({
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
         className={cn(
-          "fixed inset-0 z-50 bg-black/35 backdrop-blur-[18px]",
+          "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-          "duration-200",
+          "duration-[var(--duration-slow)]",
         )}
       />
       <DialogPrimitive.Content
@@ -153,12 +153,12 @@ function DialogContent({
           "flex flex-col overflow-hidden",
           "max-h-[min(90vh,720px)]",
           "bg-background border border-border rounded-[var(--radius-xl)]",
-          "shadow-[0_24px_80px_rgba(0,0,0,0.28),0_8px_24px_rgba(0,0,0,0.18)]",
+          "shadow-[var(--shadow-high)]",
           "overscroll-behavior-contain outline-none",
-          "duration-200",
+          "duration-[var(--duration-slow)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-          "data-[state=closed]:duration-150",
+          "data-[state=closed]:duration-[var(--duration-exit-slow)]",
           sizeStyles[size],
           className,
         )}
@@ -197,12 +197,12 @@ function Sheet({
     <Drawer.Root open={open} onOpenChange={onOpenChange} {...drawerRootProps}>
       <Drawer.Portal>
         <Drawer.Overlay
-          className={cn(
-            "fixed inset-0 z-50 bg-black/35 backdrop-blur-[18px]",
-            "data-[state=open]:animate-in data-[state=open]:fade-in-0",
-            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-            "duration-200",
-          )}
+        className={cn(
+          "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+          "duration-[var(--duration-slow)]",
+        )}
         />
         <Drawer.Content
           className={cn(
@@ -210,13 +210,13 @@ function Sheet({
             "flex flex-col w-full max-h-[92dvh]",
             "bg-background border-t border-border",
             "rounded-t-[var(--radius-xl)]",
-            "shadow-[0_-8px_32px_rgba(0,0,0,0.12),0_-24px_64px_rgba(0,0,0,0.18)]",
+            "shadow-[var(--shadow-high)]",
             "will-change-transform outline-none",
             className,
           )}
         >
           <DrawerHandle />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-behavior-contain [webkit-overflow-scrolling:touch]">
+          <div className="flex-1 flex flex-col min-h-0">
             {children}
           </div>
         </Drawer.Content>
@@ -228,10 +228,10 @@ function Sheet({
 function DrawerHandle() {
   return (
     <div
-      className="sticky top-0 z-10 flex items-center justify-center shrink-0 pt-3.5 pb-2 bg-background rounded-t-inherit"
+      className="sticky top-0 z-10 flex items-center justify-center shrink-0 pt-4 pb-2 bg-background rounded-t-inherit"
       aria-hidden="true"
     >
-      <div className="w-[42px] h-[5px] rounded-full bg-border-strong opacity-90" />
+      <div className="w-10 h-1 rounded-full bg-border-strong opacity-90" />
     </div>
   );
 }
@@ -246,10 +246,10 @@ type DialogHeaderProps = {
 };
 
 const iconVariantStyles = {
-  default: "bg-elevated text-foreground border border-border",
-  danger: "bg-destructive-muted text-destructive border border-destructive/20",
-  warning: "bg-warning-muted text-warning border border-warning/20",
-  success: "bg-success-muted text-success border border-success/20",
+  default: "bg-[var(--color-surface-elevated)] text-foreground border border-border",
+  danger: "bg-[var(--color-danger-muted)] text-destructive border border-destructive/20",
+  warning: "bg-[var(--color-warning-muted)] text-warning border border-warning/20",
+  success: "bg-[var(--color-success-muted)] text-success border border-success/20",
 } as const;
 
 function DialogHeader({
@@ -282,11 +282,11 @@ function DialogHeader({
           </div>
         )}
         <div className="flex flex-col gap-[3px] min-w-0 pt-px">
-          <h2 className="font-display text-base font-bold text-foreground tracking-tight leading-snug">
+          <h2 className="font-display text-base font-semibold text-foreground tracking-tight leading-snug">
             {title}
           </h2>
           {description && (
-            <p className="text-[0.8125rem] text-muted-foreground leading-normal">
+            <p className="text-sm text-muted-foreground leading-normal">
               {description}
             </p>
           )}
@@ -344,7 +344,7 @@ function DialogFooter({
     <div
       className={cn(
         "flex items-center justify-end gap-2",
-        "px-5 py-3.5",
+        "px-4 py-3",
         "shrink-0",
         bordered && "border-t border-border",
         className,

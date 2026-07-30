@@ -23,6 +23,8 @@ export const RESERVED_SLUGS = new Set([
   "billing",
   "account",
   "profile",
+  "password",
+  "link-unavailable",
 ]);
 
 export {APP_URL};

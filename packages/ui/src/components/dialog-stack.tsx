@@ -163,10 +163,10 @@ function DialogStackOverlay({ className, ...props }: DialogStackOverlayProps) {
     <div
       role="presentation"
       className={cn(
-        "fixed inset-0 z-50 bg-black/35 backdrop-blur-[18px]",
+        "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
         "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-        "duration-200",
+        "duration-[var(--duration-slow)]",
         className,
       )}
       onClick={() => setIsOpen(false)}
@@ -260,9 +260,9 @@ function DialogStackContent({
     <div
       onClick={handleClick}
       className={cn(
-        "h-auto w-full rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-surface)] p-6",
-        "shadow-[0_24px_80px_rgba(0,0,0,0.28),0_8px_24px_rgba(0,0,0,0.18)]",
-        "transition-all duration-300 ease-[cubic-bezier(0,0,0.2,1)]",
+        "h-auto w-full rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--surface)] p-6",
+        "shadow-[var(--shadow-high)]",
+        "transition-all duration-[var(--duration-slow)] ease-[var(--ease-enter)]",
         clickable && activeIndex > index && "cursor-pointer",
         className,
       )}
@@ -278,7 +278,7 @@ function DialogStackContent({
     >
       <div
         className={cn(
-          "h-full w-full transition-opacity duration-300",
+          "h-full w-full transition-opacity duration-[var(--duration-slow)]",
           activeIndex !== index && "pointer-events-none select-none opacity-0",
         )}
       >
@@ -318,7 +318,7 @@ function DialogStackTitle({ children, className, ...props }: DialogStackTitlePro
   return (
     <h2
       className={cn(
-        "font-display text-base font-bold text-foreground tracking-tight leading-snug",
+        "font-display text-base font-semibold text-foreground tracking-tight leading-snug",
         className,
       )}
       {...props}
@@ -344,7 +344,7 @@ function DialogStackDescription({
 }: DialogStackDescriptionProps) {
   return (
     <p
-      className={cn("text-[0.8125rem] text-muted-foreground leading-normal", className)}
+      className={cn("text-sm text-muted-foreground leading-normal", className)}
       {...props}
     >
       {children}

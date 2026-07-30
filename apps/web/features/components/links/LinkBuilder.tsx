@@ -16,14 +16,14 @@ import {
   CommentSection,
   QrCodeSection,
   ExpirySection,
-  PasswordModal,
+  PasswordSection
 } from "./sections";
 import styles from "./LinkBuilder.module.scss";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
 import { logger } from "@repo/shared";
 import { Link } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSlugGenerator } from "@/hooks/useSlugGenerator";
 
 export const LinkBuilder = () => {
@@ -40,8 +40,6 @@ export const LinkBuilder = () => {
   const { generateRandomSlug } = useSlugGenerator();
   const trpc = useTRPC();
 
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-
   const createLink = useMutation(
     trpc.post.shortenUrl.mutationOptions({
       onSuccess: () => {
@@ -49,9 +47,10 @@ export const LinkBuilder = () => {
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
+        closeModal();
       },
       onError: (err) => {
-        logger.error("SLug creation error:", err);
+        logger.error("Slug creation error:", err);
         toast.error("Failed to create link");
       },
     }),
@@ -64,9 +63,10 @@ export const LinkBuilder = () => {
         queryClient.invalidateQueries({
           queryKey: trpc.get.getMyUrls.queryKey(),
         });
+        closeModal();
       },
       onError: (err) => {
-        logger.error("Slug not Edited error:", err);
+        logger.error("Slug edit error:", err);
         toast.error("Failed to update link");
       },
     }),
@@ -98,46 +98,34 @@ export const LinkBuilder = () => {
     };
 
     initialize();
-  }, [modal, reset]);
+  }, [modal, reset, generateRandomSlug]);
 
   const handleClose = () =>  {
-    reset({ destinationUrl: "", slug: "", comments: "",});
+    reset(LINK_BUILDER_DEFAULTS);
     closeModal();
   }
 
   const onSubmit: SubmitHandler<LinkBuilderFields> = (data) => {
-    try {
-      if (selectedLink) {
-        const editObj: LinkBuilderFields = {
-          slug: data.slug,
-          destinationUrl: data.destinationUrl,
-          ...(dirtyFields.comments && { comments: data.comments }),
-          ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt }),
-          ...(dirtyFields.password && { password: data.password }),
-          ...(dirtyFields.tags && { tags: data.tags }),
-        };
-        editSlug.mutate({
-          ...editObj,
-          domain: editObj.domain ?? undefined,
-          tags: editObj.tags ?? undefined,
-          comments: editObj.comments ?? undefined,
-          expiresAt: editObj.expiresAt ?? undefined,
-          password: editObj.password ?? undefined,
-        });
-      } else {
-        createLink.mutate({
-          destinationUrl: data.destinationUrl,
-          slug: data.slug,
-          domain: data.domain ?? undefined,
-          tags: data.tags ?? undefined,
-          comments: data.comments ?? undefined,
-          expiresAt: data.expiresAt ?? undefined,
-          password: data.password ?? undefined,
-        });
-      }
-      closeModal();
-    } catch (error) {
-      logger.error("Error while creating Slug:", error);
+    if (selectedLink) {
+      editSlug.mutate({
+        slug: data.slug,
+        destinationUrl: data.destinationUrl,
+        domain: data.domain ?? undefined,
+        ...(dirtyFields.comments && { comments: data.comments ?? undefined }),
+        ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt ?? undefined }),
+        ...(dirtyFields.password && { password: data.password }),
+        ...(dirtyFields.tags && { tags: data.tags ?? undefined }),
+      });
+    } else {
+      createLink.mutate({
+        destinationUrl: data.destinationUrl,
+        slug: data.slug,
+        domain: data.domain ?? undefined,
+        tags: data.tags ?? undefined,
+        comments: data.comments ?? undefined,
+        expiresAt: data.expiresAt ?? undefined,
+        password: data.password,
+      });
     }
   };
 
@@ -173,7 +161,10 @@ export const LinkBuilder = () => {
             </DialogBody>
 
             <DialogFooter className="justify-between">
-              <ExpirySection />
+              <div className="flex items-center gap-2">
+                <ExpirySection />
+                <PasswordSection />
+              </div>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" type="button" onClick={handleClose}>
                   Cancel

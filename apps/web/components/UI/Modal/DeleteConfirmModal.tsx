@@ -52,8 +52,8 @@ export function DeleteConfirmModal() {
         />
 
         <DialogBody>
-          <p className="text-[0.875rem] text-muted leading-relaxed">
-            <span className="font-mono font-semibold text-foreground bg-elevated px-1.5 py-px rounded-[var(--radius-sm)]">
+          <p className="text-[0.875rem] text-foreground leading-relaxed">
+            <span className="font-mono font-semibold text-foreground  px-1.5 py-px rounded-[var(--radius-sm)]">
               /{selectedLink?.slug}
             </span>{" "}
             will be permanently deleted.

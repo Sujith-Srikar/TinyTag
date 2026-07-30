@@ -81,24 +81,24 @@ export function AnimatedSelect({
           rounded-[var(--radius-sm)]
           border
 
-          border-[var(--border-default)]
-          bg-[var(--bg-elevated)]
+          border-[var(--color-border)]
+          bg-[var(--color-surface-elevated)]
 
           px-3
 
           text-sm
-          text-[var(--text-secondary)]
+          text-[var(--color-text-secondary)]
 
           transition-colors
 
-          hover:border-[var(--border-strong)]
-          hover:text-[var(--text-primary)]
+          hover:border-[var(--color-border-strong)]
+          hover:text-[var(--color-text-primary)]
 
           focus:outline-none
-          focus:border-[var(--border-focus)]
+          focus:border-[var(--color-border-focus)]
 
           disabled:pointer-events-none
-          disabled:opacity-50
+          disabled:opacity-[var(--opacity-disabled)]
         "
       >
         <span className="truncate">{selected?.label ?? placeholder}</span>
@@ -137,26 +137,26 @@ export function AnimatedSelect({
               y: -4,
             }}
             transition={{
-              duration: 0.16,
+              duration: 0.12,
               ease: "easeOut",
             }}
             className="
               absolute
               right-0
               top-[calc(100%+8px)]
-              z-[100]
+              z-[var(--z-dropdown)]
 
               min-w-full
 
               rounded-[var(--radius-md)]
               border
 
-              border-[var(--border-default)]
-              bg-[var(--bg-surface)]
+              border-[var(--color-border)]
+              bg-[var(--color-surface)]
 
               p-1
 
-              border-[var(--border-strong)]
+              border-[var(--color-border-strong)]
             "
           >
             {options.map((option) => {
@@ -191,18 +191,18 @@ export function AnimatedSelect({
 
                     transition-colors
 
-                    hover:bg-[var(--bg-elevated)]
+                    hover:bg-[var(--color-surface-elevated)]
                   "
                 >
                   {option.icon}
 
                   <div className="flex-1 min-w-0">
-                    <div className="truncate text-[var(--text-primary)]">
+                    <div className="truncate text-[var(--color-text-primary)]">
                       {option.label}
                     </div>
 
                     {option.description && (
-                      <div className="truncate text-xs text-[var(--text-muted)]">
+                      <div className="truncate text-xs text-[var(--color-text-muted)]">
                         {option.description}
                       </div>
                     )}
@@ -220,8 +220,8 @@ export function AnimatedSelect({
 
                         rounded-full
 
-                        bg-[var(--accent-dim)]
-                        text-[var(--brand-accent)]
+                        bg-[var(--color-accent-dim)]
+                        text-[var(--color-brand)]
                       "
                     >
                       <Check size={12} />

@@ -29,7 +29,7 @@ export function AnimatedContainer({
         y: -8,
       }}
       transition={{
-        duration: 0.22,
+        duration: 0.18,
         delay,
       }}
     >
