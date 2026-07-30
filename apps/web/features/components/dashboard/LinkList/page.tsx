@@ -16,7 +16,7 @@ import { LinkBuilderFields } from "@repo/shared";
 import { Frown } from "lucide-react";
 
 type SortKey = "clicks" | "createdAt" | "title";
-type FilterStatus = "all" | "active" | "inactive";
+type FilterStatus = "all" | "expired" | "password";
 
 interface LinkListProps {
   links: LinkRecord[];
@@ -24,6 +24,8 @@ interface LinkListProps {
   onEdit: (link: LinkBuilderFields) => void;
   onDelete: (link: LinkBuilderFields) => void;
 }
+
+const isExpired = (link: LinkRecord) => !!link.expiresAt && new Date(link.expiresAt).getTime() <= Date.now();
 
 export function LinkList({
   links,
@@ -37,8 +39,8 @@ export function LinkList({
 
   const FILTER_TABS = [
     { id: "all", label: "All" },
-    { id: "active", label: "Active" },
-    { id: "inactive", label: "Inactive" },
+    { id: "expired", label: "Expired" },
+    { id: "password", label: "Password" },
   ];
 
   const SORT_OPTIONS = [
@@ -59,8 +61,15 @@ export function LinkList({
   const filtered = useMemo(() => {
     let result = links;
 
-    if (filter === "active") result = result.filter((l) => l.isActive);
-    if (filter === "inactive") result = result.filter((l) => !l.isActive);
+    const now = Date.now();
+
+    if (filter === "expired") {
+      result = result.filter(isExpired);
+    }
+
+    if (filter === "password") {
+      result = result.filter((l) => l.hasPassword);
+    }
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -79,14 +88,12 @@ export function LinkList({
 
   return (
     <div className={styles.container}>
-
       <div className={styles.toolbar}>
-
         <div className={styles.toolbarLeft}>
           <div className={styles.searchWrap}>
             <Input
               id="search-link"
-              placeholder="Search links…"
+              placeholder="Search via Slug or URL"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={styles.searchLink}

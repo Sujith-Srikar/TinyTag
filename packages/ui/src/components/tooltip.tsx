@@ -71,13 +71,13 @@ export const TooltipContent = React.forwardRef<
               max-w-xs
               rounded-[var(--radius-md)]
               border
-              bg-[var(--bg-elevated)]
-              border-[var(--border)]
+              bg-[var(--color-surface-elevated)]
+              border-[var(--color-border)]
               px-3
               py-1.5
               text-xs
               font-medium
-              text-[var(--text-primary)]
+              text-[var(--color-text-primary)]
               `,
               className,
             )}
@@ -87,8 +87,8 @@ export const TooltipContent = React.forwardRef<
 
           <TooltipPrimitive.Arrow
             className="
-              fill-[var(--bg-surface)]
-              stroke-[var(--border)]
+              fill-[var(--color-surface)]
+              stroke-[var(--color-border)]
             "
             width={10}
             height={6}

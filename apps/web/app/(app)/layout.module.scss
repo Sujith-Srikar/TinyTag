@@ -8,13 +8,25 @@
   flex: 1;
   min-width: 0;
   margin-left: var(--sidebar-width);
+  padding: var(--spacing-2) 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
+.panel {
+  flex: 1;
+  min-height: 0;
+  background: var(--color-surface);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md) 0  0 var(--radius-md);
+}
+
 @media (max-width: 1024px) {
   .main {
     margin-left: 0;
+    padding: 0;
   }
 }

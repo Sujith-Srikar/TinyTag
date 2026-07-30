@@ -5,20 +5,20 @@ import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-clip-padding text-sm font-medium leading-none whitespace-nowrap font-body transition-all outline-none select-none focus-visible:border-[var(--border-focus)] focus-visible:ring-3 focus-visible:ring-[var(--brand-accent)]/20 active:not-aria-[haspopup]:scale-[0.97] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-invalid:border-[var(--danger)] aria-invalid:ring-3 aria-invalid:ring-[var(--danger)]/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-clip-padding text-sm font-medium leading-none whitespace-nowrap font-body transition-all outline-none select-none focus-visible:border-[var(--color-border-focus)] focus-visible:ring-3 focus-visible:ring-[var(--color-brand)]/20 active:not-aria-[haspopup]:scale-[0.97] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-invalid:border-[var(--color-danger)] aria-invalid:ring-3 aria-invalid:ring-[var(--color-danger)]/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--interactive)] text-[var(--accent-fg)] hover:bg-[var(--interactive-hover)]",
+          "bg-[var(--interactive)] text-[var(--color-on-accent)] hover:bg-[var(--interactive-hover)]",
         outline:
-          "border-[var(--border)] bg-transparent hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] aria-expanded:bg-[var(--surface-hover)] aria-expanded:text-[var(--foreground)]",
+          "border-[var(--color-border)] bg-transparent hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] aria-expanded:bg-[var(--surface-hover)] aria-expanded:text-[var(--foreground)]",
         secondary:
           "bg-[var(--surface-elevated)] text-[var(--foreground)] hover:bg-[var(--surface)] aria-expanded:bg-[var(--surface-elevated)] aria-expanded:text-[var(--foreground)]",
         ghost:
           "hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] aria-expanded:bg-[var(--surface-hover)] aria-expanded:text-[var(--foreground)]",
         destructive:
-          "bg-[var(--status-danger-muted)] text-[var(--status-danger)] hover:bg-[var(--danger-muted)] focus-visible:border-[var(--danger)]/40 focus-visible:ring-[var(--danger)]/20",
+          "bg-[var(--status-danger-muted)] text-[var(--status-danger)] hover:bg-[var(--color-danger-muted)] focus-visible:border-[var(--color-danger)]/40 focus-visible:ring-[var(--color-danger)]/20",
         link: "text-[var(--interactive)] underline-offset-4 hover:underline",
       },
       size: {

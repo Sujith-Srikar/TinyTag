@@ -54,7 +54,7 @@ export function ExpirySection() {
         size="sm"
         type="button"
         onClick={handleOpen}
-        className="gap-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+        className="gap-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
       >
         <CalendarClock size={14} />
         {value ? getExpiryInfo(value).label : "Set expiration"}

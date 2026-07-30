@@ -47,12 +47,12 @@ export function Logo({ size = "md" }: LogoProps) {
           width="14"
           height="10"
           rx="5"
-          stroke="var(--text-primary)"
+          stroke="var(--color-text-primary)"
           strokeWidth="2.5"
           fill="none"
         />
         {/* Overlap mask — left ring front */}
-        <rect x="2" y="10.5" width="11" height="7" fill="var(--bg-surface)" />
+        <rect x="2" y="10.5" width="11" height="7" fill="var(--color-surface)" />
         {/* Redraw left ring front arc */}
         <path
           d="M7 9 A5 5 0 0 0 7 19"

@@ -163,10 +163,10 @@ function DialogStackOverlay({ className, ...props }: DialogStackOverlayProps) {
     <div
       role="presentation"
       className={cn(
-        "fixed inset-0 z-50 bg-[var(--overlay-modal)] backdrop-blur-[var(--blur-medium)]",
+        "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
         "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-        "duration-[var(--motion-slow)]",
+        "duration-[var(--duration-slow)]",
         className,
       )}
       onClick={() => setIsOpen(false)}
@@ -260,9 +260,9 @@ function DialogStackContent({
     <div
       onClick={handleClick}
       className={cn(
-        "h-auto w-full rounded-[var(--radius-xl)] border border-[var(--border)] bg-[var(--surface)] p-6",
-        "shadow-[var(--shadow-modal)]",
-        "transition-all duration-[var(--motion-slow)] ease-[var(--ease-enter)]",
+        "h-auto w-full rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--surface)] p-6",
+        "shadow-[var(--shadow-high)]",
+        "transition-all duration-[var(--duration-slow)] ease-[var(--ease-enter)]",
         clickable && activeIndex > index && "cursor-pointer",
         className,
       )}
@@ -278,7 +278,7 @@ function DialogStackContent({
     >
       <div
         className={cn(
-          "h-full w-full transition-opacity duration-[var(--motion-slow)]",
+          "h-full w-full transition-opacity duration-[var(--duration-slow)]",
           activeIndex !== index && "pointer-events-none select-none opacity-0",
         )}
       >

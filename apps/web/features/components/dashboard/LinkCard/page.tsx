@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, Lock } from "lucide-react";
 import { Badge, Button, CopyButton, getExpiryInfo } from "@repo/ui";
 import {
   getDomain,
@@ -89,6 +89,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
                 {getExpiryInfo(link.expiresAt).label}
               </Badge>
             )}
+            {link.hasPassword && ( <Lock size={14} />)}
           </div>
           <a
             href={link.destinationUrl}
@@ -149,7 +150,9 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
       {/* Actions */}
       <div className={styles.actions} ref={menuRef}>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-sm"
           className={styles.menuBtn}
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Link actions"
@@ -160,7 +163,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
             <circle cx="8" cy="8" r="1.2" fill="currentColor" />
             <circle cx="8" cy="13" r="1.2" fill="currentColor" />
           </svg>
-        </button>
+        </Button>
 
         {menuOpen && (
           <div className={styles.menu}>

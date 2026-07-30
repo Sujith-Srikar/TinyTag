@@ -6,7 +6,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className={styles.layout}>
       <Sidebar />
 
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <div className={styles.panel}>{children}</div>
+      </main>
     </div>
   );
 }

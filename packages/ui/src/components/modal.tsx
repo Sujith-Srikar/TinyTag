@@ -141,10 +141,10 @@ function DialogContent({
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
         className={cn(
-          "fixed inset-0 z-50 bg-[var(--overlay-modal)] backdrop-blur-[var(--blur-medium)]",
+          "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-          "duration-[var(--motion-slow)]",
+          "duration-[var(--duration-slow)]",
         )}
       />
       <DialogPrimitive.Content
@@ -153,12 +153,12 @@ function DialogContent({
           "flex flex-col overflow-hidden",
           "max-h-[min(90vh,720px)]",
           "bg-background border border-border rounded-[var(--radius-xl)]",
-          "shadow-[var(--shadow-modal)]",
+          "shadow-[var(--shadow-high)]",
           "overscroll-behavior-contain outline-none",
-          "duration-[var(--motion-slow)]",
+          "duration-[var(--duration-slow)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-          "data-[state=closed]:duration-[var(--motion-exit-slow)]",
+          "data-[state=closed]:duration-[var(--duration-exit-slow)]",
           sizeStyles[size],
           className,
         )}
@@ -198,10 +198,10 @@ function Sheet({
       <Drawer.Portal>
         <Drawer.Overlay
         className={cn(
-          "fixed inset-0 z-50 bg-[var(--overlay-modal)] backdrop-blur-[var(--blur-medium)]",
+          "fixed inset-0 z-50 bg-[var(--color-overlay)] backdrop-blur-[var(--blur-medium)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-          "duration-[var(--motion-slow)]",
+          "duration-[var(--duration-slow)]",
         )}
         />
         <Drawer.Content
@@ -210,13 +210,13 @@ function Sheet({
             "flex flex-col w-full max-h-[92dvh]",
             "bg-background border-t border-border",
             "rounded-t-[var(--radius-xl)]",
-            "shadow-[var(--shadow-modal)]",
+            "shadow-[var(--shadow-high)]",
             "will-change-transform outline-none",
             className,
           )}
         >
           <DrawerHandle />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-behavior-contain [webkit-overflow-scrolling:touch]">
+          <div className="flex-1 flex flex-col min-h-0">
             {children}
           </div>
         </Drawer.Content>
@@ -246,10 +246,10 @@ type DialogHeaderProps = {
 };
 
 const iconVariantStyles = {
-  default: "bg-[var(--bg-elevated)] text-foreground border border-border",
-  danger: "bg-[var(--danger-muted)] text-destructive border border-destructive/20",
-  warning: "bg-[var(--warning-muted)] text-warning border border-warning/20",
-  success: "bg-[var(--success-muted)] text-success border border-success/20",
+  default: "bg-[var(--color-surface-elevated)] text-foreground border border-border",
+  danger: "bg-[var(--color-danger-muted)] text-destructive border border-destructive/20",
+  warning: "bg-[var(--color-warning-muted)] text-warning border border-warning/20",
+  success: "bg-[var(--color-success-muted)] text-success border border-success/20",
 } as const;
 
 function DialogHeader({

@@ -9,15 +9,15 @@
   background: transparent;
   border: none;
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition:
     background-color var(--transition-base),
     color var(--transition-base);
 
   &:hover {
-    background-color: var(--bg-elevated);
-    color: var(--text-primary);
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-primary);
   }
 
   &.collapsed {

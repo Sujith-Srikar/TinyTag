@@ -1,23 +1,21 @@
 .sidebar {
   position: fixed;
-  top: 0;
+  top: var(--spacing-2);
   left: 0;
-  height: 100dvh;
-  height: 100vh;
+  height: calc(100dvh - var(--spacing-2) - var(--spacing-2));
   width: var(--sidebar-width);
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-default);
+  background-color: var(--color-surface-elevated);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  z-index: 1;
 }
-
-// ─── Header ───────────────────────────────────────────────────────────────────
 
 .header {
   display: flex;
   align-items: center;
-  padding: var(--space-6) var(--space-6) var(--space-8);
+  padding: var(--spacing-6) var(--spacing-8) var(--spacing-8);
   flex-shrink: 0;
 }
 
@@ -28,11 +26,9 @@
   flex: 1;
 }
 
-// ─── Nav ──────────────────────────────────────────────────────────────────────
-
 .nav {
   flex: 1;
-  padding: var(--space-4) var(--space-4);
+  padding: var(--spacing-4) var(--spacing-8);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -40,18 +36,18 @@
 .navList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-size: var(--text-body-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-sm);
   font-weight: 500;
   text-decoration: none;
   position: relative;
@@ -78,13 +74,13 @@
   }
 
   &.active::before {
-    background: var(--brand-accent);
+    background: var(--color-brand);
     left: 0;
   }
 
   &:hover {
-    background: var(--bg-elevated);
-    color: var(--text-primary);
+    background: var(--color-surface-elevated);
+    color: var(--color-text-primary);
     transform: translateX(2px);
   }
 
@@ -93,7 +89,7 @@
   }
 
   &.active {
-    color: var(--brand-accent);
+    color: var(--color-brand);
     font-weight: 600;
   }
 }
@@ -118,33 +114,27 @@
   text-overflow: ellipsis;
 }
 
-// ─── Divider ──────────────────────────────────────────────────────────────────
-
 .divider {
   height: 1px;
-  background-color: var(--border-default);
-  margin: var(--space-1) var(--space-3);
+  background-color: var(--color-border);
+  margin: var(--spacing-1) var(--spacing-8);
   flex-shrink: 0;
 }
 
-// ─── Footer ───────────────────────────────────────────────────────────────────
-
 .footer {
-  padding: var(--space-2) var(--space-2) var(--space-3);
+  padding: var(--spacing-2) var(--spacing-8) var(--spacing-3);
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
   flex-shrink: 0;
   position: relative;
 }
 
-// ─── User Row ─────────────────────────────────────────────────────────────────
-
 .userRow {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color var(--transition-base);
@@ -152,7 +142,7 @@
   position: relative;
 
   &:hover {
-    background-color: var(--bg-elevated);
+    background-color: var(--color-surface-elevated);
   }
 }
 
@@ -160,21 +150,21 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-full);
-  background: var(--brand-accent);
+  background: var(--color-brand);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--accent-fg);
-  font-family: var(--font-body);
+  color: var(--color-on-accent);
+  font-family: var(--font-family-body);
   transition: box-shadow var(--transition-base);
 
   .userRow:hover & {
     box-shadow:
-      0 0 0 2px var(--bg-surface),
-      0 0 0 3px var(--border-strong);
+      0 0 0 2px var(--color-surface),
+      0 0 0 3px var(--color-border-strong);
   }
 }
 
@@ -187,31 +177,29 @@
 }
 
 .userName {
-  font-size: var(--text-body-sm);
+  font-size: var(--font-size-body-sm);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .userPlan {
-  font-size: var(--text-caption);
-  color: var(--text-muted);
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
   line-height: var(--line-height-caption);
 }
 
-// ─── User Menu (popover) ─────────────────────────────────────────────────────
-
 .userMenu {
   position: absolute;
-  bottom: calc(100% + var(--space-3));
-  left: var(--space-2);
-  right: var(--space-2);
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  bottom: calc(100% + var(--spacing-3));
+  left: var(--spacing-2);
+  right: var(--spacing-2);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--space-2);
+  padding: var(--spacing-2);
   z-index: var(--z-dropdown);
   opacity: 0;
   transform: translateY(8px) scale(0.96);
@@ -236,15 +224,15 @@
   text-align: left;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
   width: 100%;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--spacing-2) var(--spacing-3);
   border: none;
   background: none;
   border-radius: var(--radius-xs);
-  color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-size: var(--text-body-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-sm);
   font-weight: 500;
   cursor: pointer;
   transition:
@@ -259,8 +247,8 @@
   }
 
   &:hover {
-    background-color: var(--bg-elevated);
-    color: var(--text-primary);
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-primary);
   }
 
   &:active {
@@ -270,44 +258,42 @@
 
 .menuDivider {
   height: 1px;
-  background-color: var(--border-default);
-  margin: var(--space-1) var(--space-2);
+  background-color: var(--color-border);
+  margin: var(--spacing-1) var(--spacing-2);
 }
 
 .menuItemDanger {
-  color: var(--danger);
+  color: var(--color-danger);
 
   &:hover {
-    background-color: var(--danger-muted);
-    color: var(--danger);
+    background-color: var(--color-danger-muted);
+    color: var(--color-danger);
   }
 }
 
 .menuItemAccent {
-  color: var(--brand-accent);
+  color: var(--color-brand);
 
   &:hover {
-    background-color: var(--bg-elevated);
-    color: var(--brand-accent);
+    background-color: var(--color-surface-elevated);
+    color: var(--color-brand);
   }
 }
-
-// ─── Mobile ───────────────────────────────────────────────────────────────────
 
 .mobileToggle {
   display: none;
   position: fixed;
-  top: var(--space-3);
-  left: var(--space-3);
+  top: var(--spacing-3);
+  left: var(--spacing-3);
   width: 44px;
   height: 44px;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   z-index: var(--z-overlay);
   transition:
     background-color var(--transition-base),
@@ -319,8 +305,8 @@
   }
 
   &:hover {
-    background-color: var(--bg-elevated);
-    border-color: var(--border-strong);
+    background-color: var(--color-surface-elevated);
+    border-color: var(--color-border-strong);
   }
 
   &:active {
@@ -332,10 +318,10 @@
   display: none;
   position: fixed;
   inset: 0;
-  background-color: var(--overlay-drawer);
-  backdrop-filter: var(--blur-subtle);
+  background-color: var(--color-overlay-drawer);
+  backdrop-filter: blur(var(--blur-subtle));
   z-index: var(--z-overlay);
-  animation: overlayFadeIn var(--motion-normal) var(--ease-enter) forwards;
+  animation: overlayFadeIn var(--duration-medium) var(--ease-enter) forwards;
 }
 
 @keyframes overlayFadeIn {
@@ -349,10 +335,12 @@
 
 @media (max-width: 1024px) {
   .sidebar {
+    top: 0;
+    height: 100dvh;
     width: var(--sidebar-width) !important;
     transform: translateX(-100%);
     z-index: calc(var(--z-overlay) + 1);
-    transition: transform var(--motion-normal) var(--ease-enter);
+    transition: transform var(--duration-medium) var(--ease-enter);
 
     &.mobileOpen {
       transform: translateX(0);
@@ -384,7 +372,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   flex-shrink: 0;
 
   transition:

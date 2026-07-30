@@ -56,58 +56,58 @@ Restrained. Tinted neutrals plus one accent used at ≤10% of surface area. Acce
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--brand-accent` | `#D0F54A` | `#D0F54A` | Primary actions, active states, focus rings. Reserved — never decorative. |
-| `--accent-fg` | `#100303` | `#100303` | Text and icons on accent backgrounds. Always near-black — acid green is too light for white text. |
-| `--accent-muted` | `#e8ffaa` | `rgba(203,255,71,0.12)` | Subtle accent tints, hover tints. |
-| `--accent-dim` | `rgba(203,255,71,0.15)` | `rgba(203,255,71,0.08)` | Focus rings, disabled accent backgrounds. |
+| `--color-brand` | `#D0F54A` | `#D0F54A` | Primary actions, active states, focus rings. Reserved — never decorative. |
+| `--color-on-accent` | `#100303` | `#100303` | Text and icons on accent backgrounds. Always near-black — acid green is too light for white text. |
+| `--color-accent-muted` | `#e8ffaa` | `rgba(203,255,71,0.12)` | Subtle accent tints, hover tints. |
+| `--color-accent-dim` | `rgba(203,255,71,0.15)` | `rgba(203,255,71,0.08)` | Focus rings, disabled accent backgrounds. |
 
-**Contrast guarantee:** `--brand-accent` on `--accent-fg` passes WCAG AA at all text sizes.
+**Contrast guarantee:** `--color-brand` on `--color-on-accent` passes WCAG AA at all text sizes.
 
 #### Surfaces
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--bg-base` | `#F3F1EC` | `#090909` | Page canvas |
-| `--bg-surface` | `#F0EEE9` | `#111111` | Cards, panels, inputs |
-| `--bg-elevated` | `#EBE8E1` | `#171717` | Dropdowns, hovered rows, disabled inputs |
+| `--color-surface-canvas` | `#F3F1EC` | `#090909` | Page canvas |
+| `--color-surface` | `#F0EEE9` | `#111111` | Cards, panels, inputs |
+| `--color-surface-elevated` | `#EBE8E1` | `#171717` | Dropdowns, hovered rows, disabled inputs |
 
 #### Borders
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--border-subtle` | `rgba(20,20,18,0.06)` | `rgba(255,255,255,0.06)` | Dividers, ghost borders |
-| `--border-default` | `rgba(20,20,18,0.10)` | `rgba(255,255,255,0.10)` | Card borders, input borders at rest |
-| `--border-strong` | `rgba(20,20,18,0.18)` | `rgba(255,255,255,0.18)` | Focused inputs, active rows |
-| `--border-focus` | `var(--brand-accent)` | `var(--brand-accent)` | Focus outlines only — accent reused |
+| `--color-border-subtle` | `rgba(20,20,18,0.06)` | `rgba(255,255,255,0.06)` | Dividers, ghost borders |
+| `--color-border` | `rgba(20,20,18,0.10)` | `rgba(255,255,255,0.10)` | Card borders, input borders at rest |
+| `--color-border-strong` | `rgba(20,20,18,0.18)` | `rgba(255,255,255,0.18)` | Focused inputs, active rows |
+| `--color-border-focus` | `var(--color-brand)` | `var(--color-brand)` | Focus outlines only — accent reused |
 
 #### Text
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--text-primary` | `#141412` | `#F5F5F0` | Headlines, labels, body copy |
-| `--text-secondary` | `#68655F` | `#B3B3AC` | Descriptions, timestamps, help text |
-| `--text-muted` | `#8C8882` | `#777770` | Placeholders, disabled labels, fine print |
-| `--text-inverse` | `#F5F5F0` | `#141412` | Text on dark or colored surfaces |
+| `--color-text-primary` | `#141412` | `#F5F5F0` | Headlines, labels, body copy |
+| `--color-text-secondary` | `#68655F` | `#B3B3AC` | Descriptions, timestamps, help text |
+| `--color-text-muted` | `#8C8882` | `#777770` | Placeholders, disabled labels, fine print |
+| `--color-text-inverse` | `#F5F5F0` | `#141412` | Text on dark or colored surfaces |
 
-**Contrast:** `--text-primary` on `--bg-surface` meets 4.5:1 in both modes. `--text-secondary` on `--bg-surface` meets 4.5:1. `--text-muted` is non-critical UI only — avoid for body copy or labels.
+**Contrast:** `--color-text-primary` on `--color-surface` meets 4.5:1 in both modes. `--color-text-secondary` on `--color-surface` meets 4.5:1. `--color-text-muted` is non-critical UI only — avoid for body copy or labels.
 
 #### Semantic
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--success` | `#22C55E` | `#4ADE80` | Positive trends, active badges |
-| `--success-muted` | `rgba(34,197,94,0.1)` | `rgba(74,222,128,0.1)` | Success backgrounds |
-| `--warning` | `#F59E0B` | `#FBBF24` | Caution states, expiring items |
-| `--warning-muted` | `rgba(245,158,11,0.1)` | `rgba(251,191,36,0.1)` | Warning backgrounds |
-| `--danger` | `#EF4444` | `#F87171` | Destructive actions and errors |
-| `--danger-muted` | `rgba(239,68,68,0.1)` | `rgba(248,113,113,0.1)` | Error backgrounds |
-| `--danger-ring` | `rgba(239,68,68,0.2)` | `rgba(248,113,113,0.2)` | Error focus rings |
+| `--color-success` | `#22C55E` | `#4ADE80` | Positive trends, active badges |
+| `--color-success-muted` | `rgba(34,197,94,0.1)` | `rgba(74,222,128,0.1)` | Success backgrounds |
+| `--color-warning` | `#F59E0B` | `#FBBF24` | Caution states, expiring items |
+| `--color-warning-muted` | `rgba(245,158,11,0.1)` | `rgba(251,191,36,0.1)` | Warning backgrounds |
+| `--color-danger` | `#EF4444` | `#F87171` | Destructive actions and errors |
+| `--color-danger-muted` | `rgba(239,68,68,0.1)` | `rgba(248,113,113,0.1)` | Error backgrounds |
+| `--color-danger-ring` | `rgba(239,68,68,0.2)` | `rgba(248,113,113,0.2)` | Error focus rings |
 
 **Rule:** Every color-coded state is paired with an icon or text label. Color alone never carries meaning.
 
 #### Accent-as-foreground text
 
-When accent is used as a text color (e.g., slug in link row, active sort indicator), verify contrast against the actual background. `--brand-accent` (#D0F54A) on `--bg-surface` (#F0EEE9) is low contrast — use `--text-primary` or `--text-secondary` as fallback in those contexts, reserving accent text for large display sizes only.
+When accent is used as a text color (e.g., slug in link row, active sort indicator), verify contrast against the actual background. `--color-brand` (#D0F54A) on `--color-surface` (#F0EEE9) is low contrast — use `--color-text-primary` or `--color-text-secondary` as fallback in those contexts, reserving accent text for large display sizes only.
 
 ---
 
@@ -117,9 +117,9 @@ When accent is used as a text color (e.g., slug in link row, active sort indicat
 
 | Token | Stack | Use |
 |---|---|---|
-| `--font-display` | `'PP Neue Montreal', system-ui, sans-serif` | Headlines ≥ 20px |
-| `--font-body` | `'Satoshi', system-ui, sans-serif` | Body copy, labels, buttons, inputs |
-| `--font-mono` | `'JetBrains Mono', ui-monospace, monospace` | URLs, slugs, IDs, analytics figures |
+| `--font-family-display` | `'PP Neue Montreal', system-ui, sans-serif` | Headlines ≥ 20px |
+| `--font-family-body` | `'Satoshi', system-ui, sans-serif` | Body copy, labels, buttons, inputs |
+| `--font-family-mono` | `'JetBrains Mono', ui-monospace, monospace` | URLs, slugs, IDs, analytics figures |
 
 PP Neue Montreal pairs with Satoshi on a geometric-vs-humanist axis — the contrast between them creates hierarchy without visual noise.
 
@@ -131,24 +131,24 @@ Base size: 16px. Scale ratio: major second (×1.125) for body, larger steps for 
 
 | Token | Size | Weight | Line Height | Letter Spacing | Use |
 |---|---|---|---|---|---|
-| `--text-display-xl` | 56px | 600 | 1.05 | -0.03em | Landing hero |
-| `--text-display-lg` | 48px | 600 | 1.05 | -0.03em | Section hero |
-| `--text-display-md` | 40px | 600 | 1.10 | -0.02em | Page titles |
-| `--text-heading-xl` | 32px | 600 | 1.15 | -0.02em | Card group headers |
-| `--text-heading-lg` | 24px | 600 | 1.20 | -0.02em | Card titles, sidebar sections |
-| `--text-heading-md` | 20px | 600 | 1.25 | -0.01em | Sub-section heads |
-| `--text-body-lg` | 18px | 400 | 1.60 | 0 | Lead paragraphs, onboarding |
-| `--text-body` | 16px | 400 | 1.60 | 0 | Default body copy |
-| `--text-body-sm` | 14px | 400 | 1.50 | 0 | Help text, secondary descriptions |
-| `--text-label` | 14px | 500 | 1.00 | 0 | Input labels, button text, nav items |
-| `--text-caption` | 12px | 400 | 1.40 | 0.01em | Timestamps, table headers, fine print |
-| `--text-mono-lg` | 24px | 500 | 1.20 | -0.01em | Large stat numbers |
-| `--text-mono` | 14px | 400 | 1.50 | -0.01em | URLs, slugs, click counts, IDs |
+| `--font-size-display-xl` | 56px | 600 | 1.05 | -0.03em | Landing hero |
+| `--font-size-display-lg` | 48px | 600 | 1.05 | -0.03em | Section hero |
+| `--font-size-display-md` | 40px | 600 | 1.10 | -0.02em | Page titles |
+| `--font-size-heading-xl` | 32px | 600 | 1.15 | -0.02em | Card group headers |
+| `--font-size-heading-lg` | 24px | 600 | 1.20 | -0.02em | Card titles, sidebar sections |
+| `--font-size-heading-md` | 20px | 600 | 1.25 | -0.01em | Sub-section heads |
+| `--font-size-body-lg` | 18px | 400 | 1.60 | 0 | Lead paragraphs, onboarding |
+| `--font-size-body` | 16px | 400 | 1.60 | 0 | Default body copy |
+| `--font-size-body-sm` | 14px | 400 | 1.50 | 0 | Help text, secondary descriptions |
+| `--font-size-label` | 14px | 500 | 1.00 | 0 | Input labels, button text, nav items |
+| `--font-size-caption` | 12px | 400 | 1.40 | 0.01em | Timestamps, table headers, fine print |
+| `--font-size-mono-lg` | 24px | 500 | 1.20 | -0.01em | Large stat numbers |
+| `--font-size-mono` | 14px | 400 | 1.50 | -0.01em | URLs, slugs, click counts, IDs |
 
 #### Typographic rules
 
-- `--font-mono` is mandatory for every URL, slug, numeric stat, and ID.
-- `--font-display` at ≥ 20px only. Below that, `--font-body` takes over.
+- `--font-family-mono` is mandatory for every URL, slug, numeric stat, and ID.
+- `--font-family-display` at ≥ 20px only. Below that, `--font-family-body` takes over.
 - Max reading width: 70ch on all body text containers.
 - Weight ladder: 400 / 500 / 600. Reserve 700 for marketing surfaces only.
 - `font-variant-numeric: tabular-nums` on all mono data in tables and dashboards.
@@ -162,16 +162,23 @@ Base unit: 4px. All values are multiples of this unit.
 
 | Token | Value | Use |
 |---|---|---|
-| `space-1` | 4px | Icon-to-label gap, tight inline spacing |
-| `space-2` | 8px | Compact internal spacing |
-| `space-3` | 12px | Badge padding, tight gaps |
-| `space-4` | 16px | Default unit, input horizontal padding |
-| `space-6` | 24px | Card padding, form field gaps |
-| `space-8` | 32px | Section spacing |
-| `space-12` | 48px | Large block spacing |
-| `space-16` | 64px | Page vertical rhythm |
-| `space-24` | 96px | Hero whitespace |
-| `space-32` | 128px | Large marketing sections |
+| `spacing-1` | 4px | Icon-to-label gap, tight inline spacing |
+| `spacing-2` | 8px | Compact internal spacing |
+| `spacing-3` | 12px | Badge padding, tight gaps |
+| `spacing-4` | 16px | Default unit, input horizontal padding |
+| `spacing-6` | 24px | Card padding, form field gaps |
+| `spacing-8` | 32px | Section spacing |
+| `spacing-12` | 48px | Large block spacing |
+| `spacing-16` | 64px | Page vertical rhythm |
+| `spacing-24` | 96px | Hero whitespace |
+| `spacing-32` | 128px | Large marketing sections |
+| `spacing-0-5` | 2px | Half-unit spacing, compact icon gaps |
+| `spacing-1-5` | 6px | Fine spacing for tight layouts |
+| `spacing-5` | 20px | Input-to-label gap, subtle section spread |
+| `spacing-7` | 28px | Compact card padding |
+| `spacing-9` | 36px | Form section spacing |
+| `spacing-10` | 40px | Wide form spacing |
+| `spacing-11` | 44px | Element height baseline, generous spacing |
 
 **Default:** Use the nearest token. Avoid arbitrary pixel values — if a value doesn't fit the scale, round to the nearest token.
 
@@ -192,33 +199,45 @@ Base unit: 4px. All values are multiples of this unit.
 
 ---
 
-### 2.5 Elevation
+### 2.5 Element Size
+
+| Token | Value | Use |
+|---|---|---|
+| `--size-element-xs` | 24px | Compact buttons, tags, icon-only controls |
+| `--size-element-sm` | 28px | Small buttons, compact inputs |
+| `--size-element-md` | 36px | Default input height, dropdown items |
+| `--size-element-lg` | 44px | Primary button height, touch target minimum |
+| `--size-element-xl` | 52px | Large buttons, hero inputs |
+
+---
+
+### 2.6 Elevation
 
 Depth comes from border contrast and spacing first. Shadow is reserved for the overlay layer — modals, drawers, and toasts. Subtle shadow may appear on dropdowns and elevated cards, but never as default card treatment.
 
 | Level | Treatment | Use |
 |---|---|---|
 | Flat | No border, no shadow | Page canvas, sidebar, nav bars |
-| Subtle | 1px solid `--border-default` | Cards, inputs at rest, table rows |
-| Raised | 1px solid `--border-strong` | Focused inputs, hovered cards, dropdowns |
+| Subtle | 1px solid `--color-border` | Cards, inputs at rest, table rows |
+| Raised | 1px solid `--color-border-strong` | Focused inputs, hovered cards, dropdowns |
 | Overlay | Modal shadow + backdrop blur | Modals, bottom sheets, toasts |
 
 **Default:** Levels 0–2 use border contrast. Level 3 uses shadow and backdrop blur.
 
 ---
 
-### 2.6 Blur
+### 2.7 Blur
 
 | Token | Value | Use |
 |---|---|---|
 | `blur-subtle` | 8px | Modal backdrop, drawer backdrop |
-| `blur-medium` | 12px | Dropdown backdrop over complex content |
+| `blur-medium` | 20px | Dropdown backdrop over complex content |
 
 Applied as `backdrop-filter` on the backdrop element, not the surface itself. Always paired with a dimming overlay.
 
 ---
 
-### 2.7 Opacity
+### 2.8 Opacity
 
 | Token | Value | Use |
 |---|---|---|
@@ -226,16 +245,16 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 
 ---
 
-### 2.8 Motion
+### 2.9 Motion
 
 | Token | Duration | Use |
 |---|---|---|---|
-| `motion-fast` | 120ms | Button press, badge appear, tooltip |
-| `motion-normal` | 180ms | Card hover, dropdown open, input focus |
-| `motion-slow` | 280ms | Modal enter/exit, drawer slide, toast enter |
-| `motion-exit-fast` | 84ms | Button press release, badge dismiss |
-| `motion-exit-normal` | 126ms | Dropdown close, tooltip hide |
-| `motion-exit-slow` | 196ms | Modal exit, drawer close, toast dismiss |
+| `duration-fast` | 120ms | Button press, badge appear, tooltip |
+| `duration-medium` | 180ms | Card hover, dropdown open, input focus |
+| `duration-slow` | 280ms | Modal enter/exit, drawer slide, toast enter |
+| `duration-exit-fast` | 84ms | Button press release, badge dismiss |
+| `duration-exit-medium` | 126ms | Dropdown close, tooltip hide |
+| `duration-exit-slow` | 196ms | Modal exit, drawer close, toast dismiss |
 
 | Token | Curve | Use |
 |---|---|---|
@@ -246,31 +265,33 @@ Applied as `backdrop-filter` on the backdrop element, not the surface itself. Al
 
 | Token | Value | Use |
 |---|---|---|
-| `--transition-fast` | `var(--motion-fast) var(--ease-enter)` | Quick property transitions (color, bg) |
-| `--transition-base` | `var(--motion-normal) var(--ease-enter)` | Default transition |
-| `--transition-slow` | `var(--motion-slow) var(--ease-enter)` | Theme-switch, layout transitions |
-| `--transition-exit-fast` | `var(--motion-exit-fast) var(--ease-exit)` | Quick exit transitions |
-| `--transition-exit-base` | `var(--motion-exit-normal) var(--ease-exit)` | Default exit transition |
-| `--transition-exit-slow` | `var(--motion-exit-slow) var(--ease-exit)` | Slow exit transitions |
+| `--transition-fast` | `var(--duration-fast) var(--ease-enter)` | Quick property transitions (color, bg) |
+| `--transition-base` | `var(--duration-medium) var(--ease-enter)` | Default transition |
+| `--transition-slow` | `var(--duration-slow) var(--ease-enter)` | Theme-switch, layout transitions |
+| `--transition-exit-fast` | `var(--duration-exit-fast) var(--ease-exit)` | Quick exit transitions |
+| `--transition-exit-base` | `var(--duration-exit-medium) var(--ease-exit)` | Default exit transition |
+| `--transition-exit-slow` | `var(--duration-exit-slow) var(--ease-exit)` | Slow exit transitions |
 
 #### Motion rules
 
 - Animate only: opacity, transform (translate, scale), color, background-color, border-color.
 - Avoid animating layout properties (width, height, padding, margin).
-- Exit animations use the dedicated `--motion-exit-*` tokens (70% of corresponding enter duration).
+- Exit animations use the dedicated `--duration-exit-*` tokens (70% of corresponding enter duration).
 - Respect `prefers-reduced-motion: reduce` — disable all transforms and opacity transitions.
 
 ---
 
-### 2.9 Shadow and Overlay
+### 2.10 Shadow and Overlay
 
 | Token | Value | Use |
 |---|---|---|
-| `shadow-modal` | `0 8px 32px rgba(20,20,18,0.16), 0 2px 8px rgba(20,20,18,0.08)` | Modal surfaces |
-| `overlay-modal` | `rgba(20,20,18,0.5)` | Modal backdrop |
-| `overlay-drawer` | `rgba(20,20,18,0.4)` | Drawer backdrop |
+| `shadow-high` | `0 8px 32px rgba(20,20,18,0.16), 0 2px 8px rgba(20,20,18,0.08)` | Modal surfaces |
+| `color-overlay` | `rgba(20,20,18,0.5)` | Modal backdrop |
+| `color-overlay-drawer` | `rgba(20,20,18,0.4)` | Drawer backdrop |
+| `shadow-low` | `0 1px 2px rgba(20,20,18,0.06), 0 1px 1px rgba(20,20,18,0.04)` | Small card hover shadow |
+| `shadow-md` | `0 4px 12px rgba(20,20,18,0.10), 0 2px 4px rgba(20,20,18,0.06)` | Dropdown, popover shadow |
 
-### 2.10 Z-index
+### 2.11 Z-index
 
 | Token | Value | Use |
 |---|---|---|
@@ -292,51 +313,51 @@ Semantic tokens map intent to primitives. Components consume semantic tokens, ne
 
 | Token | Maps to | Use |
 |---|---|---|
-| `foreground` | `--text-primary` | Headlines, labels, body copy |
-| `foreground-muted` | `--text-secondary` | Descriptions, timestamps |
-| `foreground-subtle` | `--text-muted` | Placeholders, fine print |
-| `foreground-inverse` | `--text-inverse` | Text on dark or colored surfaces |
+| `foreground` | `--color-text-primary` | Headlines, labels, body copy |
+| `foreground-muted` | `--color-text-secondary` | Descriptions, timestamps |
+| `foreground-subtle` | `--color-text-muted` | Placeholders, fine print |
+| `foreground-inverse` | `--color-text-inverse` | Text on dark or colored surfaces |
 
 ### Surface
 
 | Token | Maps to | Use |
 |---|---|---|
-| `surface` | `--bg-surface` | Cards, panels, inputs |
-| `surface-elevated` | `--bg-elevated` | Dropdowns, hovered rows |
-| `surface-base` | `--bg-base` | Page canvas |
-| `surface-hover` | `--bg-elevated` | Hovered interactive surface |
-| `surface-selected` | `--accent-muted` | Selected items, active states |
-| `surface-disabled` | `--bg-elevated` | Disabled inputs and buttons |
+| `surface` | `--color-surface` | Cards, panels, inputs |
+| `surface-elevated` | `--color-surface-elevated` | Dropdowns, hovered rows |
+| `surface-base` | `--color-surface-canvas` | Page canvas |
+| `surface-hover` | `--color-surface-elevated` | Hovered interactive surface |
+| `surface-selected` | `--color-accent-muted` | Selected items, active states |
+| `surface-disabled` | `--color-surface-elevated` | Disabled inputs and buttons |
 
 ### Border
 
 | Token | Maps to | Use |
 |---|---|---|
-| `border` | `--border-default` | Card borders, input borders |
-| `border-subtle` | `--border-subtle` | Dividers, ghost borders |
-| `border-strong` | `--border-strong` | Focused inputs, active rows |
-| `border-focus` | `--border-focus` | Focus outlines |
+| `border` | `--color-border` | Card borders, input borders |
+| `border-subtle` | `--color-border-subtle` | Dividers, ghost borders |
+| `border-strong` | `--color-border-strong` | Focused inputs, active rows |
+| `border-focus` | `--color-border-focus` | Focus outlines |
 
 ### Interactive
 
 | Token | Maps to | Use |
 |---|---|---|
-| `interactive` | `--brand-accent` | Primary action color |
-| `interactive-hover` | `color-mix(in srgb, var(--brand-accent) 80%, #000)` | Hovered primary action |
-| `interactive-active` | `color-mix(in srgb, var(--brand-accent) 60%, #000)` | Pressed primary action |
-| `interactive-muted` | `--accent-muted` | Subtle interactive tints |
+| `interactive` | `--color-brand` | Primary action color |
+| `interactive-hover` | `color-mix(in srgb, var(--color-brand) 80%, #000)` | Hovered primary action |
+| `interactive-active` | `color-mix(in srgb, var(--color-brand) 60%, #000)` | Pressed primary action |
+| `interactive-muted` | `--color-accent-muted` | Subtle interactive tints |
 
 ### Status
 
 | Token | Maps to | Use |
 |---|---|---|
-| `status-success` | `--success` | Positive outcome |
-| `status-success-muted` | `--success-muted` | Success background |
-| `status-warning` | `--warning` | Caution |
-| `status-warning-muted` | `--warning-muted` | Warning background |
-| `status-danger` | `--danger` | Error, destructive |
-| `status-danger-muted` | `--danger-muted` | Error background |
-| `status-danger-ring` | `--danger-ring` | Error focus ring |
+| `status-success` | `--color-success` | Positive outcome |
+| `status-success-muted` | `--color-success-muted` | Success background |
+| `status-warning` | `--color-warning` | Caution |
+| `status-warning-muted` | `--color-warning-muted` | Warning background |
+| `status-danger` | `--color-danger` | Error, destructive |
+| `status-danger-muted` | `--color-danger-muted` | Error background |
+| `status-danger-ring` | `--color-danger-ring` | Error focus ring |
 
 ---
 
@@ -348,7 +369,7 @@ All interactive components share these states. Component specs reference this se
 |---|---|---|
 | **Default** | Resting appearance. Component is visible and ready for interaction. | All components |
 | **Hover** | `--surface-hover` background for containers; `--interactive-hover` for accent actions; cursor: pointer. | Buttons, cards, dropdown items, table rows |
-| **Focused** | `2px solid var(--brand-accent)` outline, `outline-offset: 2px`. Never hidden. | All interactive elements |
+| **Focused** | `2px solid var(--color-brand)` outline, `outline-offset: 2px`. Never hidden. | All interactive elements |
 | **Active/Pressed** | `--interactive-active` for accent actions; `transform: scale(0.97)` for buttons. | Buttons, toggle switches |
 | **Disabled** | `--opacity-disabled` (0.4), `--surface-disabled` background, pointer-events: none. | Buttons, inputs, dropdowns |
 | **Loading** | Spinner replaces content. Button retains size. Skeleton for content areas after 300ms. | Buttons, stat cards, tables |
@@ -375,19 +396,19 @@ All interactive components share these states. Component specs reference this se
 
 | Context | Max width | Side padding |
 |---|---|---|
-| Mobile | `content-xs` (480px) | `space-4` (16px) |
-| Tablet | 720px | `space-6` (24px) |
-| Desktop | 1280px | `space-8` (32px) |
-| Large desktop | 1440px | `space-12` (48px) |
+| Mobile | `content-xs` (480px) | `spacing-4` (16px) |
+| Tablet | 720px | `spacing-6` (24px) |
+| Desktop | 1280px | `spacing-8` (32px) |
+| Large desktop | 1440px | `spacing-12` (48px) |
 | Ultra wide | 1600px | Content locked, whitespace grows |
 
 ### Grid
 
 | Breakpoint | Columns | Gutter |
 |---|---|---|
-| Mobile (< 640px) | 4 | `space-4` |
-| Tablet (640–1023px) | 8 | `space-4` |
-| Desktop (≥ 1024px) | 12 | `space-6` |
+| Mobile (< 640px) | 4 | `spacing-4` |
+| Tablet (640–1023px) | 8 | `spacing-4` |
+| Desktop (≥ 1024px) | 12 | `spacing-6` |
 
 ### Responsive behavior
 
@@ -415,42 +436,42 @@ Every form follows this structure, top to bottom:
 
 ```
 Label
-  ↕ space-2 (8px)
+  ↕ spacing-2 (8px)
 Description (optional)
-  ↕ space-1 (4px)
+  ↕ spacing-1 (4px)
 Input
-  ↕ space-1 (4px)
+  ↕ spacing-1 (4px)
 Helper text or validation
 ```
 
-**Between fields:** `space-6` (24px).
-**Between sections:** `space-12` (48px).
+**Between fields:** `spacing-6` (24px).
+**Between sections:** `spacing-12` (48px).
 **Max form width:** 720px.
 
-**Label:** Always above the input. `--text-label` style / `--foreground`. Avoid using placeholder text as label.
+**Label:** Always above the input. `--font-size-label` style / `--foreground`. Avoid using placeholder text as label.
 **Placeholder:** Hint text only, not a substitute for label. `--foreground-subtle`.
-**Error message:** Below input, `--text-body-sm` / `status-danger`. `role="alert"`.
+**Error message:** Below input, `--font-size-body-sm` / `status-danger`. `role="alert"`.
 **Disabled state:** `surface-disabled` background, reduced opacity, `cursor: not-allowed`.
 
 ### 6.2 Navigation
 
 **Sidebar** — Persistent on desktop (≥ 1024px). 240px wide. `surface-base` background. Right border `1px solid border`. Structure: logo → nav items → flexible space → user profile.
 
-**Sidebar item** — Default: `foreground-muted`, `label` style. Active: `interactive` background, `foreground-inverse` text.
+**Sidebar item** — Default: `foreground-muted`, `font-size-label` style. Active: `interactive` background, `foreground-inverse` text.
 
 **Top bar** — Replaces sidebar on mobile/tablet (< 1024px). `surface-base` background. Bottom border.
 
-**Nav drawer** — Mobile/tablet only. Slides from left. `surface` background. Right edge `radius-xl`. Backdrop: `overlay-drawer` + `blur-subtle`.
+**Nav drawer** — Mobile/tablet only. Slides from left. `surface` background. Right edge `radius-xl`. Backdrop: `color-overlay-drawer` + `blur-subtle`.
 
 ### 6.3 Feedback
 
-**Toast** — Bottom-right (desktop), bottom-center (mobile). Max 320px. `surface` background. `radius-lg`. Left accent bar: 3px, colored by type. Auto-dismiss 4s. Stacks with `space-2` gap.
+**Toast** — Bottom-right (desktop), bottom-center (mobile). Max 320px. `surface` background. `radius-lg`. Left accent bar: 3px, colored by type. Auto-dismiss 4s. Stacks with `spacing-2` gap.
 - Success: `status-success` bar, checkmark icon. `aria-live="polite"`.
 - Danger: `status-danger` bar, x-circle icon. `aria-live="assertive"`.
 - Warning: `status-warning` bar, alert-triangle icon.
 - Info: `interactive` bar, info icon.
 
-**Modal** — Centered. Max-width 560px. `radius-xl`. `surface-base` background. Overlay shadow. Backdrop: `overlay-modal` + `blur-subtle`. Header with title and close button. Body and footer with `space-6` padding.
+**Modal** — Centered. Max-width 560px. `radius-xl`. `surface-base` background. Overlay shadow. Backdrop: `color-overlay` + `blur-medium`. Header with title and close button. Body and footer with `spacing-6` padding.
 
 **Bottom sheet** — Mobile only (< 768px). Replaces modal. Full width, bottom-anchored, `radius-xl` top corners. Drag handle: 4×32px, `border`, `radius-full`.
 
@@ -458,7 +479,7 @@ Helper text or validation
 
 ### 6.4 Empty States
 
-Centered column. Icon (32px, `foreground-subtle`) → headline (`heading-md`, `foreground`) → description (`body`, `foreground-muted`, max 2 lines, 48ch) → primary button. Generous padding.
+Centered column. Icon (32px, `foreground-subtle`) → headline (`font-size-heading-md`, `foreground`) → description (`font-size-body`, `foreground-muted`, max 2 lines, 48ch) → primary button. Generous padding.
 
 Use cases:
 - **Empty page:** First-run or no data yet. Explain what goes here and how to get started.
@@ -478,13 +499,13 @@ Use cases:
 
 ### 6.6 Data Display
 
-**Stat cards** — Top-to-bottom: metric label (`caption` / `foreground-subtle`) → value (`mono-lg` / `foreground`) → trend arrow + delta (`body-sm`) in `status-success` or `status-danger`.
+**Stat cards** — Top-to-bottom: metric label (`font-size-caption` / `foreground-subtle`) → value (`font-size-mono-lg` / `foreground`) → trend arrow + delta (`font-size-body-sm`) in `status-success` or `status-danger`.
 
-**Link row** — Table row. Favicon → URL (`mono` / `foreground`, truncated) → slug (`mono` / accent — verify contrast) → clicks (`mono` / `foreground-muted`) → actions.
+**Link row** — Table row. Favicon → URL (`font-size-mono` / `foreground`, truncated) → slug (`font-size-mono` / accent — verify contrast) → clicks (`font-size-mono` / `foreground-muted`) → actions.
 
-**Data table** — Header: `surface-elevated`, `caption` / `foreground-subtle`, uppercase, `letter-spacing: 0.05em`. Sortable column: chevron `foreground-subtle` → `interactive` when active. Body rows: follow link row pattern.
+**Data table** — Header: `surface-elevated`, `font-size-caption` / `foreground-subtle`, uppercase, `letter-spacing: 0.05em`. Sortable column: chevron `foreground-subtle` → `interactive` when active. Body rows: follow link row pattern.
 
-**Charts** — Primary: `interactive`. Secondary: `foreground-subtle`. No gradient fills. Grid: `1px dashed border`. Axis labels: `caption` / `foreground-subtle`. Data values: `mono`. Min 44px tap targets.
+**Charts** — Primary: `interactive`. Secondary: `foreground-subtle`. No gradient fills. Grid: `1px dashed border`. Axis labels: `font-size-caption` / `foreground-subtle`. Data values: `font-size-mono`. Min 44px tap targets.
 
 ---
 
@@ -508,7 +529,7 @@ Component specs define purpose, behavior, and hierarchy — not pixel values. Im
 
 **Hierarchy:** One primary button per view. Supporting buttons use secondary or ghost. Danger is never used for cancel or navigation.
 
-**Accessibility:** Icon-only buttons must carry `aria-label`. Focus ring: `2px solid var(--brand-accent)`, `outline-offset: 2px`.
+**Accessibility:** Icon-only buttons must carry `aria-label`. Focus ring: `2px solid var(--color-brand)`, `outline-offset: 2px`.
 
 ### Inputs
 
@@ -527,7 +548,7 @@ Component specs define purpose, behavior, and hierarchy — not pixel values. Im
 
 **Purpose:** Select one option from a list. Opens below trigger.
 
-**Behavior:** `radius-md`. `surface` background. Raised elevation. Options: 36px height, `body-sm`. Hover: `surface-elevated`. Selected: accent text or check icon.
+**Behavior:** `radius-md`. `surface` background. Raised elevation. Options: 36px height, `font-size-body-sm`. Hover: `surface-elevated`. Selected: accent text or check icon.
 
 **Accessibility:** Keyboard navigation (arrow keys, Enter, Escape). `aria-expanded`, `aria-haspopup`. Selected option announced.
 
@@ -535,11 +556,11 @@ Component specs define purpose, behavior, and hierarchy — not pixel values. Im
 
 **Purpose:** Short status label. Max 2 words.
 
-**Variants:** Accent, success, danger, muted. `radius-full`. `caption` style.
+**Variants:** Accent, success, danger, muted. `radius-full`. `font-size-caption` style.
 
 ### Card
 
-**Purpose:** Group related content. `surface` background. Subtle border. `radius-lg`. `space-6` padding.
+**Purpose:** Group related content. `surface` background. Subtle border. `radius-lg`. `spacing-6` padding.
 
 **Hover:** Transitions to raised elevation. Avoid nesting cards.
 
@@ -568,7 +589,7 @@ Component specs define purpose, behavior, and hierarchy — not pixel values. Im
 
 - **Stroke weight:** 1.5px for all sizes. Consistent visual weight.
 - **Style:** Outline (stroke) by default. Filled variants reserved for active/selected states only.
-- **Spacing:** `space-1` (4px) between icon and adjacent label.
+- **Spacing:** `spacing-1` (4px) between icon and adjacent label.
 - **Color:** Inherit from parent text color. Active/selected states use accent.
 - **Functional vs decorative:** Functional icons have `aria-hidden="true"` when paired with text. Decorative icons are purely visual and also hidden from assistive tech.
 
@@ -601,14 +622,14 @@ TinyTags is analytics-heavy. These patterns apply to all data surfaces.
 - **Primary series:** Accent color. Single, clear line or fill.
 - **Secondary series:** `foreground-subtle`. Dashed line or reduced opacity.
 - **Grid:** `1px dashed border`. Subtle — data is primary.
-- **Axis labels:** `caption` / `foreground-subtle`.
-- **Data points:** `mono` font. Hover reveals exact value.
+- **Axis labels:** `font-size-caption` / `foreground-subtle`.
+- **Data points:** `font-size-mono` font. Hover reveals exact value.
 - **Empty chart:** Show axis skeleton with "No data for this period" message.
 - **Avoid:** Gradient fills, decorative shadows, 3D effects, animation on data load.
 
 ### Stat cards
 
-Structure: label → value → trend. Label is `caption` / `foreground-subtle`. Value is `mono-lg` / `foreground`. Trend is `body-sm` with directional color.
+Structure: label → value → trend. Label is `font-size-caption` / `foreground-subtle`. Value is `font-size-mono-lg` / `foreground`. Trend is `font-size-body-sm` with directional color.
 
 ---
 
@@ -619,7 +640,7 @@ Structure: label → value → trend. Label is `caption` / `foreground-subtle`. 
 | Touch target | Minimum 44 × 44px |
 | Body text contrast | WCAG AA — 4.5:1 |
 | Large text contrast | WCAG AA — 3:1 (≥ 18px bold or ≥ 24px) |
-| Focus ring | `2px solid var(--brand-accent)`, `outline-offset: 2px` |
+| Focus ring | `2px solid var(--color-brand)`, `outline-offset: 2px` |
 | Keyboard | Full tab order; DOM order matches visual order |
 | Skip link | Visible on first Tab press, bypasses nav to main content |
 | Heading hierarchy | Single `h1` per page, semantic nesting (`h1` → `h2` → `h3`), no skipping levels |

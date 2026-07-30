@@ -114,7 +114,9 @@ export function Sidebar() {
       )}
 
       {/* Mobile hamburger */}
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className={styles.mobileToggle}
         onClick={() => setMobileOpen((o) => !o)}
         aria-label="Toggle sidebar"
@@ -148,7 +150,7 @@ export function Sidebar() {
             strokeLinecap="round"
           />
         </svg>
-      </button>
+      </Button>
 
       <aside
         className={[styles.sidebar, mobileOpen ? styles.mobileOpen : ""]
