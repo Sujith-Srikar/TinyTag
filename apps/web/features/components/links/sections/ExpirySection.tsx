@@ -42,7 +42,7 @@ export function ExpirySection() {
   };
 
   const handleRemove = () => {
-    setValue("expiresAt", undefined, { shouldDirty: true });
+    setValue("expiresAt", null, { shouldDirty: true });
     setDraft(null);
     setOpen(false);
   };

@@ -42,7 +42,7 @@ export const LinkBuilderFormSchema = z.object({
   domain: z.string().optional(),
   tags: z.array(z.string()).optional(),
   comments: z.string().optional(),
-  expiresAt: z.date().optional(),
+  expiresAt: z.union([z.date(), z.null()]).optional(),
   password: z.union([z.string(), z.null()]).optional(),
   hasPassword: z.boolean().optional(),
 });

@@ -84,7 +84,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
           <div className={styles.titleRow}>
             <span className={styles.title}>{link.destinationUrl}</span>
             {!link.isActive && <Badge variant="destructive">Inactive</Badge>}
-            {link.expiresAt && link.isActive && (
+            {link.expiresAt && (
               <Badge variant="outline">
                 {getExpiryInfo(link.expiresAt).label}
               </Badge>

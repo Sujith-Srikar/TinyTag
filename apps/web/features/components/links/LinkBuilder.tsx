@@ -112,7 +112,7 @@ export const LinkBuilder = () => {
         destinationUrl: data.destinationUrl,
         domain: data.domain ?? undefined,
         ...(dirtyFields.comments && { comments: data.comments ?? undefined }),
-        ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt ?? undefined }),
+        ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt}),
         ...(dirtyFields.password && { password: data.password }),
         ...(dirtyFields.tags && { tags: data.tags ?? undefined }),
       });

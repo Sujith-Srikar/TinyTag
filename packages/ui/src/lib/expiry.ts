@@ -8,6 +8,12 @@ import {
 } from "date-fns";
 import { EXPIRY_STATE, ExpiryInfo } from "@repo/shared";
 
+const stripSeconds = (date: Date) => {
+  const d = new Date(date);
+  d.setSeconds(0, 0);
+  return d;
+};
+
 /**
  * Returns a user-friendly expiry label.
  *
@@ -20,26 +26,29 @@ import { EXPIRY_STATE, ExpiryInfo } from "@repo/shared";
  * - 2–6 calendar days     -> Expires in X days
  * - >= 7 days             -> Jul 30 / Jul 30, 2027
  */
-export function getExpiryInfo(
+export const getExpiryInfo = (
   expiresAt: string | Date,
   now: Date = new Date(),
-): ExpiryInfo {
+): ExpiryInfo => {
   const expiryDate = typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt;
-  if (isPast(expiryDate)) {
+  const normalizedNow = stripSeconds(now);
+  const normalizedExpiry = stripSeconds(expiryDate);
+
+  if (isPast(normalizedExpiry)) {
     return {
       state: EXPIRY_STATE.EXPIRED,
       label: "Expired",
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
-  const minutes = differenceInMinutes(expiryDate, now);
+  const minutes = differenceInMinutes(normalizedExpiry, normalizedNow);
 
   if (minutes < 1) {
     return {
       state: EXPIRY_STATE.NOW,
       label: "Expires now",
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
@@ -47,27 +56,27 @@ export function getExpiryInfo(
     return {
       state: EXPIRY_STATE.MINUTES,
       label: `Expires in ${minutes} min`,
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
-  const hours = differenceInHours(expiryDate, now);
+  const hours = differenceInHours(normalizedExpiry, normalizedNow);
 
   if (hours < 24) {
     return {
       state: EXPIRY_STATE.HOURS,
       label: `Expires in ${hours} hr`,
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
-  const calendarDays = differenceInCalendarDays(expiryDate, now);
+  const calendarDays = differenceInCalendarDays(normalizedExpiry, normalizedNow);
 
   if (calendarDays === 1) {
     return {
       state: EXPIRY_STATE.TOMORROW,
       label: "Expires tomorrow",
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
@@ -75,16 +84,16 @@ export function getExpiryInfo(
     return {
       state: EXPIRY_STATE.DAYS,
       label: `Expires in ${calendarDays} days`,
-      expiresAt: expiryDate,
+      expiresAt: normalizedExpiry,
     };
   }
 
   return {
     state: EXPIRY_STATE.DATE,
     label: format(
-      expiryDate,
-      isSameYear(expiryDate, now) ? "MMM d" : "MMM d, yyyy",
+      normalizedExpiry,
+      isSameYear(normalizedExpiry, normalizedNow) ? "MMM d" : "MMM d, yyyy",
     ),
-    expiresAt: expiryDate,
+    expiresAt: normalizedExpiry,
   };
 }
