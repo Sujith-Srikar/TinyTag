@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TITLE_MAX_LENGTH } from "../constant";
 
 export interface RedirectData {
   destinationUrl: string;
@@ -16,7 +17,7 @@ export type LinkRecord = {
   createdAt: string;
   isActive: boolean;
   hasPassword: boolean;
-  comments?: string;
+  title?: string;
   tags?: string[];
 };
 
@@ -41,7 +42,7 @@ export const LinkBuilderFormSchema = z.object({
   ]),
   domain: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  comments: z.string().optional(),
+  title: z.string().max(TITLE_MAX_LENGTH).optional(),
   expiresAt: z.union([z.date(), z.null()]).optional(),
   password: z.union([z.string(), z.null()]).optional(),
   hasPassword: z.boolean().optional(),
@@ -56,7 +57,7 @@ export const LINK_BUILDER_DEFAULTS: LinkBuilderFields = {
   slug: "",
   domain: "ttags.vercel.app",
   tags: undefined,
-  comments: undefined,
+  title: undefined,
   expiresAt: undefined,
   password: undefined,
 };

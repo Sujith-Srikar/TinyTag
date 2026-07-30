@@ -277,6 +277,25 @@
   color: var(--color-text-muted);
 }
 
+.inputWrap {
+  position: relative;
+
+  input {
+    padding-right: 56px;
+  }
+}
+
+.charCount {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  translate: 0 -50%;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }

@@ -29,7 +29,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
     destinationUrl: link.destinationUrl,
     slug: link.slug,
     expiresAt: link.expiresAt ? new Date(link.expiresAt) : undefined,
-    comments: link.comments,
+    title: link.title,
     tags: link.tags,
     hasPassword: link.hasPassword,
   };
@@ -82,7 +82,7 @@ export function LinkCard({ link, index = 0, onEdit, onDelete }: LinkCardProps) {
 
         <div className={styles.info}>
           <div className={styles.titleRow}>
-            <span className={styles.title}>{link.destinationUrl}</span>
+            <span className={styles.title}>{link.title || link.destinationUrl}</span>
             {!link.isActive && <Badge variant="destructive">Inactive</Badge>}
             {link.expiresAt && (
               <Badge variant="outline">

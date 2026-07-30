@@ -56,7 +56,7 @@ export const getRouter = createTRPCRouter({
           createdAt: link.created_at,
           isActive: link.is_active,
           hasPassword: link.has_password,
-          comments: link.comments ?? undefined,
+          title: link.title ?? undefined,
           tags: link.tags ?? undefined,
         }));
 

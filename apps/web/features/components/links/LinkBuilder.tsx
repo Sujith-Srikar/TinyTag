@@ -13,7 +13,7 @@ import {
 import {
   DestinationSection,
   ShortLinkSection,
-  CommentSection,
+  TitleSection,
   QrCodeSection,
   ExpirySection,
   PasswordSection
@@ -78,7 +78,7 @@ export const LinkBuilder = () => {
     reset({
       destinationUrl: selectedLink.destinationUrl ?? "",
       slug: selectedLink.slug ?? "",
-      comments: selectedLink.comments ?? undefined,
+      title: selectedLink.title ?? undefined,
       expiresAt: selectedLink.expiresAt ?? undefined,
       password: selectedLink.password ?? undefined,
     });
@@ -93,7 +93,7 @@ export const LinkBuilder = () => {
       reset({
         destinationUrl: "",
         slug,
-        comments: "",
+        title: "",
       });
     };
 
@@ -111,7 +111,7 @@ export const LinkBuilder = () => {
         slug: data.slug,
         destinationUrl: data.destinationUrl,
         domain: data.domain ?? undefined,
-        ...(dirtyFields.comments && { comments: data.comments ?? undefined }),
+        ...(dirtyFields.title && { title: data.title }),
         ...(dirtyFields.expiresAt && { expiresAt: data.expiresAt}),
         ...(dirtyFields.password && { password: data.password }),
         ...(dirtyFields.tags && { tags: data.tags ?? undefined }),
@@ -122,7 +122,7 @@ export const LinkBuilder = () => {
         slug: data.slug,
         domain: data.domain ?? undefined,
         tags: data.tags ?? undefined,
-        comments: data.comments ?? undefined,
+        title: data.title ?? undefined,
         expiresAt: data.expiresAt ?? undefined,
         password: data.password,
       });
@@ -152,7 +152,7 @@ export const LinkBuilder = () => {
 
                 <ShortLinkSection />
 
-                <CommentSection />
+                <TitleSection />
               </div>
 
               <aside className={styles.rightColumn}>
