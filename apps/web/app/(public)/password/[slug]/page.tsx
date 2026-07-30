@@ -8,6 +8,8 @@ import { z } from "zod";
 import { Field, FieldLabel, FieldError, Input, Button } from "@repo/ui";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
+import { logger } from "@repo/shared";
+import { updateClicksCount } from "@repo/db";
 
 const PasswordSchema = z.object({
   password: z.string().min(1, "Password is required"),
@@ -32,6 +34,7 @@ export default function PasswordPage() {
   const verifyPassword = useMutation(
     trpc.post.verifyPassword.mutationOptions({
       onSuccess: (data) => {
+        void updateClicksCount(slug).catch((err) => logger.error("Failed to increment click count", { slug, err }));
         router.push(data.redirectUrl);
       },
       onError: (err) => {

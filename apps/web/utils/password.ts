@@ -8,3 +8,15 @@ export const createPasswordToken = () => {
 export const createPasswordCookieName = (slug: string) => {
     return `${COOKIE_PREFIX}${slug}`;
 }
+
+export const generatePassword = () : string => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  const specials = "!@#$%&*";
+  let pw = "";
+  for (let i = 0; i < 16; i++) {
+    pw += chars[Math.floor(Math.random() * chars.length)];
+  }
+  const pos = Math.floor(Math.random() * (pw.length - 1)) + 1;
+  pw = pw.slice(0, pos) + specials[Math.floor(Math.random() * specials.length)] + pw.slice(pos);
+  return pw;
+}

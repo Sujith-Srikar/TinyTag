@@ -1,6 +1,13 @@
 alter table public.links
 add column password_token text;
 
+create extension if not exists pgcrypto;
+
+update public.links
+set password_token = gen_random_uuid()::text
+where has_password = true
+  and password_token is null;
+
 alter table public.links
 add constraint links_password_consistency
 check (
