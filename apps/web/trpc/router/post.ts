@@ -118,7 +118,7 @@ export const postRouter = createTRPCRouter({
     })
     .input(
       z.object({
-        slug: z.string().min(4).max(10),
+        slug: z.string().min(3).max(10).regex(/^[a-zA-Z0-9-]+$/),
       }),
     )
     .mutation(async (opts) => {
