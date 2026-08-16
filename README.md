@@ -27,6 +27,8 @@ Turns out shortening URLs was easy. Building everything around it was where the 
 * Edit destination URLs
 * Delete links
 * QR Code Generation
+* Password-protected links
+* Link expiration
 
 ### Authentication
 
@@ -111,27 +113,27 @@ https://tiny-tag.vercel.app/api/trpc
 ```txt
 apps/
 └── web/
-    ├── src/
-    │   ├── app/
-    │   │   ├── (public)/
-    │   │   ├── (auth)/
-    │   │   ├── (app)/
-    │   │   ├── auth/
-    │   │   └── s/
-    │   │
-    │   ├── components/
-    │   │
-    │   ├── features/
-    │   │   ├── links/
-    │   │   ├── dashboard/
-    │   │   └── analytics/
-    │   │
-    │   ├── hooks/
-    │   ├── trpc/
-    │   ├── utils/
-    │   └── middleware/
-    │
-    └── public/
+    ├── src/
+    │   ├── app/
+    │   │   ├── (public)/
+    │   │   ├── (auth)/
+    │   │   ├── (app)/
+    │   │   ├── auth/
+    │   │   └── s/
+    │   │
+    │   ├── components/
+    │   │
+    │   ├── features/
+    │   │   ├── links/
+    │   │   ├── dashboard/
+    │   │   └── analytics/
+    │   │
+    │   ├── hooks/
+    │   ├── trpc/
+    │   ├── utils/
+    │   └── middleware/
+    │
+    └── public/
 
 packages/
 ├── db/
@@ -150,18 +152,18 @@ docs/
 
 # Tech Stack
 
-| Category         | Technology           |
+| Category         | Technology           |
 | ---------------- | -------------------- |
-| Frontend         | Next.js 15           |
-| Language         | TypeScript           |
-| API Layer        | tRPC                 |
-| Authentication   | Supabase Auth        |
-| Database         | Supabase Postgres    |
-| Authorization    | RLS                  |
-| Cache            | Upstash Redis        |
-| State Management | React Query          |
-| Hosting          | Vercel               |
-| Runtime          | Serverless Functions |
+| Frontend         | Next.js 15           |
+| Language         | TypeScript           |
+| API Layer        | tRPC                 |
+| Authentication   | Supabase Auth        |
+| Database         | Supabase Postgres    |
+| Authorization    | RLS                  |
+| Cache            | Upstash Redis        |
+| State Management | React Query          |
+| Hosting          | Vercel               |
+| Runtime          | Serverless Functions |
 
 ---
 
@@ -199,9 +201,9 @@ pnpm dev
 
 Detailed architecture and design decisions live in the `/docs` folder.
 
-| Document           | Description                 |
+| Document           | Description                 |
 | ------------------ | --------------------------- |
-| authentication.md  | Auth, OAuth, SSR, RLS       |
+| authentication.md  | Auth, OAuth, SSR, RLS       |
 
 ---
 
@@ -210,8 +212,6 @@ Detailed architecture and design decisions live in the `/docs` folder.
 * Custom domains
 * QR code Customization
 * Advanced analytics
-* Link Expiration
-* Password Protection
 * Link tags and folders
 * Bulk import/export
 
@@ -240,7 +240,6 @@ Feel free to submit issues and enhancement requests!
 ## License
 
 This project is open source and available under the MIT License.
-
 
 -----------
 
@@ -277,6 +276,7 @@ This project is open source and available under the MIT License.
 │       │   │   ├── password/
 │       │   │   │   └── [slug]/
 │       │   │   │       └── page.tsx
+│       │   │   ├── layout.tsx
 │       │   │   ├── page.module.css
 │       │   │   └── page.tsx
 │       │   ├── [slug]/
@@ -321,12 +321,7 @@ This project is open source and available under the MIT License.
 │       │       │   ├── Logo.module.scss
 │       │       │   └── Logo.tsx
 │       │       ├── Modal/
-│       │       │   ├── DeleteConfirmModal.module.scss
-│       │       │   ├── DeleteConfirmModal.tsx
-│       │       │   ├── Modal.module.scss
-│       │       │   ├── Modal.tsx
-│       │       │   ├── ModalParts.module.scss
-│       │       │   └── ModalParts.tsx
+│       │       │   └── DeleteConfirmModal.tsx
 │       │       ├── ThemeToggle/
 │       │       │   ├── ThemeToggle.module.scss
 │       │       │   └── ThemeToggle.tsx
@@ -346,14 +341,13 @@ This project is open source and available under the MIT License.
 │       │       │   └── index.ts
 │       │       └── links/
 │       │           ├── sections/
-│       │           │   ├── CommentSection.tsx
 │       │           │   ├── DestinationSection.tsx
 │       │           │   ├── ExpirySection.tsx
 │       │           │   ├── index.ts
-│       │           │   ├── PasswordModal.tsx
 │       │           │   ├── PasswordSection.tsx
 │       │           │   ├── QrCodeSection.tsx
-│       │           │   └── ShortLinksSection.tsx
+│       │           │   ├── ShortLinksSection.tsx
+│       │           │   └── TitleSection.tsx
 │       │           ├── LinkBuilder.module.scss
 │       │           └── LinkBuilder.tsx
 │       ├── hooks/
@@ -384,7 +378,8 @@ This project is open source and available under the MIT License.
 │       │   │   ├── client.ts
 │       │   │   └── server.ts
 │       │   ├── formatters.ts
-│       │   └── generate-slug.ts
+│       │   ├── generate-slug.ts
+│       │   └── password.ts
 │       ├── .gitignore
 │       ├── components.json
 │       ├── eslint.config.js
@@ -392,12 +387,12 @@ This project is open source and available under the MIT License.
 │       ├── package.json
 │       ├── postcss.config.mjs
 │       ├── proxy.ts
-│       ├── README.md
 │       └── tsconfig.json
 ├── docs/
 │   ├── architecture.png
 │   ├── Auth.md
 │   ├── Design.md
+│   ├── password-protection.md
 │   └── PRODUCT.md
 ├── packages/
 │   ├── cache/
@@ -430,7 +425,9 @@ This project is open source and available under the MIT License.
 │   │   │   │   ├── 20260630124055_create-health-rpc.sql
 │   │   │   │   ├── 20260713100920_extend_the_exisitng_get_redirect_url_rpc.sql
 │   │   │   │   ├── 20260725070232_increment_click_count-rls.sql
-│   │   │   │   └── 20260725072116_increment_count_rls_making_public.sql
+│   │   │   │   ├── 20260725072116_increment_count_rls_making_public.sql
+│   │   │   │   ├── 20260729063919_add-password_token-column.sql
+│   │   │   │   └── 20260730162131_modify-commets-to-title.sql
 │   │   │   └── config.toml
 │   │   ├── package.json
 │   │   └── tsconfig.json
@@ -476,6 +473,7 @@ This project is open source and available under the MIT License.
 │       │   │   ├── infotooltip.tsx
 │       │   │   ├── input.tsx
 │       │   │   ├── label.tsx
+│       │   │   ├── loader.tsx
 │       │   │   ├── modal.tsx
 │       │   │   ├── popover.tsx
 │       │   │   ├── separator.tsx
@@ -486,6 +484,7 @@ This project is open source and available under the MIT License.
 │       │   │   └── url-compression.tsx
 │       │   ├── lib/
 │       │   │   ├── expiry.ts
+│       │   │   ├── parse-datetime.ts
 │       │   │   ├── time-picker-utils.ts
 │       │   │   └── utils.ts
 │       │   └── index.ts
@@ -503,8 +502,8 @@ This project is open source and available under the MIT License.
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml
 ├── README.md
+├── Todo.md
 ├── turbo.json
 └── vercel.json
-
 
 ```
