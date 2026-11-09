@@ -2,7 +2,7 @@ import { db } from "../client";
 import type { RedirectData } from "@repo/shared";
 
 const getDbHealth = async () => {
-  const { data, error } = await db.from("links").select("1").limit(1);
+  const { data, error } = await db.from("links").select("id").limit(1);
 
   if (error) throw error;
 
